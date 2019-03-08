@@ -1,0 +1,112 @@
+<div id="content-list-wrapper">
+	<div class="right-list" ng-if="mobile && category != 'trending' && category != 'recent'">
+		<div class="right-list-item" ng-repeat="alphaList in alphaLists"><a ng-click="goToAnchor(alphaList.letter)">{{alphaList.letter}}</a></div>
+	</div>
+	<div id="page-content" style="min-height:{{contentListScreenHeight}}px;height:{{contentListScreenHeight}}px;overflow-y:scroll;">
+		<div class="section results-section" ng-if="desktop">
+			<div id="results-section-header" class="section-header">
+				<span ng-click="goToCategory('')" class="section-header-icon fa fa-file {{category == '' || category == null || category == undefined ? 'active' : ''}}"></span>
+				<span ng-click="goToCategory('featured')" class="section-header-icon fa fa-star {{category == 'featured' ? 'active' : ''}}"></span>
+				<span ng-click="goToCategory('trending')" class="section-header-icon fa fa-line-chart {{category == 'trending' ? 'active' : ''}}"></span>
+				<span ng-click="goToCategory('recent')" class="section-header-icon fa fa-clock-o {{category == 'recent' ? 'active' : ''}}"></span>
+			</div>
+		</div>
+		<div class="section results-section" ng-if="desktop && category == 'trending'">
+			<div id="results-section-header" class="section-header">
+				<span ng-click="changeTrendingFilter('views')">
+					<span class="section-header-icon fa fa-eye {{trendingFilter == 'views' ? 'active' : ''}}"></span>
+					<span class="section-header-text padding-right-30 {{trendingFilter == 'views' ? 'active' : ''}}">recent views</span>
+				</span>
+				<span ng-click="changeTrendingFilter('votes')">
+					<span class="section-header-icon fa fa-thumbs-up {{trendingFilter == 'votes' ? 'active' : ''}}"></span>
+					<span class="section-header-text {{trendingFilter == 'votes' ? 'active' : ''}}">votes</span>
+				</span>
+			</div>
+		</div>
+		<div class="top-list" ng-if="desktop && category != 'trending' && category != 'recent'">
+			<div class="top-list-item" ng-repeat="alphaList in alphaLists"><a ng-click="filterResultsByLetter(alphaList.letter);goToAnchor(alphaList.letter);">{{alphaList.letter}}</a></div>
+			<div class="top-list-item">|</div>
+			<div class="top-list-item"><a ng-click="filterResultsByLetter('ALL')">ALL</a></div>
+		</div>
+		<div class="section results-section left-list" ng-if="mobile">
+			<div id="results-section-header" class="section-header" ng-click="collapseContentList()">
+				<span class="section-header-text inline-block">Contents</span>
+				<span ng-if="displayContentListClose" class="section-header-close fa fa-times"></span>
+			</div>
+		</div>
+		<div class="category-tabs" ng-if="mobile">
+			<span ng-click="goToCategory('')" class="tab-icon fa fa-file {{category == '' || category == null || category == undefined ? 'active' : ''}}"></span>
+			<span ng-click="goToCategory('featured')" class="tab-icon fa fa-star {{category == 'featured' ? 'active' : ''}}"></span>
+			<span ng-click="goToCategory('trending')" class="tab-icon fa fa-line-chart {{category == 'trending' ? 'active' : ''}}"></span>
+			<span ng-click="goToCategory('recent')" class="tab-icon fa fa-clock-o {{category == 'recent' ? 'active' : ''}}"></span>
+		</div>
+		<div class="section results-section" ng-if="mobile && category == 'trending'">
+			<div id="results-section-header" class="section-header">
+				<span ng-click="changeTrendingFilter('views')">
+					<span class="section-header-icon fa fa-eye {{trendingFilter == 'views' ? 'active' : ''}}"></span>
+					<span class="section-header-text padding-right-30 {{trendingFilter == 'views' ? 'active' : ''}}">recent views</span>
+				</span>
+				<span ng-click="changeTrendingFilter('votes')">
+					<span class="section-header-icon fa fa-thumbs-up {{trendingFilter == 'votes' ? 'active' : ''}}"></span>
+					<span class="section-header-text {{trendingFilter == 'votes' ? 'active' : ''}}">votes</span>
+				</span>
+			</div>
+		</div>
+		<div class="pagination-controls" ng-if="category != 'trending' && category != 'recent'">
+			<span class="pagination-control {{showPrevious ? '' : 'disabled'}}" ng-click="getPrevious()">
+				<span class="pagination-control-icon s1utility s1utility-chevronleft"></span><span class="pagination-control-text">Previous</span>
+			</span>
+			<span class="pagination-control float-right {{showNext ? '' : 'disabled'}}" ng-click="getNext()">
+				<span class="pagination-control-text">Next</span><span class="pagination-control-icon s1utility s1utility-chevronright"></span>
+			</span>
+		</div>
+		<div class="section results-section left-list" ng-if="category != 'trending' && category != 'recent'">
+			<div class="results-container">
+				<div class="section-list-container results-container-items">
+					<div ng-repeat="alphaList in contentLists | filter:{ letter: letter }" ng-if="alphaList.display" class="section-list searchResult-section-list">
+						<a id="{{alphaList.letter}}" class="{{displayContentListClose ? 'active-letter' : ''}}"></a>
+						<div class="section-list-items">
+							<div class="section-list-item">
+								<div class="section-list-item-name letter">
+									{{alphaList.letter}}
+								</div>
+							</div>
+						</div>
+						<div class="section-list-items" ng-repeat="sublistItem in alphaList.sublist" ng-click="goToContent(sublistItem.contentDocumentId)">
+							<div class="section-list-item">
+								<div class="section-list-item-name">
+									{{sublistItem.title}}<span ng-if="!sublistItem.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section results-section left-list" ng-if="category == 'trending' || category == 'recent'">
+			<div class="results-container">
+				<div class="section-list-container results-container-items">
+					<div class="section-list searchResult-section-list">
+						<div class="section-list-items" ng-repeat="item in contentLists" ng-click="goToContent(item.contentDocumentId)">
+							<div class="section-list-item">
+								<div ng-if="category == 'trending' && trendingFilter == 'views'" class="section-list-item-count">({{item.viewCount}})</div>
+								<div ng-if="category == 'trending' && trendingFilter == 'votes'" class="section-list-item-count">({{item.ratingCount}})</div>
+								<div class="section-list-item-name">
+									{{item.title}}<span ng-if="!item.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pagination-controls" ng-if="category != 'trending' && category != 'recent'">
+			<span class="pagination-control {{showPrevious ? '' : 'disabled'}}" ng-click="getPrevious()">
+				<span class="pagination-control-icon s1utility s1utility-chevronleft"></span><span class="pagination-control-text">Previous</span>
+			</span>
+			<span class="pagination-control float-right {{showNext ? '' : 'disabled'}}" ng-click="getNext()">
+				<span class="pagination-control-text">Next</span><span class="pagination-control-icon s1utility s1utility-chevronright"></span>
+			</span>
+		</div>
+	</div>
+</div>

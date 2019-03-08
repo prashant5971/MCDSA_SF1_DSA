@@ -1,0 +1,179 @@
+﻿<style>
+    a, a:visited, a:hover, a:active {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        position: relative;
+        transition: 0.5s color ease;
+        text-decoration: none;
+        
+    }
+
+        a:hover {
+            color: white;
+        }
+
+        a.before:before, a.after:after {
+            content: "";
+            transition: 0.5s all ease;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            position: absolute;
+        }
+
+        a.before:before {
+            top: -0.25em;
+        }
+
+        a.after:after {
+            bottom: -0.25em;
+        }
+
+        a.before:before, a.after:after {
+            height: 5px;
+            height: 0.35rem;
+            width: 0;
+            background: white;
+        }
+
+        a.first:after {
+            left: 0;
+        }
+
+        a.second:after {
+            right: 0;
+        }
+
+        a.before:hover:before, a.after:hover:after {
+            width: 100%;
+        }
+
+        .fontSize{
+            font-size:large !important;
+        }
+</style>
+<div id="page-content" style="min-height:{{categoryScreenHeight}}px;height:{{categoryScreenHeight}}px;">
+    <div id="category-navbar" ng-hide="category.isTopLevel" ng-controller="parentCategoryNavbarController">
+
+
+        <!-- .breadcrumb -->
+
+
+        <div id="parent-category-hierarchy-wrapper" ng-if="hierarchy.length > 0">
+            <div ng-repeat="hierarchyCategory in hierarchy" class="category-navbar-header" ng-click="goToCategory(hierarchyCategory.categoryId)">
+                <span class="category-navbar-header-icon fa fa-circle"></span><span class="category-navbar-header-text">{{mobile ? (hierarchyCategory.name | ellipseText22) : hierarchyCategory.name}}</span>
+            </div>
+
+        </div>
+
+        <div id="category-navbar-header" ng-click="goToCategory()">
+            <div class="wrapper">
+                <a class="second after fontSize" href="#">
+                    <span class="category-navbar-header-icon fa fa-circle"></span><span class="category-navbar-header-text">{{mobile ? (parentCategory.name | ellipseText22) : parentCategory.name}}</span>
+                </a>
+            </div>
+        </div>
+        <div id="category-navbar-controls" ng-if="hierarchy.length > 0">
+            <span ng-hide="showHierarchy" class="category-navbar-control fa fa-chevron-circle-down" ng-click="slideDownHierarchy()"></span>
+            <span ng-show="showHierarchy" class="category-navbar-control fa fa-chevron-circle-up" ng-click="slideUpHierarchy()"></span>
+        </div>
+    </div>
+    <div ng-if="mobile" class="featuredCategoriesCarousel" style="height:{{imageHeight}}px;">
+        <div ng-repeat="item in carouselItems" ng-if="item.isCategory" class="carousel-layer" style="width:{{categoryScreenWidth}}px;height:{{imageHeight}}px;">
+            <div class="categoryWrapper">
+                <div class="categoryIcon" style="background-image:url({{item.iconImageURL}});"></div>
+                <div class="categoryText">{{item.name}}</div>
+            </div>
+            <div class="backgroundImage" style="background-image:url({{item.landscapeImageURL}});background-size:cover;"></div>
+        </div>
+    </div>
+    <div ng-if="desktop" class="featuredCategoriesTiles" style="width:{{imageRowWidth}}px;">
+        <!--
+        -->
+        <div class="carousel-layer" style="width:{{categoryImageWidth}}px;height:300px;">
+            <div class="categoryWrapper">
+                <div class="categoryIcon" style="background-image:url({{category.iconImageURL}});"></div>
+                <div class="categoryText">{{category.name}}</div>
+                <div class="categoryDescription">{{category.description}}</div>
+            </div>
+            <div class="backgroundImage" style="background-image:url({{category.landscapeImageURL}});background-size:cover;background-position:center center;"></div>
+        </div>
+        <!--
+        -->
+    </div>
+    <div ng-if="mobile" class="descriptionWrapper">
+        <div class="categoryDescription">{{category.description}}</div>
+    </div>
+    <div id="contents" class="section" ng-if="category.contentItems.length > 0">
+        <div class="section-header">
+            <span ng-click="expandContents()">
+                <span ng-if="category.contentItems" class="section-header-icon fa fa-file"></span>
+                <span ng-if="category.contentItems" class="section-header-text">
+                    CONTENT
+                    <span class="list-count">{{mobile ? '(' + category.contentItems.length + ')' : ''}}</span>
+                </span>
+            </span>
+            <span ng-if="displayContentClose" ng-click="collapseContents()" class="section-header-close fa fa-times"></span>
+        </div>
+        <div class="section-list-container">
+            <div ng-repeat="contentItem in category.contentItems" class="section-list content-height" style="width:{{contentWidth}}; display:inline-block;">
+                <!--<div class="section-list-header {{mobile ? 'content-mobile-header' : ''}}">
+                    <span ng-click="goToContent()"><span ng-if="desktop" class="fa fa-chevron-circle-right content-more-indicator"></span>{{content.name}}<span ng-if="!content.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span> <span class="list-count">{{mobile ? '(' + content.contentItems.length + ')' : ''}}</span></span>
+                    <span ng-click="expandContentItems($event)" class="section-list-header-expand fa {{content.itemsExpanded == true ? 'fa-chevron-up' : 'fa-chevron-down'}}"></span>
+                </div>-->
+                <div c
+                <div class="section-list-items">
+                    <div class="section-list-item" ng-click="goToContent(contentItem)">
+                        <div class="section-list-item-icon file-icon-{{
+                        <div class="section-list-item-icon file-icon-{{contentItem.fileExtension | fileIconClass}}">
+                            nt
+                            >
+
+                        </div>
+                        <div class="section-list-item-name">
+                            {{contentItem.title}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            di
+            <
+        </div>
+        di
+        <
+    </div>
+    <div id="relatedCategories" class="section" ng-if="relatedCategories.length > 0">
+        <div class="section-header">
+            <!--<span ng-click="expandRelatedCategories()">--><span class="section-header-icon fa fa-circle"></span><span class="section-header-text">RELATED CATEGORIES <span class="list-count">{{mobile ? '(' + relatedCategories.length + ')' : ''}}</span></span><!--</span>-->
+            <!--<span ng-if="displayRelatedCategoriesClose" ng-click="collapseRelatedCategories()" class="section-header-close fa fa-times"></span>-->
+        </div>
+        <div ng-if="desktop" class="section-image-container">
+            <a class="inline-block" ng-repeat="relatedCategory in relatedCategories" href="#/category/{{relatedCategory.categoryId}}">
+                <!--<div class="imageLink" style="width:{{relatedCategoryWidth}}px;height:{{relatedCategoryHeight}}px;">-->
+                <div class="imageLink" ng-style="{'width': relatedCategoryWidth + 'px', 'height': relatedCategoryHeight + 'px'}">
+                    <div class="imageWrapper">
+                        <div class="imageIcon" style="background-image:url({{relatedCategory.iconImageURL}});"></div>
+                        <div class="imageText">{{relatedCategory.name}}</div>
+                    </div>
+                    <div class="backgroundImage" style="background-image:url({{relatedCategory.landscapeImageURL}});background-size:cover;"></div>
+                </div>
+            </a>
+        </div>
+        <div ng-if="mobile" class="section-list-container">
+            <a ng-repeat="relatedCategory in relatedCategories" href="#/category/{{relatedCategory.categoryId}}">
+                <div class="section-list-container">
+                    <div class="section-list" style="display:inline-block;">
+                        <div class="section-list-items">
+                            <div class="section-list-item">
+                                <div class="section-list-item-icon" style="background-image:url({{relatedCategory.iconImageURL}});">
+                                </div>
+                                <div class="section-list-item-name">
+                                    {{relatedCategory.name}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

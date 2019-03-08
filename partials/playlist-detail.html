@@ -1,0 +1,279 @@
+<div id="page-content" style="min-height:{{playlistScreenHeight}}px;height:{{playlistScreenHeight}}px;">
+    <h1>Prashant@</h1>
+	<div id="hub-navbar" ng-if="hubPresent" ng-controller="hubNavbarController">
+		<div id="hub-navbar-header" ng-click="goToHub()">
+			<span class="hub-navbar-header-icon fa fa-circle"></span><span class="hub-navbar-header-text">{{mobile ? (hub.name | ellipseText22) : hub.name}}<span ng-if="!hub.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span></span>
+		</div>
+		<div id="hub-navbar-controls">
+			<span class="hub-navbar-control fa fa-chevron-left {{hasPrevious ? 'active' : ''}}" ng-click="previous()"></span>
+			<span class="hub-navbar-control fa fa-chevron-right {{hasNext ? 'active' : ''}}" ng-click="next()"></span>
+		</div>
+	</div>
+	<div ng-if="mobile" class="left-side">
+		<div class="contentTitle">
+			<span ng-if="!editingPlaylist">{{playlist.name}}<span ng-if="!playlist.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span></span>
+			<input ng-if="editingPlaylist" type="text" ng-model="playlist.name"></input>
+		</div>
+		<div class="contentDescription">
+			<span ng-if="!editingPlaylist">{{playlist.description}}</span>
+			<textarea rows="5" ng-if="editingPlaylist" ng-model="playlist.description"></textarea>
+		</div>
+		<div id="contentMetadata">
+			<div ng-if="!editingPlaylist && playlist.hasEditAccess" class="section-header-edit s1utility s1utility-edit" ng-click="changePlaylistEditMode()"></div>
+			<div ng-if="editingPlaylist && playlist.hasEditAccess" class="section-header-edit fa fa-check" ng-click="changePlaylistEditMode()"></div>
+			<div class="contentMetadataItem">
+				<span class="contentMetadata-label">Created by </span><span class="contentMetadata-value">{{playlist.createdByUser.firstName}} {{playlist.createdByUser.lastName}}</span>
+			</div>
+			<div class="contentMetadataItem">
+				<span class="contentMetadata-label">Last Updated </span><span class="contentMetadata-value">{{playlist.lastModified | sfdcMonthDateYear}}</span>
+			</div>
+		</div>
+	<!--	<div class="contentActions">
+			<div class="contentActionFollowers">
+				<span class="contentAction-icon s1utility s1utility-people"></span><span class="contentAction-label">{{playlist.followerCount}} Followers</span>
+			</div>
+			<div ng-if="!playlist.followedByMe" class="contentActionFollow" ng-click="followPlaylist()">
+				<span class="contentAction-icon s1utility s1utility-adduser"></span><span class="contentAction-label">Follow</span>
+			</div>
+			<div ng-if="playlist.followedByMe" class="contentActionUnfollow" ng-click="unfollowPlaylist()">
+				<span class="contentAction-icon fa fa-times-circle"></span><span class="contentAction-label">Following</span>
+			</div>
+		</div>-->
+		<div class="section" ng-if="chatterEnabled">
+			<div class="section-header" ng-click="togglePosts()">
+				<span class="section-header-icon fa fa-comment"></span><span class="section-header-text">CHATTER FEED</span>
+			</div>
+			<div class="section-list-container">
+				<div class="section-list comment-list">
+					<div class="section-list-items">
+						<div ng-repeat="post in posts">
+							<div class="section-list-item comment {{$last ? 'last-post' : ''}}">
+								<div class="section-list-item-table">
+									<div class="section-list-item-icon" style="background-image:url({{post.smallPhotoUrl}});">
+									</div>
+									<div class="section-list-item-name">
+										{{post.post.CreatedBy.FirstName}} {{post.post.CreatedBy.LastName}}
+									</div>
+								</div>
+								<div class="section-list-item-comment">
+									{{post.post.Body}}
+								</div>
+								<div class="section-list-item-comment-summary">
+									<div class="section-list-item-comment-date">
+										{{post.post.CreatedDate | sfdcMonthDateYearTime}}
+									</div>
+									<div class="section-list-item-comment-likes-total {{post.feedLikesSummary.iLiked ? 'active' : ''}}" ng-click="likePost(post)">
+										<span class="section-list-item-comment-icon fa fa-thumbs-up"></span><span class="section-list-item-comment-label">{{post.feedLikesSummary.total}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="section-list-item comment" ng-repeat="comment in post.comments">
+								<div class="section-list-item-table">
+									<div class="section-list-item-icon" style="background-image:url({{comment.smallPhotoUrl}});">
+									</div>
+									<div class="section-list-item-name">
+										{{comment.comment.CreatedBy.FirstName}} {{comment.comment.CreatedBy.LastName}}
+									</div>
+								</div>
+								<div class="section-list-item-comment">
+									{{comment.comment.CommentBody}}
+								</div>
+								<div class="section-list-item-comment-summary">
+									<div class="section-list-item-comment-date">
+										{{comment.comment.CreatedDate | sfdcMonthDateYearTime}}
+									</div>
+									<div class="section-list-item-comment-likes-total {{comment.feedLikesSummary.iLiked ? 'active' : ''}}" ng-click="likeComment(comment)">
+										<span class="section-list-item-comment-icon fa fa-thumbs-up"></span><span class="section-list-item-comment-label">{{comment.feedLikesSummary.total}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="section-list-item comment comment-form">
+							<div>
+								<textarea rows="3" class="comments-textarea" placeholder="Write a comment..." ng-model="myPost.Body"></textarea>
+							</div>
+							<div class="fa fa-arrow-circle-o-right comments-submit" ng-click="addPost()">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div ng-if="mobile" class="section playlistContent right-side">
+		<div class="section-header">
+			<!--<span ng-click="expandPlaylistContent()">-->
+			<span class="section-header-icon">
+				<!-- <div class="footer-nav-link-icon fa-stack fa-lg">
+					<span class="menu-item-icon"> -->
+					<img class="section-header-icon-img" ng-src="{{myPlaylistIconUrl}}"/>
+					<!-- </span>
+				</div>	 -->			
+			</span>
+			<span class="section-header-text">PLAYLIST CONTENTS<!-- <span class="list-count">{{mobile ? '(' + playlist.contentItems.length + ')' : ''}}</span>--></span><!--</span>-->
+			<!--<span ng-if="displayPlaylistClose" ng-click="collapsePlaylistContent()" class="section-header-close fa fa-times"></span>-->
+			<span ng-if="!editingContent && playlist.hasEditAccess" class="section-header-edit s1utility s1utility-edit" ng-click="changeContentEditMode();enableSorting()"></span>
+			<span ng-if="editingContent && playlist.hasEditAccess" class="section-header-edit fa fa-check" ng-click="changeContentEditMode();destroySorting()"></span>
+		</div>
+		<div class="section-list-container">
+			<div class="section-list-container">
+				<div class="section-list">
+					<div id="sortable" class="section-list-items">
+						<div ng-repeat="contentItem in playlist.contentItems" class="section-list-item {{editingContent ? 'sortable-item' : ''}}" data-content-id="{{contentItem.contentDocumentId}}">
+							<div ng-if="editingContent" class="section-list-item-delete fa fa-times-circle" ng-click="removeFromPlaylist(playlist.recordId, contentItem.contentDocumentId, $event)"></div>
+							<div class="section-list-item-icon file-icon-{{contentItem.fileExtension | fileIconClass}}" ng-click="goToContent(contentItem)">
+							</div>
+							<div class="section-list-item-name" ng-click="goToContent(contentItem)">
+								{{contentItem.title}}<span ng-if="!contentItem.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span>
+							</div>
+							<div ng-if="editingContent" class="sortable-handle fa fa-reorder"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div ng-if="desktop" class="section playlistContent left-side">
+		<div class="section-header">
+			<span ng-click="expandPlaylistContent()">
+				<span class="section-header-icon">
+					<!-- <div class="footer-nav-link-icon fa-stack">
+						<span class="menu-item-icon"> -->
+							<img class="section-header-icon-img" ng-src="{{myPlaylistIconUrl}}"/>
+						<!-- </span>
+					</div>			 -->		
+				</span>
+				<span class="section-header-text">PLAYLIST CONTENTS<!-- <span class="list-count">{{mobile ? '(' + playlist.contentItems.length + ')' : ''}}</span>--></span>
+			</span>
+			<!--<span ng-if="displayPlaylistClose" ng-click="collapsePlaylistContent()" class="section-header-close fa fa-times"></span>-->
+			<span ng-if="!editingContent && playlist.hasEditAccess" class="section-header-edit s1utility s1utility-edit" ng-click="changeContentEditMode();enableSorting()"></span>
+			<span ng-if="editingContent && playlist.hasEditAccess" class="section-header-edit fa fa-check" ng-click="changeContentEditMode();destroySorting()"></span>
+		</div>
+		<div class="section-list-container">
+			<div class="section-list-container">
+				<div class="section-list">
+					<div id="sortable" class="section-list-items">
+						<div ng-repeat="contentItem in playlist.contentItems" class="section-list-item {{editingContent ? 'sortable-item' : ''}}" data-content-id="{{contentItem.contentDocumentId}}">
+							<div ng-if="editingContent" class="section-list-item-delete fa fa-times-circle" ng-click="removeFromPlaylist(playlist.recordId, contentItem.contentDocumentId, $event)"></div>
+							<div class="section-list-item-icon file-icon-{{contentItem.fileExtension | fileIconClass}}" ng-click="goToContent(contentItem)">
+							</div>
+							<div class="section-list-item-detail-wrapper" ng-click="goToContent(contentItem)">
+								<div class="section-list-item-name">
+									{{contentItem.title}}<span ng-if="!contentItem.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span>
+								</div>
+								<div class="section-list-item-description">
+									{{contentItem.description | ellipseText}}
+								</div>
+							</div>
+							<div ng-if="editingContent" class="sortable-handle fa fa-reorder"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div ng-if="desktop" class="right-side">
+		<div class="contentTitle">
+			<span ng-if="!editingPlaylist">{{playlist.name}}<span ng-if="!playlist.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span></span>
+			<input ng-if="editingPlaylist" type="text" ng-model="playlist.name"></input>
+		</div>
+		<div class="contentDescription">
+			<span ng-if="!editingPlaylist">{{playlist.description}}</span>
+			<textarea rows="5" ng-if="editingPlaylist" ng-model="playlist.description"></textarea>
+		</div>
+		<!-- <div class="playlist-featured-checkbox-wrapper" ng-if="info.isFeaturePlaylistAdmin">
+			<input ng-if="editingPlaylist" type="checkbox" ng-model="playlist.isFeatured" id="playlist-featured-checkbox" />
+			<span ng-if="!editingPlaylist" class="fa {{playlist.isFeatured ? 'fa-check-square-o' : 'fa-square-o'}}"></span>
+			<label for="playlist-featured-checkbox">Featured</label>
+		</div> -->
+		<div id="contentMetadata">
+			<div ng-if="!editingPlaylist && playlist.hasEditAccess" class="section-header-edit s1utility s1utility-edit" ng-click="changePlaylistEditMode()"></div>
+			<div ng-if="editingPlaylist && playlist.hasEditAccess" class="section-header-edit fa fa-check" ng-click="changePlaylistEditMode()"></div>
+			<div class="contentMetadataItem">
+				<span class="contentMetadata-label">Created by </span><span class="contentMetadata-value">{{playlist.createdByUser.firstName}} {{playlist.createdByUser.lastName}}</span>
+			</div>
+			<div class="contentMetadataItem">
+				<span class="contentMetadata-label">Last Updated </span><span class="contentMetadata-value">{{playlist.lastModified | sfdcMonthDateYear}}</span>
+			</div>
+		</div>
+	<!--	<div class="contentActions">
+			<div class="contentActionFollowers">
+				<span class="contentAction-icon s1utility s1utility-people"></span><span class="contentAction-label">{{playlist.followerCount}} Followers</span>
+			</div>
+			<div ng-if="!playlist.followedByMe" class="contentActionFollow" ng-click="followPlaylist()">
+				<span class="contentAction-icon s1utility s1utility-adduser"></span><span class="contentAction-label">Follow</span>
+			</div>
+			<div ng-if="playlist.followedByMe" class="contentActionUnfollow" ng-click="unfollowPlaylist()">
+				<span class="contentAction-icon fa fa-times-circle"></span><span class="contentAction-label">Following</span>
+			</div>
+		</div>-->
+		<div class="section" ng-if="chatterEnabled">
+			<div class="section-header">
+				<span class="section-header-icon fa fa-comment"></span><span class="section-header-text">CHATTER FEED</span>
+			</div>
+			<div class="section-list-container">
+				<div class="section-list comment-list">
+					<div class="section-list-items">
+						<div ng-repeat="post in posts">
+							<div class="section-list-item comment">
+								<div class="section-list-item-table">
+									<div class="section-list-item-icon" style="background-image:url({{post.smallPhotoUrl}});">
+									</div>
+								</div>
+								<div>
+									<div class="section-list-item-table comment-top">
+										<span class="section-list-item-name">
+											{{post.post.CreatedBy.FirstName}} {{post.post.CreatedBy.LastName}}
+										</span>
+										<span class="section-list-item-date">
+											{{post.post.CreatedDate | sfdcMonthDateYearTime}}
+										</span>
+									</div>
+									<div class="section-list-item-comment">
+										{{post.post.Body}}
+									</div>
+									<div class="section-list-item-comment-summary">
+										<div class="section-list-item-comment-likes-total {{post.feedLikesSummary.iLiked ? 'active' : ''}}" ng-click="likePost(post)">
+											<span class="section-list-item-comment-icon fa fa-thumbs-up"></span><span class="section-list-item-comment-label">{{post.feedLikesSummary.total}}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="section-list-item comment" ng-repeat="comment in post.comments">
+								<div class="section-list-item-table">
+									<div class="section-list-item-icon" style="background-image:url({{comment.smallPhotoUrl}});">
+									</div>
+								</div>
+								<div>
+									<div class="section-list-item-table">
+										<span class="section-list-item-name">
+											{{comment.comment.CreatedBy.FirstName}} {{comment.comment.CreatedBy.LastName}}
+										</span>
+										<span class="section-list-item-date">
+											{{comment.comment.CreatedDate | sfdcMonthDateYearTime}}
+										</span>
+									</div>
+									<div class="section-list-item-comment">
+										{{comment.comment.CommentBody}}
+									</div>
+									<div class="section-list-item-comment-summary">
+										<div class="section-list-item-comment-likes-total {{comment.feedLikesSummary.iLiked ? 'active' : ''}}" ng-click="likeComment(comment)">
+											<span class="section-list-item-comment-icon fa fa-thumbs-up"></span><span class="section-list-item-comment-label">{{comment.feedLikesSummary.total}}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="section-list-item comment comment-form">
+							<div>
+								<textarea rows="3" class="comments-textarea" placeholder="Write a comment..." ng-model="myPost.Body"></textarea>
+							</div>
+							<div class="fa fa-arrow-circle-o-right comments-submit" ng-click="addPost()">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

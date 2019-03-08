@@ -1,0 +1,102 @@
+<div id="page-content" style="min-height:{{resultsScreenHeight}}px;height:{{resultsScreenHeight}}px;">
+	<form ng-submit="goToResult()" class="search-form navbar-search" role="search">
+		<div id="searchResults-search" class="form-group">
+			<input type="text" class="form-control" placeholder="Search for Content" ng-model="searchTerm" ng-change="hideKeyword()" ><!--
+			--><span class="input-group-addon" ng-click="clearSearch()"><span class="fa {{searchIconClass}}"></span></span>
+		</div>
+	</form>
+	<div ng-if="desktop" id="page-content-title">Results for '{{searchTermLabel}}'</div>
+	<div ng-if="searchErrorMessage != ''" class="error-message" ng-bind="searchErrorMessage"></div>
+	<div ng-if="searchResults.length == 0" class="error-message">No results.</div>
+	<div ng-if="desktop && filteredResultLists.length == 0 && searchResults.category.length > 0" id="categorySearchResults" class="section">
+		<div class="section-header">
+			<span class="section-header-icon fa fa-circle"></span><span class="section-header-text">CATEGORIES</span>
+		</div>
+		<div class="section-image-container category-container">
+			<a ng-repeat="category in searchResults | filter:belongsToCategories" href="#/category/{{category.categoryId}}">
+				<div class="imageLink" style="width:{{relatedCategoryWidth}}px;height:{{relatedCategoryHeight}}px;">
+					<div class="imageWrapper">
+						<div class="imageIcon" style="background-image:url({{category.iconImageURL}});"></div>
+						<div class="imageText">{{category.name}}</div>
+					</div>
+					<div class="backgroundImage" style="background-image:url({{category.landscapeImageURL}});background-size:cover;"></div>
+				</div>
+			</a>
+		</div>
+	</div>
+	<div ng-if="mobile && filteredResultLists.length == 0 && searchResults.category.length > 0" class="section results-section">
+		<div id="results-section-header" class="section-header">
+			<span class="section-header-icon fa fa-circle"></span><span class="section-header-text">CATEGORIES</span>
+		</div>
+		<div class="results-container">
+			<div class="section-list-container results-container-items">
+				<div ng-repeat="searchResult in searchResults | filter:belongsToCategories" class="section-list searchResult-section-list">
+					<div class="section-list-items">
+						<div class="section-list-item" ng-click="goToItemDetail()">
+							<div ng-if="searchResult.obj_type == 'category'" class="section-list-item-icon" style="background-image:url({{searchResult.iconImageURL}});">
+							</div>
+							<div class="section-list-item-name">
+								{{searchResult.name}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="results-container-more-button">
+
+			</div>
+		</div>
+	</div>
+	<div ng-if="filteredResultLists.length == 0 && searchResults.length > 0" class="section results-section">
+		<div id="results-section-header" class="section-header">
+			<span class="section-header-text">All Results</span>
+		</div>
+		<div class="results-container">
+			<div class="section-list-container results-container-items">
+				<div ng-repeat="searchResult in searchResults | filter:belongsToAllResults" class="section-list searchResult-section-list">
+					<div class="section-list-items">
+						<div class="section-list-item" ng-click="goToItemDetail()">
+							<div ng-if="searchResult.obj_type == 'playlist'" class="section-list-item-icon fa fa-list-ul">
+							</div>
+							<div ng-if="searchResult.obj_type == 'contentItem'" class="section-list-item-icon file-icon-{{searchResult.fileExtension | fileIconClass}}">
+							</div>
+							<div class="section-list-item-name">
+								{{searchResult.name}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="results-container-more-button">
+
+			</div>
+		</div>
+	</div>
+	<div ng-if="filteredResultLists.length > 0" ng-repeat="list in filteredResultLists" class="section results-section">
+		<div id="results-section-header" class="section-header">
+			<span class="section-header-text">{{list.label}}</span>
+		</div>
+		<div class="results-container">
+			<div class="section-list-container results-container-items">
+				<div ng-repeat="searchResult in list.results" class="section-list searchResult-section-list">
+					<div class="section-list-items">
+						<div class="section-list-item" ng-click="goToItemDetail()">
+							<div ng-if="searchResult.obj_type == 'category'" class="section-list-item-icon" style="background-image:url({{searchResult.iconImageURL}});">
+							</div>
+							<div ng-if="searchResult.obj_type == 'playlist'" class="section-list-item-icon fa fa-list-ul">
+							</div>
+							<div ng-if="searchResult.obj_type == 'contentItem'" class="section-list-item-icon file-icon-{{searchResult.fileExtension | fileIconClass}}">
+							</div>
+							<div class="section-list-item-name">
+								{{searchResult.name}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="results-container-more-button">
+
+			</div>
+		</div>
+	</div>
+</div>

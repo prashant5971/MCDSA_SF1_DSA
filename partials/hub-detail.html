@@ -1,0 +1,120 @@
+<div id="page-content" style="min-height:{{hubScreenHeight}}px;height:{{hubScreenHeight}}px;">
+	<div ng-if="mobile" class="featuredHubsCarousel" style="height:{{imageHeight}}px;">
+		<ul rn-carousel rn-carousel-indicator="true"><!--
+		--><li ng-repeat="item in carouselItems">
+				<div ng-if="item.isHub" class="carousel-layer" style="width:{{screenWidth}}px;height:{{imageHeight}}px;">
+					<div class="hubWrapper">
+						<div class="hubIcon" style="background-image:url({{item.iconImageUrl}});"></div>
+						<div class="hubText">{{item.name}}<span ng-if="!item.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span></div>
+					</div>
+					<div class="backgroundImage" style="background-image:url({{item.smallImageUrl}});background-size:cover;"></div>
+				</div>
+				<a ng-if="!item.isHub" href="#/content/{{item.contentDocumentId}}">
+					<div class="carousel-layer" style="width:{{screenWidth}}px;height:{{imageHeight}}px;">
+						<div class="hubWrapper">
+							<div class="hubText">{{item.title}}<span ng-if="!item.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span></div>
+						</div>
+						<div ng-if="item.smallImageUrl != '' && item.smallImageUrl != null && item.smallImageUrl != undefined" class="backgroundImage" style="background-image:url({{item.smallImageUrl}});background-size:cover;"></div>
+						<div ng-if="item.smallImageUrl == '' || item.smallImageUrl == null || item.smallImageUrl == undefined" class="backgroundImage file-icon-{{item.fileExtension | fileIconClass}}" style="background-repeat:no-repeat;background-position:center;"></div>
+					</div>
+				</a>
+			</li><!--
+		--></ul>
+	</div>
+	<div ng-if="desktop" class="featuredHubsTiles" style="width:{{imageRowWidth}}px;"><!--
+		--><div class="carousel-layer" style="width:{{hubImageWidth}}px;height:300px;">
+			<div class="hubWrapper">
+				<div class="hubIcon" style="background-image:url({{hub.iconImageUrl}});"></div>
+				<div class="hubText">{{hub.name}}<span ng-if="!hub.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span></div>
+				<div class="hubDescription">{{hub.description}}</div>
+				<div class="hubAllResultsLink"><a href="#/searchResults/{{hub.name}}">See All Results</a></div>
+			</div>
+			<div class="backgroundImage" style="background-image:url({{hub.largeImageUrl}});background-size:cover;background-position:center center;"></div>
+		</div><!--
+		--><a ng-repeat="content in hub.contentItems" class="featuredHubTileLink inline-block" href="#/content/{{content.contentDocumentId}}">
+			<div ng-if="$index < remainder" class="carousel-layer" style="width:{{remainderImageWidth}}px;height:200px;">
+				<div class="hubWrapper">
+					<div class="hubText">{{content.title}}<span ng-if="!content.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span></div>
+				</div>
+				<div ng-if="content.largeImageUrl != '' && content.largeImageUrl != null && content.largeImageUrl != undefined" class="backgroundImage" style="background-image:url({{content.largeImageUrl}});background-size:cover;"></div>
+				<div ng-if="content.largeImageUrl == '' || content.largeImageUrl == null || content.largeImageUrl == undefined" class="backgroundImage file-icon-{{content.fileExtension | fileIconClass}}" style="background-repeat:no-repeat;background-position:center;"></div>
+			</div>
+			<div ng-if="$index >= remainder" class="carousel-layer" style="width:{{imageWidth}}px;height:200px;">
+				<div class="hubWrapper">
+					<div class="hubText">{{content.title}}<span ng-if="!content.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span></div>
+				</div>
+				<div ng-if="content.largeImageUrl != '' && content.largeImageUrl != null && content.largeImageUrl != undefined" class="backgroundImage" style="background-image:url({{content.largeImageUrl}});background-size:cover;"></div>
+				<div ng-if="content.largeImageUrl == '' || content.largeImageUrl == null || content.largeImageUrl == undefined" class="backgroundImage file-icon-{{content.fileExtension | fileIconClass}}" style="background-repeat:no-repeat;background-position:center;"></div>
+			</div>
+		</a><!--
+	--></div>
+	<div ng-if="mobile" class="descriptionWrapper">
+		<div class="hubDescription">{{hub.description}}</div>
+		<div class="hubAllResultsLink"><a href="#/searchResults/{{hub.name}}">See All Results</a></div>
+	</div>
+	<div id="playlists" class="section">
+		<div class="section-header">
+			<span ng-click="expandPlaylists()"><span class="section-header-icon fa fa-list-ul"></span><span class="section-header-text">PLAYLISTS <span class="list-count">{{mobile ? '(' + hub.playlistDetails.length + ')' : ''}}</span></span></span>
+			<span ng-if="displayPlaylistClose" ng-click="collapsePlaylists()" class="section-header-close fa fa-times"></span>
+		</div>
+		<div class="section-list-container">
+			<div ng-repeat="playlist in hub.playlistDetails" class="section-list playlist-height" style="width:{{playListWidth}};">
+				<div class="section-list-header {{mobile ? 'playlist-mobile-header' : ''}}">
+					<span ng-click="goToPlaylist()"><span ng-if="desktop" class="fa fa-chevron-circle-right playlist-more-indicator"></span>{{playlist.name}}<span ng-if="!playlist.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span> <span class="list-count">{{mobile ? '(' + playlist.contentItems.length + ')' : ''}}</span></span>
+					<span ng-click="expandPlaylistItems($event)" class="section-list-header-expand fa {{playlist.itemsExpanded == true ? 'fa-chevron-up' : 'fa-chevron-down'}}"></span>
+				</div>
+				<div class="section-list-items">
+					<div ng-repeat="contentItem in playlist.contentItems" ng-if="$index < 4" class="section-list-item" ng-click="goToContent(contentItem)">
+						<div class="section-list-item-icon file-icon-{{contentItem.fileExtension | fileIconClass}}">
+						</div>
+						<div class="section-list-item-name">
+							{{contentItem.title}}<span ng-if="!contentItem.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span>
+						</div>
+					</div>
+				</div>
+				<div class="section-list-footer">
+					<div class="section-list-footer-item">
+						<span class="section-list-footer-item-icon ss-binoculars"></span><span class="section-list-footer-item-text">{{playlist.followerCount}} Followers</span>
+					</div>
+					<div class="section-list-footer-item" ng-if="chatterEnabled">
+						<span class="section-list-footer-item-icon fa fa-comment"></span><span class="section-list-footer-item-text">{{playlist.commentCount}} Comments</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="relatedHubs" class="section">
+		<div class="section-header">
+			<span ng-click="expandRelatedHubs()"><span class="section-header-icon fa fa-circle"></span><span class="section-header-text">RELATED CATEGORIES <span class="list-count">{{mobile ? '(' + hub.relatedHubs.length + ')' : ''}}</span></span></span>
+			<span ng-if="displayRelatedHubsClose" ng-click="collapseRelatedHubs()" class="section-header-close fa fa-times"></span>
+		</div>
+		<div ng-if="desktop" class="section-image-container">
+			<a class="inline-block" ng-repeat="relatedHub in hub.relatedHubs" href="#/hubs/{{relatedHub.recordId}}">
+				<div class="imageLink" style="width:{{relatedHubWidth}}px;height:{{relatedHubHeight}}px;">
+					<div class="imageWrapper">
+						<div class="imageIcon" style="background-image:url({{relatedHub.iconImageUrl}});"></div>
+						<div class="imageText">{{relatedHub.name}}<span ng-if="!relatedHub.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span></div>
+					</div>
+					<div class="backgroundImage" style="background-image:url({{relatedHub.smallImageUrl}});background-size:cover;"></div>
+				</div>
+			</a>
+		</div>
+		<div ng-if="mobile" class="section-list-container">
+			<a ng-repeat="relatedHub in hub.relatedHubs" href="#/hubs/{{relatedHub.recordId}}">
+				<div class="section-list-container">
+					<div class="section-list">
+						<div class="section-list-items">
+							<div class="section-list-item">
+								<div class="section-list-item-icon" style="background-image:url({{relatedHub.iconImageUrl}});">
+								</div>
+								<div class="section-list-item-name">
+									{{relatedHub.name}}<span ng-if="!relatedHub.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+</div>
