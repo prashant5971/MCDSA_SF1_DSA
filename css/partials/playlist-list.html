@@ -1,0 +1,113 @@
+<div id="playlist-list-wrapper" ng-controller="playlistListController">
+	<div class="right-list" ng-if="mobile && category != 'trending'">
+		<div class="right-list-item" ng-repeat="alphaList in alphaLists"><a ng-click="goToAnchor(alphaList.letter)">{{alphaList.letter}}</a></div>
+	</div>
+	<div id="page-content" style="min-height:{{playlistListScreenHeight}}px;height:{{playlistListScreenHeight}}px;overflow-y:scroll;">
+		<div class="section results-section" ng-if="desktop">
+			<div id="results-section-header" class="section-header">
+				<span ng-if="category == 'my' && !editing" class="playlist-edit s1utility s1utility-edit" ng-click="changeEditMode()"></span>
+				<span ng-if="category == 'my' && editing" class="playlist-edit fa fa-check" ng-click="changeEditMode()"></span>
+				<span ng-click="goToCategory('')" class="section-header-icon fa fa-list-ul {{category == '' || category == null || category == undefined ? 'active' : ''}}"></span>
+				<span ng-click="goToCategory('featured')" class="section-header-icon fa fa-star {{category == 'featured' ? 'active' : ''}}"></span>
+				<span ng-click="goToCategory('my')" class="section-header-icon {{category == 'my' ? 'active' : ''}}">
+					<img class="section-header-icon-img" ng-src="{{myPlaylistIconUrl}}"/>
+				</span>
+				<span ng-click="goToCategory('trending')" class="section-header-icon fa fa-line-chart {{category == 'trending' ? 'active' : ''}}"></span>
+				<span ng-click="slideNewPlaylistForm()" class="section-header-icon fa fa-plus-square"></span>
+			</div>
+		</div>
+		<div class="top-list" ng-if="desktop && category != 'trending'">
+			<div class="top-list-item" ng-repeat="alphaList in alphaLists"><a ng-click="filterResultsByLetter(alphaList.letter);">{{alphaList.letter}}</a></div>
+			<div class="top-list-item">|</div>
+			<div class="top-list-item"><a ng-click="filterResultsByLetter('ALL')">ALL</a></div>
+		</div>
+		<div class="section results-section left-list" ng-if="mobile">
+			<div id="results-section-header" class="section-header">
+				<span class="section-header-text inline-block" ng-click="collapsePlaylistList()">Playlists</span>
+				<span ng-if="category == 'my' && !editing" class="playlist-edit s1utility s1utility-edit" ng-click="changeEditMode()"></span>
+				<span ng-if="category == 'my' && editing" class="playlist-edit fa fa-check" ng-click="changeEditMode()"></span>
+				<span ng-if="displayPlaylistListClose" class="section-header-close fa fa-times" ng-click="collapsePlaylistList()"></span>
+			</div>
+		</div>
+		<div class="category-tabs" ng-if="mobile">
+			<span ng-click="goToCategory('')" class="tab-icon fa fa-list-ul {{category == '' || category == null || category == undefined ? 'active' : ''}}"></span>
+			<span ng-click="goToCategory('featured')" class="tab-icon fa fa-star {{category == 'featured' ? 'active' : ''}}"></span>
+			<span ng-click="goToCategory('my')" class="tab-icon {{category == 'my' ? 'active' : ''}}">
+					<img class="section-header-icon-img" ng-src="{{myPlaylistIconUrl}}"/>
+				</span>
+			<span ng-click="goToCategory('trending')" class="tab-icon fa fa-line-chart {{category == 'trending' ? 'active' : ''}}"></span>
+			<span ng-click="slideNewPlaylistForm()" class="tab-icon fa fa-plus-square"></span>
+		</div>
+		<div class="pagination-controls" ng-if="category != 'trending'">
+			<span class="pagination-control {{showPrevious ? '' : 'disabled'}}" ng-click="getPrevious()">
+				<span class="pagination-control-icon s1utility s1utility-chevronleft"></span><span class="pagination-control-text">Previous</span>
+			</span>
+			<span class="pagination-control float-right {{showNext ? '' : 'disabled'}}" ng-click="getNext()">
+				<span class="pagination-control-text">Next</span><span class="pagination-control-icon s1utility s1utility-chevronright"></span>
+			</span>
+		</div>
+		<div class="section results-section left-list" ng-if="category != 'trending'">
+			<div class="results-container">
+				<div class="section-list-container results-container-items">
+					<div ng-repeat="alphaList in playlistLists | filter:{ letter: letter }" ng-if="alphaList.display" class="section-list searchResult-section-list">
+						<a id="{{alphaList.letter}}" class="{{activeLetter ? 'active-letter' : ''}}"></a>
+						<div class="section-list-items">
+							<div class="section-list-item">
+								<div class="section-list-item-name letter">
+									{{alphaList.letter}}
+								</div>
+							</div>
+						</div>
+						<div class="section-list-items" ng-repeat="sublistItem in alphaList.sublist">
+							<div class="section-list-item">
+								<div ng-if="category == 'my' && editing" class="section-list-item-delete fa fa-times-circle" ng-click="deletePlaylist(sublistItem.recordId, $event)"></div>
+								<div class="section-list-item-name" ng-click="goToPlaylist(sublistItem.recordId)">
+									{{sublistItem.name}}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section results-section left-list" ng-if="category == 'trending'">
+			<div class="results-container">
+				<div class="section-list-container results-container-items">
+					<div class="section-list searchResult-section-list">
+						<div class="section-list-items" ng-repeat="item in playlistLists" ng-click="goToPlaylist(item.recordId)">
+							<div class="section-list-item">
+								<div ng-if="category == 'trending'" class="section-list-item-count">({{item.viewCount}})</div>
+								<div class="section-list-item-name">
+									{{item.name}}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pagination-controls" ng-if="category != 'trending'">
+			<span class="pagination-control {{showPrevious ? '' : 'disabled'}}" ng-click="getPrevious()">
+				<span class="pagination-control-icon s1utility s1utility-chevronleft"></span><span class="pagination-control-text">Previous</span>
+			</span>
+			<span class="pagination-control float-right {{showNext ? '' : 'disabled'}}" ng-click="getNext()">
+				<span class="pagination-control-text">Next</span><span class="pagination-control-icon s1utility s1utility-chevronright"></span>
+			</span>
+		</div>
+			<div id="new-playlist-form" class="section-list-item-form">
+				<div class="section-playlist-x-button">
+					<span class="fa fa-window-close-o" ng-click="slideNewPlaylistForm()" aria-hidden="true"></span>
+				</div>
+				<div class="section-list-item-form-field">
+					<input type="text" placeholder="Title" ng-model="newPlaylist.newPlaylistTitle"></input>
+				</div>
+				<div class="section-list-item-form-field">
+					<textarea placeholder="Description" rows="4" ng-model="newPlaylist.newPlaylistDescription"></textarea>
+				</div>
+				<div class="section-list-item-form-control" ng-click="createAndAddToPlaylist()">
+					<span class="section-list-item-form-control-icon s1utility s1utility-check"></span><span class="section-list-item-form-control-text">Create new playlist</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

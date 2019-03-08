@@ -1,0 +1,99 @@
+<div id="page-content" style="min-height:{{homeScreenHeight}}px;height:{{homeScreenHeight}}px;">
+	<div ng-if="mobile" class="featuredCategoriesCarousel" style="height:{{imageHeight}}px;">
+		<ul rn-carousel rn-carousel-indicator="true"><!--
+			--><li ng-repeat="category in categories"><a href="#category/{{category.categoryId}}"><div class="carousel-layer" style="width:100%;height:{{imageHeight}}px;">
+				<div class="categoryWrapper">
+					<div class="categoryIcon" style="background-image:url({{category.iconImageURL}});"></div>
+					<div class="categoryText">{{category.name}}</div>
+				</div>
+				<div class="backgroundImage" style="background-image:url({{category.landscapeImageURL}});background-size:cover;background-position:center;"></div>
+			</div></a></li><!--
+		--></ul>
+	</div>
+	<div ng-if="desktop" class="featuredCategoriesTiles" style="width:100%;"><!--
+		--><a ng-repeat="category in categories" class="featuredCategoryTileLink" href="#/category/{{category.categoryId}}">
+			<div ng-if="$index < remainder" class="carousel-layer {{category.widthClass}}" style="height:{{remainderImageHeight}}px;">
+				<div class="categoryWrapper">
+					<div class="categoryIcon" style="background-image:url({{category.iconImageURL}});"></div>
+					<div class="categoryText">{{category.name}}</div>
+				</div>
+				<div class="backgroundImage" style="background-image:url({{category.landscapeImageURL}});background-size:cover;background-position:center;"></div>
+			</div>
+			<div ng-if="$index >= remainder" class="carousel-layer {{category.widthClass}}" style="height:{{imageHeight}}px;">
+				<div class="categoryWrapper">
+					<div class="categoryIcon" style="background-image:url({{category.iconImageURL}});"></div>
+					<div class="categoryText">{{category.name}}</div>
+				</div>
+				<div class="backgroundImage" style="background-image:url({{category.landscapeImageURL}});background-size:cover;background-position:center;"></div>
+			</div>
+		</a><!--
+	--></div>
+	<div id="seeAllCategoriesDividerWrapper"><div id="seeAllCategoriesDivider"></div></div>
+	<div id="footer">
+		<div id="footer-nav">
+			<div class="footer-nav-section-wrapper">
+				<div class="footer-nav-section">
+					<div class="footer-nav-title">CONTENT</div>
+					<div class="footer-nav-links">
+						<div class="footer-nav-link" ng-click="goToAllContents('featured')">
+							<div class="footer-nav-link-icon fa-stack fa-lg">
+								<span class="fa fa-circle fa-stack-2x"></span>
+								<span class="fa fa-star fa-stack-1x fa-inverse"></span>
+							</div>
+							<div class="footer-nav-link-text">Featured</div>
+						</div>
+						<div class="footer-nav-link" ng-click="goToAllContents('trending')">
+							<div class="footer-nav-link-icon fa-stack fa-lg">
+								<span class="fa fa-circle fa-stack-2x"></span>
+								<img class="app-footerIcon fa-stack-1x" ng-src="{{trendIconUrl}}"/>
+							</div>
+							<div class="footer-nav-link-text">Trending</div>
+						</div>
+						<div class="footer-nav-link" ng-click="goToAllContents('recent')">
+							<div class="footer-nav-link-icon fa-stack fa-lg">
+								<span class="fa fa-circle fa-stack-2x"></span>
+								<span class="fa fa-clock-o fa-stack-1x fa-inverse"></span>
+							</div>
+							<div class="footer-nav-link-text">Most Recent</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="bottom-footer-nav-section-wrapper" class="footer-nav-section-wrapper">
+				<div class="footer-nav-section">
+					<div class="footer-nav-title">PLAYLISTS</div>
+					<div class="footer-nav-links">
+						<div class="footer-nav-link" ng-click="goToAllPlaylists('featured')">
+							<div class="footer-nav-link-icon fa-stack fa-lg">
+								<span class="fa fa-circle fa-stack-2x"></span>
+								<span class="fa fa-star fa-stack-1x fa-inverse"></span>
+							</div>
+							<div class="footer-nav-link-text">Featured</div>
+						</div>
+					<!--	<div class="footer-nav-link" ng-click="goToAllPlaylists('following')">
+							<div class="footer-nav-link-icon fa-stack fa-lg">
+								<span class="fa fa-circle fa-stack-2x"></span>
+								<img class="app-footerIconPlus fa-stack-1x" ng-src="{{followIconUrl}}"/>
+							</div>
+							<div class="footer-nav-link-text">I Follow</div>
+						</div>-->
+						<div class="footer-nav-link" ng-click="goToAllPlaylists('my')">
+							<div class="footer-nav-link-icon fa-stack fa-lg">
+								<span class="fa fa-circle fa-stack-2x"></span>
+								<img class="app-footerIcon fa-stack-1x" ng-src="{{myPlaylistIconUrl}}"/>
+							</div>
+							<div class="footer-nav-link-text">My Playlists</div>
+						</div>
+						<div class="footer-nav-link" ng-click="goToFavoritePlaylist()">
+							<div class="footer-nav-link-icon fa-stack fa-lg">
+								<span class="fa fa-circle fa-stack-2x"></span>
+								<img class="app-footerIcon fa-stack-1x" ng-src="{{myFavoriteIconUrl}}"/>
+							</div>
+							<div class="footer-nav-link-text">My Favorites</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

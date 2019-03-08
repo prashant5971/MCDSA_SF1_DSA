@@ -1,0 +1,31 @@
+<span ng-controller="searchController">
+	<form class="navbar-form navbar-left navbar-search" role="search" ng-submit="goToResult()">
+		<div id="menu-content-search" class="form-group">
+			<input type="text" class="form-control" placeholder="Search for Content" ng-model="searchTerm" ng-focus="hideKeyword()"> <!--
+			--><span class="input-group-addon" ng-click="clearSearch()"><span class="fa {{searchIconClass}}"></span></span>
+		</div>
+	</form>
+	<!--<div ng-if="mobile" id="navbar-search-results-wrapper" style="height:0px;overflow-y:auto;">
+		<div class="section-list-container">
+			<a ng-repeat="searchResult in searchResults" ng-click="goToResult()">
+				<div class="section-list-container">
+					<div class="section-list">
+						<div class="section-list-items">
+							<div class="section-list-item">
+								<div ng-if="searchResult.obj_type == 'hub'" class="section-list-item-icon" style="background-image:url({{searchResult.iconImageUrl}});">
+								</div>
+								<div ng-if="searchResult.obj_type == 'playlist'" class="section-list-item-icon fa fa-list-ul">
+								</div>
+								<div ng-if="searchResult.obj_type == 'contentItem'" class="section-list-item-icon file-icon-{{searchResult.fileExtension | fileIconClass}}">
+								</div>
+								<div class="section-list-item-name">
+									{{searchResult.name}}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>-->
+</span>

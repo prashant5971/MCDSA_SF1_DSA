@@ -1,5 +1,5 @@
 <div id="page-content" style="min-height:{{playlistScreenHeight}}px;height:{{playlistScreenHeight}}px;">
-    <h1>Prashant@</h1>
+  
 	<div id="hub-navbar" ng-if="hubPresent" ng-controller="hubNavbarController">
 		<div id="hub-navbar-header" ng-click="goToHub()">
 			<span class="hub-navbar-header-icon fa fa-circle"></span><span class="hub-navbar-header-text">{{mobile ? (hub.name | ellipseText22) : hub.name}}<span ng-if="!hub.externalApproved && internalOnlyMode" class="fa fa-lock internal-mode-lock"></span></span>
