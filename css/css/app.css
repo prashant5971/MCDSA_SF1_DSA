@@ -30219,4 +30219,8 @@ body {
     cursor: pointer;
 }
 
+.walkme-icon-image-div{
+    display:none !important;
+}
+
 /*# sourceMappingURL=app.css.map*/

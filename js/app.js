@@ -1,7 +1,7 @@
-var app = angular.module('dsaApp', ['ngRoute', 'angular-carousel'], function($httpProvider) {
-    $httpProvider.interceptors.push(function($q) {
+var app = angular.module('dsaApp', ['ngRoute', 'angular-carousel'], function ($httpProvider) {
+    $httpProvider.interceptors.push(function ($q) {
         return {
-            "responseError": function(rejection) {
+            "responseError": function (rejection) {
                 location.reload(true);
                 return $q.reject(rejection);
             }
@@ -13,7 +13,7 @@ angular.module('dsaApp').config(function ($sceDelegateProvider) {
     $sceDelegateProvider.resourceUrlWhitelist(['**']);
 });
 
-app.config(function($routeProvider) {
+app.config(function ($routeProvider) {
     if (resourceUrl === "{!$Resource.SF1_DSA}") {
         resourceUrl = "";
     }
@@ -82,11 +82,11 @@ app.config(function($routeProvider) {
 		    templateUrl: resourceUrl + "/partials/error.html",
 		    controller: "errorController"
 		});
-	
+
 });
 var app = angular.module("dsaApp");
 
-app.controller("appController", ["$scope", "$window", "$location", "remotingService", function($scope, $window, $location, remotingService) {
+app.controller("appController", ["$scope", "$window", "$location", "remotingService", function ($scope, $window, $location, remotingService) {
     $scope.internalOnlyMode = false;
     $scope.info = {};
     $scope.loadingTemplate = resourceUrl + '/partials/loading.html';
@@ -100,11 +100,11 @@ app.controller("appController", ["$scope", "$window", "$location", "remotingServ
     $scope.myFavoriteIconUrl = resourceUrl + '/icons/standard/favorites_icon.png';
     $scope.contentIcon = resourceUrl + '/icons/standard/document_blank.png';
 
-    $scope.init = function() {
+    $scope.init = function () {
         remotingService.execute(
 			"DSARemoterInfoExtension.getInfo",
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.setupApp(result);
 			    }
 			},
@@ -112,7 +112,7 @@ app.controller("appController", ["$scope", "$window", "$location", "remotingServ
 		);
     };
 
-    $scope.setupApp = function(result) {
+    $scope.setupApp = function (result) {
         $scope.info = result;
         if ($scope.info.currentMACTitle) {
             $scope.appName = $scope.info.currentMACTitle;
@@ -124,59 +124,59 @@ app.controller("appController", ["$scope", "$window", "$location", "remotingServ
         $scope.$broadcast("infoUpdate", $scope.info);
     };
 
-    $scope.$on("infoUpdate-emit", function(event, info, macName) {
+    $scope.$on("infoUpdate-emit", function (event, info, macName) {
         $scope.setupApp(info);
         if (macName) {
             $scope.appName = macName;
         }
     });
 
-    $scope.$on("refreshPage", function() {
+    $scope.$on("refreshPage", function () {
         $scope.$broadcast("refreshPage-broadcast");
     });
 
-    $scope.$on("expandHubList", function() {
+    $scope.$on("expandHubList", function () {
         $scope.$broadcast("expandHubList2");
     });
 
-    $scope.$on("closeHubList", function(event, closeNavBar) {
+    $scope.$on("closeHubList", function (event, closeNavBar) {
         $scope.$broadcast("closeHubList2", closeNavBar);
     });
 
-    $scope.$on("expandPlaylistList", function(event, category) {
+    $scope.$on("expandPlaylistList", function (event, category) {
         $scope.$broadcast("expandPlaylistList2", category);
     });
 
-    $scope.$on("closePlaylistList", function(event, closeNavBar) {
+    $scope.$on("closePlaylistList", function (event, closeNavBar) {
         $scope.$broadcast("closePlaylistList2", closeNavBar);
     });
 
-    $scope.$on("expandContentList", function(event, category) {
+    $scope.$on("expandContentList", function (event, category) {
         $scope.$broadcast("expandContentList2", category);
     });
 
-    $scope.$on("closeContentList", function(event, closeNavBar) {
+    $scope.$on("closeContentList", function (event, closeNavBar) {
         $scope.$broadcast("closeContentList2", closeNavBar);
     });
 
-    $scope.$on("internalOnlyMode", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.$broadcast("internalOnlyMode-broadcast", $scope.internalOnlyMode);
     });
 
-    $scope.$on("searchCompleted", function() {
+    $scope.$on("searchCompleted", function () {
         $scope.$broadcast("searchCompleted-broadcast");
     });
 
-    $scope.startLoading = function() {
+    $scope.startLoading = function () {
         $("#loadingWrapper").show();
     };
 
-    $scope.stopLoading = function() {
+    $scope.stopLoading = function () {
         $("#loadingWrapper").hide();
     }
 
-    $scope.openPreferences = function() {
+    $scope.openPreferences = function () {
         if ($scope.mobile) {
             $(".preference-menu-container").show().animate({
                 bottom: 0
@@ -191,11 +191,11 @@ app.controller("appController", ["$scope", "$window", "$location", "remotingServ
         }
     };
 
-    $scope.closePreferences = function() {
+    $scope.closePreferences = function () {
         if ($scope.mobile) {
             $(".preference-menu-container").animate({
                 bottom: -1000
-            }, function() {
+            }, function () {
                 $(this).removeAttr("style");
             });
         } else if ($scope.desktop) {
@@ -203,7 +203,7 @@ app.controller("appController", ["$scope", "$window", "$location", "remotingServ
         }
     };
 
-    $scope.determineDevice = function() {
+    $scope.determineDevice = function () {
         // if (window.frameElement) {
         // 	$scope.screenWidth = +window.frameElement.attributes.width.value.replace("px","");
         // } else {
@@ -235,7 +235,7 @@ app.controller("appController", ["$scope", "$window", "$location", "remotingServ
     // $window.parent.onresize();
 
     $scope.onresize = $window.onresize;
-    $window.onresize = function() {
+    $window.onresize = function () {
         if ($scope.onresize) {
             $scope.onresize();
         }
@@ -251,7 +251,7 @@ app.controller("appController", ["$scope", "$window", "$location", "remotingServ
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("categoryController", ["$scope", "$routeParams", "$window", "$location", "remotingService", "sessionService", function($scope, $routeParams, $window, $location, remotingService, sessionService) {
+app.controller("categoryController", ["$scope", "$routeParams", "$window", "$location", "remotingService", "sessionService", function ($scope, $routeParams, $window, $location, remotingService, sessionService) {
     $scope.imageHeight = 0;
     $scope.imageWidth = 0;
     $scope.imageRowWidth = 0;
@@ -262,7 +262,7 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
     $scope.displayContentClose = false;
     $scope.chatterEnabled = false;
     $scope.relatedCategories = [];
-    $scope.init = function() {
+    $scope.init = function () {
         $scope.startLoading();
         console.log($scope.info);
         if ($scope.info && $scope.info.user) {
@@ -276,7 +276,7 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
 				$routeParams.categoryId,
 				$scope.info.preferredMobileAppConfiguration,
 				{
-				    success: function(result) {
+				    success: function (result) {
 				        $scope.stopLoading();
 				        this.category = result;
 				        if (this.category.contentItems) {
@@ -287,7 +287,7 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
 				            this.carouselItems.push(this.category);
 				        }
 				    },
-				    error: function(error) {
+				    error: function (error) {
 				        $scope.stopLoading();
 				        sessionService.checkSession(error.message);
 				    }
@@ -299,22 +299,22 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
 				$routeParams.categoryId,
 				$scope.info.preferredMobileAppConfiguration,
 				{
-				    success: function(result) {
+				    success: function (result) {
 				        $scope.relatedCategories = result;
 				    },
-				    error: function(error) {
+				    error: function (error) {
 				        $scope.stopLoading();
 				        sessionService.checkSession(error.message);
 				    }
 				},
 				$scope
 			);
-        }else{
+        } else {
             console.log('Else');
             remotingService.execute(
 				"DSARemoterInfoExtension.getInfo",
 				{
-				    success: function(result) {
+				    success: function (result) {
 				        $scope.setupApp(result);
 				        console.log('result:');
 				        console.log(result);
@@ -323,12 +323,12 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
 				$scope
 			);
         };
-		
-		
+
+
     };
     $scope.init();
 
-    $scope.setupApp = function(result) {
+    $scope.setupApp = function (result) {
         $scope.info = result;
         console.log('info:');
         console.log($scope.info);
@@ -347,7 +347,7 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
 			$routeParams.categoryId,
 			$scope.info.preferredMobileAppConfiguration,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.stopLoading();
 			        this.category = result;
 			        if (this.category.contentItems) {
@@ -358,7 +358,7 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
 			            this.carouselItems.push(this.category);
 			        }
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -370,10 +370,10 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
 			$routeParams.categoryId,
 			$scope.info.preferredMobileAppConfiguration,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.relatedCategories = result;
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -382,7 +382,7 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
 		);
     };
 
-    $scope.fixInvalidImage = function(contentItem, isMobile) {
+    $scope.fixInvalidImage = function (contentItem, isMobile) {
         if (isMobile) {
             contentItem.smallImageUrl = '';
         } else {
@@ -391,9 +391,9 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
         $window.onresize();
     };
 
-    $scope.isValidImageUrl = function(contentItem, isMobile) {
+    $scope.isValidImageUrl = function (contentItem, isMobile) {
         var img = new Image();
-        img.onerror = function() { $scope.fixInvalidImage(contentItem, isMobile); };
+        img.onerror = function () { $scope.fixInvalidImage(contentItem, isMobile); };
         if (isMobile) {
             img.src = contentItem.smallImageUrl;
         } else {
@@ -401,16 +401,16 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
         }
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         $scope.chatterEnabled = $scope.info.isChatterEnabled;
         if (!$scope.info.user.isContentUser) {
@@ -418,7 +418,7 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
         }
     });
 
-    $scope.determineDevice = function() {
+    $scope.determineDevice = function () {
         $scope.categoryScreenHeight = $window.innerHeight;
         $scope.categoryScreenWidth = $window.innerWidth;
         if ($scope.desktop) {
@@ -431,32 +431,32 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
         $scope.determineRelatedCategoryWidth();
     };
 
-    $scope.determineDesktopImageWidth = function() {
+    $scope.determineDesktopImageWidth = function () {
         $scope.categoryImageWidth = $scope.categoryScreenWidth - 21;
         $scope.categoryImageHeight = Math.floor(260 * Math.floor(($scope.categoryScreenWidth - 21) / 3) / 280);
         $scope.imageRowWidth = $scope.categoryImageWidth + 3;
     };
 
-    $scope.determineContentWidth = function() {
+    $scope.determineContentWidth = function () {
         $scope.contentWidth = $scope.desktop ? Math.floor(($scope.categoryScreenWidth - 21 - (20 * 6)) / 3) + "px" : "auto";
     };
 
-    $scope.determineRelatedCategoryWidth = function() {
+    $scope.determineRelatedCategoryWidth = function () {
         $scope.relatedCategoryWidth = Math.floor(($scope.categoryScreenWidth - 21 - (20 * 6)) / 5);
         $scope.relatedCategoryHeight = Math.floor(200 * $scope.relatedCategoryWidth / 280);
     };
 
-    $scope.expandContents = function() {
+    $scope.expandContents = function () {
         if ($scope.mobile) {
             if (!$scope.displayContentClose) {
                 $scope.displayContentClose = true;
                 $scope.contentsTop = $("#contents").position().top;
                 $("#contents").css({
-                    "position":"fixed",
-                    backgroundColor:"#1e2021",
-                    width:"100%",
-                    height:$window.innerHeight + "px",
-                    "z-index":"100000",
+                    "position": "fixed",
+                    backgroundColor: "#1e2021",
+                    width: "100%",
+                    height: $window.innerHeight + "px",
+                    "z-index": "100000",
                     top: $scope.contentsTop
                 });
                 $("#contents .section-header").css({
@@ -464,7 +464,7 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
                 })
                 $("#contents .section-list").show();
                 $("#contents").animate({
-                    top:0
+                    top: 0
                 });
             } else {
                 $scope.collapseContents();
@@ -472,11 +472,11 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
         }
     };
 
-    $scope.goToContent = function() {
+    $scope.goToContent = function () {
         $location.url("/content/" + this.content.recordId + "?categoryId=" + $routeParams.categoryId);
     };
 
-    $scope.expandContentItems = function(event) {
+    $scope.expandContentItems = function (event) {
         if ($scope.mobile) {
             this.content.itemsExpanded = this.content.itemsExpanded === true ? false : true;
             $(event.target).parent().next(".section-list-items").slideToggle();
@@ -485,28 +485,28 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
         }
     };
 
-    $scope.collapseContents = function() {
+    $scope.collapseContents = function () {
         $scope.displayContentClose = false;
         $("#contents").animate({
-            top:$scope.contentsTop
-        }, function() {
+            top: $scope.contentsTop
+        }, function () {
             $(this).removeAttr("style");
             $("#contents .section-list").hide();
             $("#contents .section-header").removeAttr("style");
         });
     };
 
-    $scope.expandRelatedCategories = function() {
+    $scope.expandRelatedCategories = function () {
         if ($scope.mobile) {
             if (!$scope.displayRelatedCategoriesClose) {
                 $scope.displayRelatedCategoriesClose = true;
                 $scope.relatedCategoriesTop = $("#relatedCategories").position().top;
                 $("#relatedCategories").css({
-                    "position":"fixed",
-                    backgroundColor:"#1e2021",
-                    width:"100%",
-                    height:$window.innerHeight + "px",
-                    "z-index":"100000",
+                    "position": "fixed",
+                    backgroundColor: "#1e2021",
+                    width: "100%",
+                    height: $window.innerHeight + "px",
+                    "z-index": "100000",
                     top: $scope.relatedCategoriesTop
                 });
                 $("#relatedCategories .section-header").css({
@@ -514,7 +514,7 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
                 })
                 $("#relatedCategories .section-list").show();
                 $("#relatedCategories").animate({
-                    top:0
+                    top: 0
                 });
             } else {
                 $scope.collapseRelatedCategories();
@@ -522,18 +522,18 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
         }
     };
 
-    $scope.collapseRelatedCategories = function() {
+    $scope.collapseRelatedCategories = function () {
         $scope.displayRelatedCategoriesClose = false;
         $("#relatedCategories").animate({
-            top:$scope.relatedCategoriesTop
-        }, function() {
+            top: $scope.relatedCategoriesTop
+        }, function () {
             $(this).removeAttr("style");
             $("#relatedCategories .section-list").hide();
             $("#relatedCategories .section-header").removeAttr("style");
         });
     };
 
-    $scope.goToContent = function(contentItem) {
+    $scope.goToContent = function (contentItem) {
         location.href = '#/content/' + contentItem.contentDocumentId + "?categoryId=" + $routeParams.categoryId;
     };
 
@@ -550,7 +550,7 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
 
     $scope.onresize = $window.onresize;
 
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.desktop = $window.innerWidth >= 768;
         $scope.mobile = $window.innerWidth < 768;
@@ -563,14 +563,14 @@ app.controller("categoryController", ["$scope", "$routeParams", "$window", "$loc
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("categoryListController", ["$scope", "$window", "$location", "remotingService", "sessionService", function($scope, $window, $location, remotingService, sessionService) {
+app.controller("categoryListController", ["$scope", "$window", "$location", "remotingService", "sessionService", function ($scope, $window, $location, remotingService, sessionService) {
     $scope.alphaLists = [
-		{letter:"#", sublist: []},
-		{letter:"A", sublist: []}, {letter:"B", sublist: []}, {letter:"C", sublist: []}, {letter:"D", sublist: []}, {letter:"E", sublist: []}, {letter:"F", sublist: []},
-		{letter:"G", sublist: []}, {letter:"H", sublist: []}, {letter:"I", sublist: []}, {letter:"J", sublist: []}, {letter:"K", sublist: []}, {letter:"L", sublist: []},
-		{letter:"M", sublist: []}, {letter:"N", sublist: []}, {letter:"O", sublist: []}, {letter:"P", sublist: []}, {letter:"Q", sublist: []}, {letter:"R", sublist: []},
-		{letter:"S", sublist: []}, {letter:"T", sublist: []}, {letter:"U", sublist: []}, {letter:"V", sublist: []}, {letter:"W", sublist: []}, {letter:"X", sublist: []},
-		{letter:"Y", sublist: []}, {letter:"Z", sublist: []}
+		{ letter: "#", sublist: [] },
+		{ letter: "A", sublist: [] }, { letter: "B", sublist: [] }, { letter: "C", sublist: [] }, { letter: "D", sublist: [] }, { letter: "E", sublist: [] }, { letter: "F", sublist: [] },
+		{ letter: "G", sublist: [] }, { letter: "H", sublist: [] }, { letter: "I", sublist: [] }, { letter: "J", sublist: [] }, { letter: "K", sublist: [] }, { letter: "L", sublist: [] },
+		{ letter: "M", sublist: [] }, { letter: "N", sublist: [] }, { letter: "O", sublist: [] }, { letter: "P", sublist: [] }, { letter: "Q", sublist: [] }, { letter: "R", sublist: [] },
+		{ letter: "S", sublist: [] }, { letter: "T", sublist: [] }, { letter: "U", sublist: [] }, { letter: "V", sublist: [] }, { letter: "W", sublist: [] }, { letter: "X", sublist: [] },
+		{ letter: "Y", sublist: [] }, { letter: "Z", sublist: [] }
     ];
     $scope.templates = {
         categoryList: resourceUrl + '/partials/category-list.html'
@@ -580,7 +580,7 @@ app.controller("categoryListController", ["$scope", "$window", "$location", "rem
     $scope.letter = "";
     $scope.activeLetter = false;
 
-    $scope.init = function() {
+    $scope.init = function () {
         $scope.startLoading();
         if ($scope.info && $scope.info.user) {
             if (!$scope.info.user.isContentUser) {
@@ -593,11 +593,11 @@ app.controller("categoryListController", ["$scope", "$window", "$location", "rem
 					"DSARemoterCategoryExtension.getCategoriesForPrefix",
 					$scope.letter, !$scope.internalOnlyMode,
 					{
-					    success: function(result) {
+					    success: function (result) {
 					        $scope.stopLoading();
 					        $scope.filterResults(result);
 					    },
-					    error: function(error) {
+					    error: function (error) {
 					        $scope.stopLoading();
 					        sessionService.checkSession(error.message);
 					    }
@@ -609,11 +609,11 @@ app.controller("categoryListController", ["$scope", "$window", "$location", "rem
 					"DSARemoterCategoryExtension.getAllCategories",
 					!$scope.internalOnlyMode,
 					{
-					    success: function(result) {
+					    success: function (result) {
 					        $scope.stopLoading();
 					        $scope.filterResults(result);
 					    },
-					    error: function(error) {
+					    error: function (error) {
 					        $scope.stopLoading();
 					        sessionService.checkSession(error.message);
 					    }
@@ -625,32 +625,32 @@ app.controller("categoryListController", ["$scope", "$window", "$location", "rem
         $scope.initRun = true;
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.initRun = false;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.initRun = false;
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.filterResults = function(result) {
-        _.each($scope.alphaLists, function(alphaList) {
+    $scope.filterResults = function (result) {
+        _.each($scope.alphaLists, function (alphaList) {
             alphaList.display = false;
             alphaList.sublist = [];
         });
         if (result && result.length > 0) {
             result = _.sortBy(result, "name");
-            var groupedResult = _.groupBy(result, function(category) {
+            var groupedResult = _.groupBy(result, function (category) {
                 var letterKey = category.name.charAt(0);
                 if (letterKey.toLowerCase() == letterKey.toUpperCase()) {
                     letterKey = '#';
@@ -659,16 +659,16 @@ app.controller("categoryListController", ["$scope", "$window", "$location", "rem
                 }
                 return letterKey;
             });
-            _.each(_.keys(groupedResult), function(key) {
+            _.each(_.keys(groupedResult), function (key) {
                 var labelKey = key;
-                var alphaLists = _.where($scope.alphaLists, {letter: labelKey});
+                var alphaLists = _.where($scope.alphaLists, { letter: labelKey });
                 alphaLists[0].sublist = alphaLists[0].sublist.concat(groupedResult[key]);
             });
             $scope.categoryLists = $scope.alphaLists;
         }
     };
 
-    $scope.filterResultsByLetter = function(letter) {
+    $scope.filterResultsByLetter = function (letter) {
         if (letter === 'ALL') {
             $scope.letter = "";
             $scope.activeLetter = false;
@@ -680,31 +680,31 @@ app.controller("categoryListController", ["$scope", "$window", "$location", "rem
         $scope.init();
     };
 
-    $scope.goToAnchor = function(letter) {
-        if($scope.activeLetter) {
+    $scope.goToAnchor = function (letter) {
+        if ($scope.activeLetter) {
             $('#category-list-wrapper #page-content').scrollTop(0);
             $('#category-list-wrapper #page-content').scrollTop($("#" + letter).offset().top);
         }
     };
 
-    $scope.goToCategory = function(recordId) {
+    $scope.goToCategory = function (recordId) {
         $location.url('/category/' + recordId);
         if ($scope.mobile) {
             $scope.collapseCategoryList(false);
         }
     };
 
-    $scope.$on("expandCategoryList2", function() {
+    $scope.$on("expandCategoryList2", function () {
         $scope.displayCategoryListClose = true;
         $scope.init();
     });
 
-    $scope.collapseCategoryList = function(closeNavBar) {
+    $scope.collapseCategoryList = function (closeNavBar) {
         $scope.displayCategoryListClose = false;
         $scope.$emit("closeCategoryList", closeNavBar);
     };
 
-    $scope.$on('displayCategoryListCloseTrue', function() {
+    $scope.$on('displayCategoryListCloseTrue', function () {
         $scope.displayCategoryListClose = true;
     });
 
@@ -719,7 +719,7 @@ app.controller("categoryListController", ["$scope", "$window", "$location", "rem
     // $window.parent.onresize();
 
     $scope.onresize = $window.onresize;
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.desktop = $window.innerWidth >= 768;
         $scope.mobile = $window.innerWidth < 768;
@@ -736,13 +736,13 @@ app.controller("categoryListController", ["$scope", "$window", "$location", "rem
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("categoryNavbarController", ["$scope", "$location", "$routeParams", "remotingService", "sessionService", function($scope, $location, $routeParams, remotingService, sessionService) {
+app.controller("categoryNavbarController", ["$scope", "$location", "$routeParams", "remotingService", "sessionService", function ($scope, $location, $routeParams, remotingService, sessionService) {
     $scope.category = {};
     $scope.initialHierarchy = [];
     $scope.hierarchy = [];
     $scope.showHierarchy = false;
 
-    $scope.init = function() {
+    $scope.init = function () {
         $scope.initialHierarchy = [];
         $scope.hierarchy = [];
         if ($scope.info && $scope.info.user) {
@@ -755,13 +755,13 @@ app.controller("categoryNavbarController", ["$scope", "$location", "$routeParams
 			$routeParams.categoryId,
 			$scope.info.preferredMobileAppConfiguration,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.category = result;
 			        if (!$scope.category.isTopLevel) {
 			            $scope.getParentCategory($scope.category.categoryId);
 			        }
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -770,13 +770,13 @@ app.controller("categoryNavbarController", ["$scope", "$location", "$routeParams
 		);
     };
 
-    $scope.getParentCategory = function(categoryId) {
+    $scope.getParentCategory = function (categoryId) {
         remotingService.execute(
 			"DSARemoterCategoryExtension.getParentCategoryWithMAC",
 			categoryId,
 			$scope.info.preferredMobileAppConfiguration,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.initialHierarchy.push(result);
 			        if (result.isTopLevel) {
 			            $scope.handleHierarchy();
@@ -784,7 +784,7 @@ app.controller("categoryNavbarController", ["$scope", "$location", "$routeParams
 			            $scope.getParentCategory(result.categoryId);
 			        }
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -793,7 +793,7 @@ app.controller("categoryNavbarController", ["$scope", "$location", "$routeParams
 		);
     };
 
-    $scope.handleHierarchy = function() {
+    $scope.handleHierarchy = function () {
         if ($scope.initialHierarchy.length > 0) {
             for (var i = $scope.initialHierarchy.length - 1; i >= 0; i--) {
                 $scope.hierarchy.push($scope.initialHierarchy[i]);
@@ -801,33 +801,33 @@ app.controller("categoryNavbarController", ["$scope", "$location", "$routeParams
         }
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.slideDownHierarchy = function() {
+    $scope.slideDownHierarchy = function () {
         $("#parent-category-hierarchy-wrapper").slideDown();
         $scope.showHierarchy = true;
     };
 
-    $scope.slideUpHierarchy = function() {
+    $scope.slideUpHierarchy = function () {
         $("#parent-category-hierarchy-wrapper").slideUp();
         $scope.showHierarchy = false;
     };
 
-    $scope.goToCategory = function(categoryId) {
+    $scope.goToCategory = function (categoryId) {
         var link = "/category/";
         if (categoryId) {
             link += categoryId;
@@ -841,7 +841,7 @@ app.controller("categoryNavbarController", ["$scope", "$location", "$routeParams
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("contentController", ["$scope", "$routeParams", "$window", "$location", "$sce", "remotingService", "sessionService", function($scope, $routeParams, $window, $location, $sce, remotingService, sessionService) {
+app.controller("contentController", ["$scope", "$routeParams", "$window", "$location", "$sce", "remotingService", "sessionService", function ($scope, $routeParams, $window, $location, $sce, remotingService, sessionService) {
     $scope.contentItem = {};
     $scope.playlistPresent = false;
     $scope.playlistId = '';
@@ -852,11 +852,11 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
     $scope.isEmbeddedVideo = false;
     $scope.videoWidth = 0;
     $scope.relatedContent = [];
-    $scope.deviceList = ["desktop","ipad","iphone","ipod","androidPhone","androidTablet","blackberryPhone","blackberryTablet","windowsPhone","windowsTablet","fxosPhone","fxosTablet"];
-    $scope.orientationList = ["landscape","portrait"];
+    $scope.deviceList = ["desktop", "ipad", "iphone", "ipod", "androidPhone", "androidTablet", "blackberryPhone", "blackberryTablet", "windowsPhone", "windowsTablet", "fxosPhone", "fxosTablet"];
+    $scope.orientationList = ["landscape", "portrait"];
     $scope.hasSourceContent = false;
 
-    $scope.init = function() {
+    $scope.init = function () {
         if ($scope.info && $scope.info.user) {
             if (!$scope.info.user.isContentUser) {
                 $location.url("/error/" + $scope.info.contentUserErrorMessage);
@@ -876,12 +876,12 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
 			"DSARemoterContentItemExtension.getRelatedContent",
 			$routeParams.contentId,
 			{
-			    success: function(result) {
-			        $scope.relatedContent = _.reject(result, function(content) {
+			    success: function (result) {
+			        $scope.relatedContent = _.reject(result, function (content) {
 			            return $routeParams.contentId == content.contentDocumentId;
 			        });
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -891,7 +891,7 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
         $scope.logContentReview();
     };
 
-    $scope.fixInvalidImage = function(contentItem, isMobile) {
+    $scope.fixInvalidImage = function (contentItem, isMobile) {
         if (isMobile) {
             contentItem.smallImageUrl = '';
         } else {
@@ -900,9 +900,9 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
         $window.onresize();
     };
 
-    $scope.isValidImageUrl = function(contentItem, isMobile) {
+    $scope.isValidImageUrl = function (contentItem, isMobile) {
         var img = new Image();
-        img.onerror = function() { $scope.fixInvalidImage(contentItem, isMobile); };
+        img.onerror = function () { $scope.fixInvalidImage(contentItem, isMobile); };
         if (isMobile) {
             img.src = contentItem.smallImageUrl;
         } else {
@@ -910,29 +910,29 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
         }
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.getContentItemDetail = function(skipContentGeneration) {
+    $scope.getContentItemDetail = function (skipContentGeneration) {
         $scope.startLoading();
         remotingService.execute(
 			"DSARemoterContentItemExtension.getContentItemDetail",
 			$routeParams.contentId,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.stopLoading();
 			        this.contentItem = result;
 			        $scope.isValidImageUrl(this.contentItem, true);
@@ -952,7 +952,7 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
 			            }
 			        }
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    },
@@ -961,11 +961,11 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
 		);
     };
 
-    $scope.checkUrlForVideo = function(url) {
+    $scope.checkUrlForVideo = function (url) {
         return url.indexOf("youtube.com") != -1 || url.indexOf("vimeo.com") != -1;
     };
 
-    $scope.checkForEmbeddedVideo = function() {
+    $scope.checkForEmbeddedVideo = function () {
         if ($scope.contentItem.linkUrl && $scope.checkUrlForVideo($scope.contentItem.linkUrl)) {
             if ($scope.contentItem.linkUrl.indexOf("http") != -1 && $scope.contentItem.linkUrl.indexOf("https") == -1) {
                 $scope.contentItem.linkUrl = $scope.contentItem.linkUrl.replace("http", "https");
@@ -984,15 +984,15 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
         }
     };
 
-    $scope.logContentReview = function() {
+    $scope.logContentReview = function () {
         var deviceName = "";
-        _.each($scope.deviceList, function(deviceOption) {
+        _.each($scope.deviceList, function (deviceOption) {
             if (device[deviceOption]()) {
                 deviceName = deviceOption;
             }
         });
         var orientationName = "";
-        _.each($scope.orientationList, function(orientationOption) {
+        _.each($scope.orientationList, function (orientationOption) {
             if (device[orientationOption]()) {
                 orientationName = orientationOption;
             }
@@ -1002,7 +1002,7 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
 			"DSARemoterContentItemExtension.logContentReview2",
 			$routeParams.contentId, $scope.desktop,
 			{
-			    success: function(result) {
+			    success: function (result) {
 
 			    }
 			},
@@ -1010,15 +1010,15 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
 		);
     };
 
-    $scope.voteUp = function() {
+    $scope.voteUp = function () {
         remotingService.execute(
 			"DSARemoterContentItemExtension.thumbsUpContentItem",
 			$routeParams.contentId,
 			{
-			    success: function() {
+			    success: function () {
 			        $scope.getContentItemDetail(true);
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -1027,15 +1027,15 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
 		);
     };
 
-    $scope.voteDown = function() {
+    $scope.voteDown = function () {
         remotingService.execute(
 			"DSARemoterContentItemExtension.thumbsDownContentItem",
 			$routeParams.contentId,
 			{
-			    success: function() {
+			    success: function () {
 			        $scope.getContentItemDetail(true);
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -1044,7 +1044,7 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
 		);
     };
 
-    $scope.goToContent = function(contentId) {
+    $scope.goToContent = function (contentId) {
         var link = "/content/" + contentId;
         if ($scope.categoryId) {
             link += "?categoryId=" + $scope.categoryId;
@@ -1052,35 +1052,35 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
         $location.url(link);
     };
 
-    $scope.generatePreviewElement = function() {
+    $scope.generatePreviewElement = function () {
         $("#chatterFileViewerPanel").html('<embed src="/_swf/196007/sfc/flex/DocViewer.swf" flashvars="shepherd_prefix=/sfc/servlet.shepherd&amp;v=' + $scope.contentItem.recordId + '&amp;mode=chatterfilepreview&amp;in_tests=false" width="100%" height="100%" align="middle" id="renditionLarge" quality="high" bgcolor="#f3f3f3" name="renditionLarge" allowscriptaccess="sameDomain" allowfullscreen="true" pluginspage="http://www.adobe.com/go/getflashplayer" wmode="opaque" type="application/x-shockwave-flash"><noembed>&lt;p&gt;Flash file preview&lt;/p&gt;</noembed>');
     };
 
-    $scope.slideNewPlaylistForm = function() {
+    $scope.slideNewPlaylistForm = function () {
         $("#new-playlist-form").slideToggle();
     };
 
-    $scope.openAddToPlaylist = function() {
+    $scope.openAddToPlaylist = function () {
         $scope.$broadcast("openAddToPlaylist");
     };
 
-    $scope.closeAddToPlaylist = function() {
+    $scope.closeAddToPlaylist = function () {
         $scope.$broadcast("closeAddToPlaylist");
     };
 
-    $scope.openRemoveFromPlaylist = function() {
+    $scope.openRemoveFromPlaylist = function () {
         $scope.$broadcast("openRemoveFromPlaylist");
     };
 
-    $scope.closeRemoveFromPlaylist = function() {
+    $scope.closeRemoveFromPlaylist = function () {
         $scope.$broadcast("closeRemoveFromPlaylist");
     };
 
-    $scope.openActions = function() {
+    $scope.openActions = function () {
         if ($scope.mobile) {
             $("#contentActionShare-menu").show().animate({
                 bottom: 0
-            }, function() {
+            }, function () {
                 if ($scope.isStream) {
                     $(".contentThumbnail iframe").height(0);
                 }
@@ -1090,14 +1090,14 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
         }
     };
 
-    $scope.closeActions = function() {
+    $scope.closeActions = function () {
         if ($scope.mobile) {
             if ($scope.isStream) {
                 $(".contentThumbnail iframe").removeAttr("style");
             }
             $("#contentActionShare-menu").animate({
                 bottom: -1000
-            }, function() {
+            }, function () {
                 $(this).removeAttr("style");
             });
         } else if ($scope.desktop) {
@@ -1105,11 +1105,11 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
         }
     };
 
-    $scope.$on("closeActions", function() {
+    $scope.$on("closeActions", function () {
         $scope.closeActions();
     });
 
-    $scope.downloadContent = function() {
+    $scope.downloadContent = function () {
         if (window.sforce && window.sforce.one) {
             window.sforce.one.navigateToSObject($scope.contentItem.contentDocumentId);
         } else {
@@ -1117,28 +1117,28 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
         }
     };
 
-    $scope.goToSource = function() {
+    $scope.goToSource = function () {
         $location.url("/content/" + $scope.contentItem.sourceContentDocumentId);
     };
 
-    $scope.trustSrc = function(src) {
+    $scope.trustSrc = function (src) {
         return $sce.trustAsResourceUrl(src);
     }
 
-    $scope.playVideo = function() {
+    $scope.playVideo = function () {
         $("#myModal").css({
-            "display":"block"
+            "display": "block"
         });
         $scope.$emit("closeActions");
     }
 
-    $scope.pauseVideo = function() {
+    $scope.pauseVideo = function () {
         var vid = document.getElementById("video-modal");
         vid.pause();
         console.log('the video is paused');
     }
 
-    $scope.openContent = function() {
+    $scope.openContent = function () {
         if ($scope.contentItem.fileType == 'LINK' && $scope.contentItem.linkUrl) {
             window.open($scope.contentItem.linkUrl);
         } else if (window.sforce && window.sforce.one) {
@@ -1169,7 +1169,7 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
 
     $scope.onresize = $window.onresize;
 
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.desktop = $window.innerWidth >= 768;
         $scope.mobile = $window.innerWidth < 768;
@@ -1191,14 +1191,14 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("contentListController", ["$scope", "$window", "$location", "$routeParams", "remotingService", "sessionService", function($scope, $window, $location, $routeParams, remotingService, sessionService) {
+app.controller("contentListController", ["$scope", "$window", "$location", "$routeParams", "remotingService", "sessionService", function ($scope, $window, $location, $routeParams, remotingService, sessionService) {
     $scope.alphaLists = [
-		{letter:"#", sublist: [], display: false},
-		{letter:"A", sublist: [], display: false}, {letter:"B", sublist: [], display: false}, {letter:"C", sublist: [], display: false}, {letter:"D", sublist: [], display: false}, {letter:"E", sublist: [], display: false}, {letter:"F", sublist: [], display: false},
-		{letter:"G", sublist: [], display: false}, {letter:"H", sublist: [], display: false}, {letter:"I", sublist: [], display: false}, {letter:"J", sublist: [], display: false}, {letter:"K", sublist: [], display: false}, {letter:"L", sublist: [], display: false},
-		{letter:"M", sublist: [], display: false}, {letter:"N", sublist: [], display: false}, {letter:"O", sublist: [], display: false}, {letter:"P", sublist: [], display: false}, {letter:"Q", sublist: [], display: false}, {letter:"R", sublist: [], display: false},
-		{letter:"S", sublist: [], display: false}, {letter:"T", sublist: [], display: false}, {letter:"U", sublist: [], display: false}, {letter:"V", sublist: [], display: false}, {letter:"W", sublist: [], display: false}, {letter:"X", sublist: [], display: false},
-		{letter:"Y", sublist: [], display: false}, {letter:"Z", sublist: [], display: false}
+		{ letter: "#", sublist: [], display: false },
+		{ letter: "A", sublist: [], display: false }, { letter: "B", sublist: [], display: false }, { letter: "C", sublist: [], display: false }, { letter: "D", sublist: [], display: false }, { letter: "E", sublist: [], display: false }, { letter: "F", sublist: [], display: false },
+		{ letter: "G", sublist: [], display: false }, { letter: "H", sublist: [], display: false }, { letter: "I", sublist: [], display: false }, { letter: "J", sublist: [], display: false }, { letter: "K", sublist: [], display: false }, { letter: "L", sublist: [], display: false },
+		{ letter: "M", sublist: [], display: false }, { letter: "N", sublist: [], display: false }, { letter: "O", sublist: [], display: false }, { letter: "P", sublist: [], display: false }, { letter: "Q", sublist: [], display: false }, { letter: "R", sublist: [], display: false },
+		{ letter: "S", sublist: [], display: false }, { letter: "T", sublist: [], display: false }, { letter: "U", sublist: [], display: false }, { letter: "V", sublist: [], display: false }, { letter: "W", sublist: [], display: false }, { letter: "X", sublist: [], display: false },
+		{ letter: "Y", sublist: [], display: false }, { letter: "Z", sublist: [], display: false }
     ];
     //debugger;
     $scope.templates = {
@@ -1214,7 +1214,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
     $scope.letter = "";
     $scope.activeLetter = false;
 
-    $scope.init = function() {
+    $scope.init = function () {
         if ($scope.info && $scope.info.user) {
             if (!$scope.info.user.isContentUser) {
                 $location.url("/error/" + $scope.info.contentUserErrorMessage);
@@ -1226,25 +1226,25 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
         $scope.initRun = true;
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.initRun = false;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.initRun = false;
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.getContents = function(pageNumber) {
+    $scope.getContents = function (pageNumber) {
         $scope.startLoading();
         switch ($scope.category) {
             case "":
@@ -1255,7 +1255,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
 						"DSARemoterContentItemExtension.getContentItemsForPrefix",
 						$scope.letter,
 						{
-						    success: function(result) {
+						    success: function (result) {
 						        var resultObj = {
 						            items: result,
 						            pageNumber: 1,
@@ -1264,7 +1264,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
 						        }
 						        $scope.handleResult(resultObj);
 						    },
-						    error: function(error) {
+						    error: function (error) {
 						        $scope.stopLoading();
 						        sessionService.checkSession(error.message);
 						    }
@@ -1276,10 +1276,10 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
 						"DSARemoterContentItemExtension.getContentItems",
 						pageNumber,
 						{
-						    success: function(result) {
+						    success: function (result) {
 						        $scope.handleResult(result);
 						    },
-						    error: function(error) {
+						    error: function (error) {
 						        $scope.stopLoading();
 						        sessionService.checkSession(error.message);
 						    }
@@ -1292,7 +1292,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
                 remotingService.execute(
 					"DSARemoterContentItemExtension.getMostRecentContent",
 					{
-					    success: function(result) {
+					    success: function (result) {
 					        var resultObj = {
 					            items: result,
 					            pageNumber: 1,
@@ -1301,7 +1301,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
 					        }
 					        $scope.handleResult(resultObj);
 					    },
-					    error: function(error) {
+					    error: function (error) {
 					        $scope.stopLoading();
 					        sessionService.checkSession(error.message);
 					    }
@@ -1315,7 +1315,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
 						"DSARemoterContentItemExtension.getFeaturedContentForPrefix",
 						$scope.letter,
 						{
-						    success: function(result) {
+						    success: function (result) {
 						        var resultObj = {
 						            items: result,
 						            pageNumber: 1,
@@ -1324,7 +1324,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
 						        }
 						        $scope.handleResult(resultObj);
 						    },
-						    error: function(error) {
+						    error: function (error) {
 						        $scope.stopLoading();
 						        sessionService.checkSession(error.message);
 						    }
@@ -1335,7 +1335,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
                     remotingService.execute(
 						"DSARemoterContentItemExtension.getFeaturedContent",
 						{
-						    success: function(result) {
+						    success: function (result) {
 						        var resultObj = {
 						            items: result,
 						            pageNumber: 1,
@@ -1344,7 +1344,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
 						        }
 						        $scope.handleResult(resultObj);
 						    },
-						    error: function(error) {
+						    error: function (error) {
 						        $scope.stopLoading();
 						        sessionService.checkSession(error.message);
 						    }
@@ -1358,7 +1358,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
                     remotingService.execute(
 						"DSARemoterContentItemExtension.getTrendingContentByViews",
 						{
-						    success: function(result) {
+						    success: function (result) {
 						        var resultObj = {
 						            items: result,
 						            pageNumber: 1,
@@ -1367,7 +1367,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
 						        }
 						        $scope.handleResult(resultObj);
 						    },
-						    error: function(error) {
+						    error: function (error) {
 						        $scope.stopLoading();
 						        sessionService.checkSession(error.message);
 						    }
@@ -1378,7 +1378,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
                     remotingService.execute(
 						"DSARemoterContentItemExtension.getTrendingContentByVotes",
 						{
-						    success: function(result) {
+						    success: function (result) {
 						        var resultObj = {
 						            items: result,
 						            pageNumber: 1,
@@ -1387,7 +1387,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
 						        }
 						        $scope.handleResult(resultObj);
 						    },
-						    error: function(error) {
+						    error: function (error) {
 						        $scope.stopLoading();
 						        sessionService.checkSession(error.message);
 						    }
@@ -1399,12 +1399,12 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
         }
     };
 
-    $scope.changeTrendingFilter = function(trendingFilter) {
+    $scope.changeTrendingFilter = function (trendingFilter) {
         $scope.trendingFilter = trendingFilter;
         $scope.goToCategory($scope.category);
     };
 
-    $scope.handleResult = function(result) {
+    $scope.handleResult = function (result) {
         $scope.stopLoading();
         $scope.pageNumber = result.pageNumber;
         $scope.showPrevious = $scope.pageNumber > 1;
@@ -1416,29 +1416,29 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
         }
     };
 
-    $scope.getPrevious = function() {
+    $scope.getPrevious = function () {
         if ($scope.showPrevious) {
             $scope.pageNumber--;
             $scope.getContents($scope.pageNumber);
         }
     };
 
-    $scope.getNext = function() {
+    $scope.getNext = function () {
         if ($scope.showNext) {
             $scope.pageNumber++;
             $scope.getContents($scope.pageNumber);
         }
     };
 
-    $scope.filterResults = function(result, resultObj) {
+    $scope.filterResults = function (result, resultObj) {
         //debugger;
-        _.each($scope.alphaLists, function(alphaList) {
+        _.each($scope.alphaLists, function (alphaList) {
             alphaList.display = false;
             alphaList.sublist = [];
         });
         if (result && result.length > 0) {
             result = _.sortBy(result, "title");
-            var groupedResult = _.groupBy(result, function(content) {
+            var groupedResult = _.groupBy(result, function (content) {
                 var letterKey = content.title.charAt(0);
                 if (letterKey.toLowerCase() == letterKey.toUpperCase()) {
                     letterKey = '#';
@@ -1447,9 +1447,9 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
                 }
                 return letterKey;
             });
-            _.each(_.keys(groupedResult), function(key) {
+            _.each(_.keys(groupedResult), function (key) {
                 var labelKey = key;
-                var alphaLists = _.where($scope.alphaLists, {letter: labelKey});
+                var alphaLists = _.where($scope.alphaLists, { letter: labelKey });
                 //alphaLists[0].sublist = _.sortBy(alphaLists[0].sublist.concat(groupedResult[key]),"title");
                 alphaLists[0].sublist = (alphaLists[0].sublist.concat(groupedResult[key])).sort(function (a, b) {
                     return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
@@ -1459,7 +1459,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
             var letters = _.sortBy(_.keys(groupedResult));
             var index = 0;
             if (resultObj.totalPages == 1) {
-                _.each($scope.alphaLists, function(alphaList) {
+                _.each($scope.alphaLists, function (alphaList) {
                     alphaList.display = true;
                 });
             } else if (resultObj.totalPages > 1) {
@@ -1489,7 +1489,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
         }
     };
 
-    $scope.filterResultsByLetter = function(letter) {
+    $scope.filterResultsByLetter = function (letter) {
         if (letter === 'ALL') {
             $scope.letter = "";
             $scope.activeLetter = false;
@@ -1501,7 +1501,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
         $scope.init();
     };
 
-    $scope.goToAnchor = function(letter) {
+    $scope.goToAnchor = function (letter) {
         //if ($("#" + letter + ".active-letter").length) {
         if ($scope.activeLetter) {
             $('#content-list-wrapper #page-content').scrollTop(0);
@@ -1509,14 +1509,14 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
         }
     };
 
-    $scope.goToContent = function(recordId) {
+    $scope.goToContent = function (recordId) {
         $location.url('/content/' + recordId);
         if ($scope.mobile) {
             $scope.collapseContentList(true);
         }
     };
 
-    $scope.goToCategory = function(category) {
+    $scope.goToCategory = function (category) {
         $scope.pageNumber = 1;
         $scope.letter = "";
         if ($scope.mobile) {
@@ -1531,17 +1531,17 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
         }
     };
 
-    $scope.$on("expandContentList2", function(event, category) {
+    $scope.$on("expandContentList2", function (event, category) {
         $scope.displayContentListClose = true;
         $scope.goToCategory(category);
     });
 
-    $scope.collapseContentList = function(closeNavBar) {
+    $scope.collapseContentList = function (closeNavBar) {
         $scope.displayContentListClose = false;
         $scope.$emit("closeContentList", closeNavBar);
     };
 
-    $scope.$on('displayContentListCloseTrue', function() {
+    $scope.$on('displayContentListCloseTrue', function () {
         $scope.displayContentListClose = true;
     });
 
@@ -1556,7 +1556,7 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
     // $window.parent.onresize();
 
     $scope.onresize = $window.onresize;
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.desktop = $window.innerWidth >= 768;
         $scope.mobile = $window.innerWidth < 768;
@@ -1573,9 +1573,9 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("errorController", ["$scope", "$routeParams", "$window", "$location", "remotingService", function($scope, $routeParams, $window, $location, remotingService) {
+app.controller("errorController", ["$scope", "$routeParams", "$window", "$location", "remotingService", function ($scope, $routeParams, $window, $location, remotingService) {
     $scope.message = $routeParams.message;
-    $scope.init = function() {
+    $scope.init = function () {
 
     };
 
@@ -1598,7 +1598,7 @@ app.controller("errorController", ["$scope", "$routeParams", "$window", "$locati
 
     $scope.onresize = $window.onresize;
 
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.desktop = $window.innerWidth >= 768;
         $scope.mobile = $window.innerWidth < 768;
@@ -1619,7 +1619,7 @@ app.controller("errorController", ["$scope", "$routeParams", "$window", "$locati
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("homeController", ["$scope", "$rootScope", "$window", "$location", "remotingService", "sessionService", function($scope, $rootScope, $window, $location, remotingService, sessionService) {
+app.controller("homeController", ["$scope", "$rootScope", "$window", "$location", "remotingService", "sessionService", function ($scope, $rootScope, $window, $location, remotingService, sessionService) {
     $scope.imageHeight = 0;
     $scope.imageWidth = 0;
     $scope.imageRowWidth = 0;
@@ -1631,28 +1631,28 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
     $scope.contentIcon = resourceUrl + '/icons/standard/document_blank.png';
 
 
-    var specialSort = function(result){
+    var specialSort = function (result) {
         var orderSort = [];
         var nameSort = [];
-        result.forEach(function(category){
-            if(category.order){
+        result.forEach(function (category) {
+            if (category.order) {
                 orderSort.push(category);
             }
-            else{
+            else {
                 nameSort.push(category);
             }
         });
         orderSort.sort(sort_by('order', false, parseInt));
-        nameSort.sort(sort_by('name', false, function(a){return a.toUpperCase()}));
-        orderSort.push.apply(orderSort,nameSort);
+        nameSort.sort(sort_by('name', false, function (a) { return a.toUpperCase() }));
+        orderSort.push.apply(orderSort, nameSort);
 
         return orderSort;
     }
 
-    var sort_by = function(field, reverse, primer){
+    var sort_by = function (field, reverse, primer) {
         var key = primer ?
-	       function(x) {return primer(x[field])} :
-	       function(x) {return x[field]};
+	       function (x) { return primer(x[field]) } :
+	       function (x) { return x[field] };
 
         reverse = !reverse ? 1 : -1;
 
@@ -1661,7 +1661,7 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
         }
     }
 
-    $scope.init = function() {
+    $scope.init = function () {
         $scope.startLoading();
         if ($scope.info && $scope.info.user) {
             if (!$scope.info.user.isContentUser) {
@@ -1674,7 +1674,7 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
 					"DSARemoterCategoryExtension.getTopLevelCategories",
 					$scope.info.preferredMobileAppConfiguration,
 					{
-					    success: function(result) {
+					    success: function (result) {
 					        result = specialSort(result);
 					        result.forEach
 					        $scope.stopLoading();
@@ -1683,7 +1683,7 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
 					            this.determineDesktopImageWidth();
 					        }
 					    },
-					    error: function(error) {
+					    error: function (error) {
 					        $scope.stopLoading();
 					        sessionService.checkSession(error.message);
 					    }
@@ -1694,16 +1694,16 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
         }
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
@@ -1711,13 +1711,13 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
         $scope.init();
     });
 
-    $scope.goToAllCategories = function() {
+    $scope.goToAllCategories = function () {
         if ($scope.mobile) {
             $scope.$emit("expandCategoryList");
         }
     };
 
-    $scope.goToAllPlaylists = function(category) {
+    $scope.goToAllPlaylists = function (category) {
         if ($scope.mobile) {
             $scope.$emit("expandPlaylistList", category);
         } else {
@@ -1725,7 +1725,7 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
         }
     };
 
-    $scope.goToAllContents = function(category) {
+    $scope.goToAllContents = function (category) {
         if ($scope.mobile) {
             $scope.$emit("expandContentList", category);
         } else {
@@ -1733,11 +1733,11 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
         }
     };
 
-    $scope.$on('displayCategoryListCloseFalse', function() {
+    $scope.$on('displayCategoryListCloseFalse', function () {
         $scope.displayCategoryListClose = false;
     });
 
-    $scope.determineDevice = function() {
+    $scope.determineDevice = function () {
         $scope.homeScreenHeight = $window.innerHeight;
         $scope.homeScreenWidth = $window.innerWidth;
         if ($scope.desktop && $scope.categories) {
@@ -1748,11 +1748,11 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
         }
     };
 
-    $scope.assignWidthClass = function(widthClass, remainderWidthClass) {
+    $scope.assignWidthClass = function (widthClass, remainderWidthClass) {
         if (!$scope.remainder) {
             $scope.remainder = 0;
         }
-        _.each($scope.categories, function(category, index) {
+        _.each($scope.categories, function (category, index) {
             if (index < $scope.remainder && remainderWidthClass) {
                 category.widthClass = remainderWidthClass;
             } else {
@@ -1761,7 +1761,7 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
         });
     };
 
-    $scope.determineDesktopImageWidth = function() {
+    $scope.determineDesktopImageWidth = function () {
         $scope.imageWidth = 0;
         $scope.imageHeight = 0;
         $scope.remainderImageWidth = 0;
@@ -1816,13 +1816,13 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
         }
     };
 
-    $scope.goToPlaylist = function() {
+    $scope.goToPlaylist = function () {
         remotingService.execute(
 			"DSARemoterPlaylistExtension.getMyFavoritesPlaylist",
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        console.log(result[0]);
-			        if(result[0] !== undefined) {
+			        if (result[0] !== undefined) {
 			            $location.url('/playlist/' + result[0].recordId);
 			            if ($scope.mobile) {
 			                $scope.collapsePlaylistList(true);
@@ -1831,7 +1831,7 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
 			            alert('You must have a playlist created with the title of My Favorites.');
 			        }
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading;
 			        sessionService.checkSession(error.message);
 			    }
@@ -1840,13 +1840,13 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
 		);
     };
 
-    $scope.goToFavoritePlaylist = function() {
+    $scope.goToFavoritePlaylist = function () {
         remotingService.execute(
 			"DSARemoterPlaylistExtension.getMyFavoritesPlaylist",
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        console.log(result[0]);
-			        if(result[0] !== undefined) {
+			        if (result[0] !== undefined) {
 			            $location.url('/playlist/' + result[0].recordId);
 			            if ($scope.mobile) {
 			                $scope.collapsePlaylistList(true);
@@ -1855,7 +1855,7 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
 			            alert('You must have a playlist created with the title of My Favorites.');
 			        }
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading;
 			        sessionService.checkSession(error.message);
 			    }
@@ -1881,7 +1881,7 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
 
     $scope.onresize = $window.onresize;
 
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.desktop = $window.innerWidth >= 768;
         $scope.mobile = $window.innerWidth < 768;
@@ -1902,7 +1902,7 @@ app.controller("homeController", ["$scope", "$rootScope", "$window", "$location"
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("hubController", ["$scope", "$routeParams", "$window", "$location", "remotingService", "sessionService", function($scope, $routeParams, $window, $location, remotingService, sessionService) {
+app.controller("hubController", ["$scope", "$routeParams", "$window", "$location", "remotingService", "sessionService", function ($scope, $routeParams, $window, $location, remotingService, sessionService) {
     $scope.imageHeight = 0;
     $scope.imageWidth = 0;
     $scope.imageRowWidth = 0;
@@ -1912,7 +1912,7 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
     $scope.carouselItems = [];
     $scope.displayPlaylistClose = false;
     $scope.chatterEnabled = false;
-    $scope.init = function() {
+    $scope.init = function () {
         if ($scope.info && $scope.info.user) {
             $scope.chatterEnabled = $scope.info.isChatterEnabled;
             if (!$scope.info.user.isContentUser) {
@@ -1924,7 +1924,7 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
 			"DSARemoterHubExtension.getHubDetail",
 			$routeParams.hubId, !$scope.internalOnlyMode,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        this.hub = result;
 			        if (this.hub.contentItems) {
 			            if (this.desktop) {
@@ -1932,7 +1932,7 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
 			            }
 			            this.hub.isHub = true;
 			            this.carouselItems.push(this.hub);
-			            _.each(this.hub.contentItems, function(elem, index, collection) {
+			            _.each(this.hub.contentItems, function (elem, index, collection) {
 			                $scope.isValidImageUrl(elem, true);
 			                $scope.isValidImageUrl(elem, false);
 			                elem.isHub = false;
@@ -1940,7 +1940,7 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
 			            }, this);
 			        }
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        sessionService.checkSession(error.message);
 			    }
 			},
@@ -1949,7 +1949,7 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
     };
     $scope.init();
 
-    $scope.fixInvalidImage = function(contentItem, isMobile) {
+    $scope.fixInvalidImage = function (contentItem, isMobile) {
         if (isMobile) {
             contentItem.smallImageUrl = '';
         } else {
@@ -1958,9 +1958,9 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
         $window.onresize();
     };
 
-    $scope.isValidImageUrl = function(contentItem, isMobile) {
+    $scope.isValidImageUrl = function (contentItem, isMobile) {
         var img = new Image();
-        img.onerror = function() { $scope.fixInvalidImage(contentItem, isMobile); };
+        img.onerror = function () { $scope.fixInvalidImage(contentItem, isMobile); };
         if (isMobile) {
             img.src = contentItem.smallImageUrl;
         } else {
@@ -1968,16 +1968,16 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
         }
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         $scope.chatterEnabled = $scope.info.isChatterEnabled;
         if (!$scope.info.user.isContentUser) {
@@ -1985,7 +1985,7 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
         }
     });
 
-    $scope.determineDevice = function() {
+    $scope.determineDevice = function () {
         $scope.hubScreenHeight = $window.innerHeight;
         if ($scope.desktop) {
             $scope.determineDesktopImageWidth();
@@ -1997,7 +1997,7 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
         $scope.determineRelatedHubWidth();
     };
 
-    $scope.determineDesktopImageWidth = function() {
+    $scope.determineDesktopImageWidth = function () {
         $scope.imageWidth = 0;
         $scope.imageHeight = 0;
         $scope.remainderImageWidth = 0;
@@ -2036,26 +2036,26 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
         }
     };
 
-    $scope.determinePlaylistWidth = function() {
+    $scope.determinePlaylistWidth = function () {
         $scope.playListWidth = $scope.desktop ? Math.floor(($scope.screenWidth - 21 - (20 * 6)) / 3) + "px" : "auto";
     };
 
-    $scope.determineRelatedHubWidth = function() {
+    $scope.determineRelatedHubWidth = function () {
         $scope.relatedHubWidth = Math.floor(($scope.screenWidth - 21 - (20 * 6)) / 5);
         $scope.relatedHubHeight = Math.floor(200 * $scope.relatedHubWidth / 280);
     };
 
-    $scope.expandPlaylists = function() {
+    $scope.expandPlaylists = function () {
         if ($scope.mobile) {
             if (!$scope.displayPlaylistClose) {
                 $scope.displayPlaylistClose = true;
                 $scope.playlistsTop = $("#playlists").position().top;
                 $("#playlists").css({
-                    "position":"fixed",
-                    backgroundColor:"#1e2021",
-                    width:"100%",
-                    height:$window.innerHeight + "px",
-                    "z-index":"100000",
+                    "position": "fixed",
+                    backgroundColor: "#1e2021",
+                    width: "100%",
+                    height: $window.innerHeight + "px",
+                    "z-index": "100000",
                     top: $scope.playlistsTop
                 });
                 $("#playlists .section-header").css({
@@ -2063,7 +2063,7 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
                 })
                 $("#playlists .section-list").show();
                 $("#playlists").animate({
-                    top:0
+                    top: 0
                 });
             } else {
                 $scope.collapsePlaylists();
@@ -2071,11 +2071,11 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
         }
     };
 
-    $scope.goToPlaylist = function() {
+    $scope.goToPlaylist = function () {
         $location.url("/playlist/" + this.playlist.recordId + "?hubId=" + $routeParams.hubId);
     };
 
-    $scope.expandPlaylistItems = function(event) {
+    $scope.expandPlaylistItems = function (event) {
         if ($scope.mobile) {
             this.playlist.itemsExpanded = this.playlist.itemsExpanded === true ? false : true;
             $(event.target).parent().next(".section-list-items").slideToggle();
@@ -2084,28 +2084,28 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
         }
     };
 
-    $scope.collapsePlaylists = function() {
+    $scope.collapsePlaylists = function () {
         $scope.displayPlaylistClose = false;
         $("#playlists").animate({
-            top:$scope.playlistsTop
-        }, function() {
+            top: $scope.playlistsTop
+        }, function () {
             $(this).removeAttr("style");
             $("#playlists .section-list").hide();
             $("#playlists .section-header").removeAttr("style");
         });
     };
 
-    $scope.expandRelatedHubs = function() {
+    $scope.expandRelatedHubs = function () {
         if ($scope.mobile) {
             if (!$scope.displayRelatedHubsClose) {
                 $scope.displayRelatedHubsClose = true;
                 $scope.relatedHubsTop = $("#relatedHubs").position().top;
                 $("#relatedHubs").css({
-                    "position":"fixed",
-                    backgroundColor:"#1e2021",
-                    width:"100%",
-                    height:$window.innerHeight + "px",
-                    "z-index":"100000",
+                    "position": "fixed",
+                    backgroundColor: "#1e2021",
+                    width: "100%",
+                    height: $window.innerHeight + "px",
+                    "z-index": "100000",
                     top: $scope.relatedHubsTop
                 });
                 $("#relatedHubs .section-header").css({
@@ -2113,7 +2113,7 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
                 })
                 $("#relatedHubs .section-list").show();
                 $("#relatedHubs").animate({
-                    top:0
+                    top: 0
                 });
             } else {
                 $scope.collapseRelatedHubs();
@@ -2121,18 +2121,18 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
         }
     };
 
-    $scope.collapseRelatedHubs = function() {
+    $scope.collapseRelatedHubs = function () {
         $scope.displayRelatedHubsClose = false;
         $("#relatedHubs").animate({
-            top:$scope.relatedHubsTop
-        }, function() {
+            top: $scope.relatedHubsTop
+        }, function () {
             $(this).removeAttr("style");
             $("#relatedHubs .section-list").hide();
             $("#relatedHubs .section-header").removeAttr("style");
         });
     };
 
-    $scope.goToContent = function(contentItem) {
+    $scope.goToContent = function (contentItem) {
         location.href = '#/content/' + contentItem.contentDocumentId;
     };
 
@@ -2151,7 +2151,7 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
 
     $scope.onresize = $window.onresize;
 
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.determineDevice();
         if (!$scope.$$phase) {
@@ -2162,14 +2162,14 @@ app.controller("hubController", ["$scope", "$routeParams", "$window", "$location
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("hubListController", ["$scope", "$window", "$location", "remotingService", function($scope, $window, $location, remotingService) {
+app.controller("hubListController", ["$scope", "$window", "$location", "remotingService", function ($scope, $window, $location, remotingService) {
     $scope.alphaLists = [
-		{letter:"#", sublist: []},
-		{letter:"A", sublist: []}, {letter:"B", sublist: []}, {letter:"C", sublist: []}, {letter:"D", sublist: []}, {letter:"E", sublist: []}, {letter:"F", sublist: []},
-		{letter:"G", sublist: []}, {letter:"H", sublist: []}, {letter:"I", sublist: []}, {letter:"J", sublist: []}, {letter:"K", sublist: []}, {letter:"L", sublist: []},
-		{letter:"M", sublist: []}, {letter:"N", sublist: []}, {letter:"O", sublist: []}, {letter:"P", sublist: []}, {letter:"Q", sublist: []}, {letter:"R", sublist: []},
-		{letter:"S", sublist: []}, {letter:"T", sublist: []}, {letter:"U", sublist: []}, {letter:"V", sublist: []}, {letter:"W", sublist: []}, {letter:"X", sublist: []},
-		{letter:"Y", sublist: []}, {letter:"Z", sublist: []}
+		{ letter: "#", sublist: [] },
+		{ letter: "A", sublist: [] }, { letter: "B", sublist: [] }, { letter: "C", sublist: [] }, { letter: "D", sublist: [] }, { letter: "E", sublist: [] }, { letter: "F", sublist: [] },
+		{ letter: "G", sublist: [] }, { letter: "H", sublist: [] }, { letter: "I", sublist: [] }, { letter: "J", sublist: [] }, { letter: "K", sublist: [] }, { letter: "L", sublist: [] },
+		{ letter: "M", sublist: [] }, { letter: "N", sublist: [] }, { letter: "O", sublist: [] }, { letter: "P", sublist: [] }, { letter: "Q", sublist: [] }, { letter: "R", sublist: [] },
+		{ letter: "S", sublist: [] }, { letter: "T", sublist: [] }, { letter: "U", sublist: [] }, { letter: "V", sublist: [] }, { letter: "W", sublist: [] }, { letter: "X", sublist: [] },
+		{ letter: "Y", sublist: [] }, { letter: "Z", sublist: [] }
     ];
     $scope.templates = {
         hubList: resourceUrl + '/partials/hub-list.html'
@@ -2179,7 +2179,7 @@ app.controller("hubListController", ["$scope", "$window", "$location", "remoting
     $scope.letter = "";
     $scope.activeLetter = false;
 
-    $scope.init = function() {
+    $scope.init = function () {
         if ($scope.info && $scope.info.user) {
             if (!$scope.info.user.isContentUser) {
                 $location.url("/error/" + $scope.info.contentUserErrorMessage);
@@ -2191,7 +2191,7 @@ app.controller("hubListController", ["$scope", "$window", "$location", "remoting
 					"DSARemoterHubExtension.getHubsForPrefix",
 					$scope.letter, !$scope.internalOnlyMode,
 					{
-					    success: function(result) {
+					    success: function (result) {
 					        $scope.filterResults(result);
 					    }
 					},
@@ -2202,7 +2202,7 @@ app.controller("hubListController", ["$scope", "$window", "$location", "remoting
 					"DSARemoterHubExtension.getAllHubs",
 					!$scope.internalOnlyMode,
 					{
-					    success: function(result) {
+					    success: function (result) {
 					        $scope.filterResults(result);
 					    }
 					},
@@ -2213,32 +2213,32 @@ app.controller("hubListController", ["$scope", "$window", "$location", "remoting
         $scope.initRun = true;
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.initRun = false;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.initRun = false;
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.filterResults = function(result) {
-        _.each($scope.alphaLists, function(alphaList) {
+    $scope.filterResults = function (result) {
+        _.each($scope.alphaLists, function (alphaList) {
             alphaList.display = false;
             alphaList.sublist = [];
         });
         if (result && result.length > 0) {
             result = _.sortBy(result, "name");
-            var groupedResult = _.groupBy(result, function(hub) {
+            var groupedResult = _.groupBy(result, function (hub) {
                 var letterKey = hub.name.charAt(0);
                 if (letterKey.toLowerCase() == letterKey.toUpperCase()) {
                     letterKey = '#';
@@ -2247,16 +2247,16 @@ app.controller("hubListController", ["$scope", "$window", "$location", "remoting
                 }
                 return letterKey;
             });
-            _.each(_.keys(groupedResult), function(key) {
+            _.each(_.keys(groupedResult), function (key) {
                 var labelKey = key;
-                var alphaLists = _.where($scope.alphaLists, {letter: labelKey});
+                var alphaLists = _.where($scope.alphaLists, { letter: labelKey });
                 alphaLists[0].sublist = alphaLists[0].sublist.concat(groupedResult[key]);
             });
             $scope.hubLists = $scope.alphaLists;
         }
     };
 
-    $scope.filterResultsByLetter = function(letter) {
+    $scope.filterResultsByLetter = function (letter) {
         if (letter === 'ALL') {
             $scope.letter = "";
             $scope.activeLetter = false;
@@ -2268,31 +2268,31 @@ app.controller("hubListController", ["$scope", "$window", "$location", "remoting
         $scope.init();
     };
 
-    $scope.goToAnchor = function(letter) {
+    $scope.goToAnchor = function (letter) {
         if ($scope.activeLetter) {
             $('#hub-list-wrapper #page-content').scrollTop(0);
             $('#hub-list-wrapper #page-content').scrollTop($("#" + letter).offset().top);
         }
     };
 
-    $scope.goToHub = function(recordId) {
+    $scope.goToHub = function (recordId) {
         $location.url('/hubs/' + recordId);
         if ($scope.mobile) {
             $scope.collapseHubList(true);
         }
     };
 
-    $scope.$on("expandHubList2", function() {
+    $scope.$on("expandHubList2", function () {
         $scope.displayHubListClose = true;
         $scope.init();
     });
 
-    $scope.collapseHubList = function(closeNavBar) {
+    $scope.collapseHubList = function (closeNavBar) {
         $scope.displayHubListClose = false;
         $scope.$emit("closeHubList", closeNavBar);
     };
 
-    $scope.$on('displayHubListCloseTrue', function() {
+    $scope.$on('displayHubListCloseTrue', function () {
         $scope.displayHubListClose = true;
     });
 
@@ -2307,7 +2307,7 @@ app.controller("hubListController", ["$scope", "$window", "$location", "remoting
     // $window.parent.onresize();
 
     $scope.onresize = $window.onresize;
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.hubListScreenHeight = $window.innerHeight;
         if (!$scope.$$phase) {
@@ -2322,14 +2322,14 @@ app.controller("hubListController", ["$scope", "$window", "$location", "remoting
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("hubNavbarController", ["$scope", "$location", "$routeParams", "remotingService", function($scope, $location, $routeParams, remotingService) {
+app.controller("hubNavbarController", ["$scope", "$location", "$routeParams", "remotingService", function ($scope, $location, $routeParams, remotingService) {
     $scope.hub = {};
     $scope.hasNext = false;
     $scope.hasPrevious = false;
     $scope.playlists = [];
     $scope.position = 0;
 
-    $scope.init = function() {
+    $scope.init = function () {
         if ($scope.info && $scope.info.user) {
             if (!$scope.info.user.isContentUser) {
                 $location.url("/error/" + $scope.info.contentUserErrorMessage);
@@ -2339,7 +2339,7 @@ app.controller("hubNavbarController", ["$scope", "$location", "$routeParams", "r
 			"DSARemoterHubExtension.getHubDetail",
 			$scope.hubId, !$scope.internalOnlyMode,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.hub = result;
 			        $scope.playlists = $scope.hub.playlistDetails;
 			        $scope.determinePlaylistPosition();
@@ -2349,24 +2349,24 @@ app.controller("hubNavbarController", ["$scope", "$location", "$routeParams", "r
 		);
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.determinePlaylistPosition = function() {
-        _.each($scope.playlists, function(playlist, index) {
+    $scope.determinePlaylistPosition = function () {
+        _.each($scope.playlists, function (playlist, index) {
             if ($routeParams.playlistId == playlist.recordId) {
                 $scope.position = index;
                 $scope.hasPrevious = $scope.position > 0;
@@ -2375,21 +2375,21 @@ app.controller("hubNavbarController", ["$scope", "$location", "$routeParams", "r
         });
     };
 
-    $scope.next = function() {
+    $scope.next = function () {
         if ($scope.hasNext) {
             var playlist = $scope.playlists[$scope.position + 1];
             $location.url("/playlist/" + playlist.recordId + "?hubId=" + $scope.hubId);
         }
     };
 
-    $scope.previous = function() {
+    $scope.previous = function () {
         if ($scope.hasPrevious) {
             var playlist = $scope.playlists[$scope.position - 1];
             $location.url("/playlist/" + playlist.recordId + "?hubId=" + $scope.hubId);
         }
     };
 
-    $scope.goToHub = function() {
+    $scope.goToHub = function () {
         $location.url("/hubs/" + $scope.hubId);
     };
 
@@ -2397,13 +2397,13 @@ app.controller("hubNavbarController", ["$scope", "$location", "$routeParams", "r
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("macController", ["$scope", "$rootScope", "$window", "$location", "remotingService", "sessionService", function($scope, $rootScope, $window, $location, remotingService, sessionService) {
+app.controller("macController", ["$scope", "$rootScope", "$window", "$location", "remotingService", "sessionService", function ($scope, $rootScope, $window, $location, remotingService, sessionService) {
     $scope.macHeight = 0;
     $scope.macWidth = 0;
     $scope.macRowWidth = 0;
     $scope.macSelected = false;
 
-    $scope.init = function() {
+    $scope.init = function () {
         if ($scope.info && $scope.info.user) {
             if (!$scope.info.user.isContentUser) {
                 $location.url("/error/" + $scope.info.contentUserErrorMessage);
@@ -2416,14 +2416,14 @@ app.controller("macController", ["$scope", "$rootScope", "$window", "$location",
         remotingService.execute(
 			"DSARemoterMobileAppConfigExtension.getMobileAppConfigurations",
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.stopLoading();
 			        $scope.macs = result;
 			        if (this.desktop && this.macs) {
 			            this.determineDesktopMacWidth();
 			        }
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -2432,16 +2432,16 @@ app.controller("macController", ["$scope", "$rootScope", "$window", "$location",
 		);
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
@@ -2449,12 +2449,12 @@ app.controller("macController", ["$scope", "$rootScope", "$window", "$location",
         $scope.init();
     });
 
-    $scope.selectMac = function(mac) {
+    $scope.selectMac = function (mac) {
         mac.isSelected = !mac.isSelected;
-        var arr = _.where($scope.macs, {isSelected: true});
+        var arr = _.where($scope.macs, { isSelected: true });
         if (arr.length > 1) {
             if (mac.isSelected) {
-                _.each($scope.macs, function(m) {
+                _.each($scope.macs, function (m) {
                     if (m.mobileAppConfigId !== mac.mobileAppConfigId) {
                         m.isSelected = false;
                     }
@@ -2469,7 +2469,7 @@ app.controller("macController", ["$scope", "$rootScope", "$window", "$location",
 				"DSARemoterInfoExtension.setPreferredMobileAppConfiguration",
 				mac.mobileAppConfigId,
 				{
-				    success: function(result) {
+				    success: function (result) {
 				        $scope.info.preferredMobileAppConfiguration = mac.mobileAppConfigId;
 				        $scope.$emit("infoUpdate-emit", $scope.info, mac.titleText);
 				    }
@@ -2479,7 +2479,7 @@ app.controller("macController", ["$scope", "$rootScope", "$window", "$location",
         }
     };
 
-    $scope.determineDevice = function() {
+    $scope.determineDevice = function () {
         $scope.macScreenHeight = $window.innerHeight;
         $scope.macScreenWidth = $window.innerWidth;
         if ($scope.desktop && $scope.macs) {
@@ -2490,7 +2490,7 @@ app.controller("macController", ["$scope", "$rootScope", "$window", "$location",
         }
     };
 
-    $scope.determineDesktopMacWidth = function() {
+    $scope.determineDesktopMacWidth = function () {
         $scope.macWidth = 0;
         $scope.macHeight = 0;
         $scope.remainderMacWidth = 0;
@@ -2539,7 +2539,7 @@ app.controller("macController", ["$scope", "$rootScope", "$window", "$location",
 
     $scope.onresize = $window.onresize;
 
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.desktop = $window.innerWidth >= 768;
         $scope.mobile = $window.innerWidth < 768;
@@ -2555,12 +2555,12 @@ app.controller("macController", ["$scope", "$rootScope", "$window", "$location",
 }]);
 var app = angular.module("myapp", []);
 
-app.controller("myappController", ["$scope", function($scope) {
+app.controller("myappController", ["$scope", function ($scope) {
     $scope.message = "hey";
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$location", function($scope, $rootScope, $window, $location) {
+app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$location", function ($scope, $rootScope, $window, $location) {
     $rootScope.desktop = false;
     $rootScope.mobile = false;
     $scope.previousNavBarHeight = "";
@@ -2578,18 +2578,33 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
         hubList: resourceUrl + '/partials/hub-list.html'
     };
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.removeWalkMe = function () {
+      
+        setTimeout(function () {
+            var elements = document.getElementsByClassName('walkme-custom-icon-outer-div');
+            elements[0].style.display = 'none';
+        }, 2000);
+    }
+
+
+
+
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
     });
 
-    $scope.determineDevice = function() {
+    $scope.navigateToSF = function () {
+        window.location.href = location.protocol + '//' + location.hostname + '/home/home.jsp';
+    }
+
+    $scope.determineDevice = function () {
         // if (window.frameElement) {
         // 	$scope.navbarMenuScreenWidth = +window.frameElement.attributes.width.value.replace("px","");
         // } else {
@@ -2604,7 +2619,7 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
 
     $scope.determineDevice();
 
-    $scope.determineBackButtonDisplay = function() {
+    $scope.determineBackButtonDisplay = function () {
         $scope.displayBackButton = $rootScope.mobile && $location.url() !== '/';
     };
 
@@ -2621,7 +2636,7 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
     // };
 
     $scope.onresize = $window.onresize;
-    $window.onresize = function() {
+    $window.onresize = function () {
         if ($scope.onresize) {
             $scope.onresize();
         }
@@ -2632,7 +2647,7 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
         }
     };
 
-    $scope.closeNavBar = function(closeNavBar) {
+    $scope.closeNavBar = function (closeNavBar) {
         if (closeNavBar) {
             var elem = $("#menu-collapse");
             if (elem.hasClass("collapse") && elem.hasClass("in")) {
@@ -2642,29 +2657,29 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
         }
     };
 
-    $scope.$on("closeHubList2", function(event, closeNavBar) {
+    $scope.$on("closeHubList2", function (event, closeNavBar) {
         $scope.closeNavBar(closeNavBar);
     });
 
-    $scope.$on("closePlaylistList2", function(event, closeNavBar) {
+    $scope.$on("closePlaylistList2", function (event, closeNavBar) {
         $scope.closeNavBar(closeNavBar);
     });
 
-    $scope.$on("closeContentList2", function(event, closeNavBar) {
+    $scope.$on("closeContentList2", function (event, closeNavBar) {
         $scope.closeNavBar(closeNavBar);
     });
 
-    $rootScope.$on("$locationChangeSuccess", function() {
+    $rootScope.$on("$locationChangeSuccess", function () {
         $scope.determineBackButtonDisplay();
     });
 
-    $scope.goBack = function() {
+    $scope.goBack = function () {
         $scope.backCalled = true;
         var path = $scope.viewHistory.pop();
         $location.url(path);
     };
 
-    $scope.goHome = function() {
+    $scope.goHome = function () {
         $location.url('/');
         if ($scope.mobile) {
             var elem = $("#menu-collapse");
@@ -2675,7 +2690,7 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
         }
     };
 
-    $scope.goToAllHubs = function() {
+    $scope.goToAllHubs = function () {
         if ($scope.mobile) {
             $scope.$emit("expandHubList");
         } else {
@@ -2683,7 +2698,7 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
         }
     };
 
-    $scope.goToAllPlaylists = function() {
+    $scope.goToAllPlaylists = function () {
         if ($scope.mobile) {
             $scope.$emit("expandPlaylistList");
         } else {
@@ -2691,7 +2706,7 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
         }
     };
 
-    $scope.goToAllContents = function() {
+    $scope.goToAllContents = function () {
         if ($scope.mobile) {
             $scope.$emit("expandContentList");
         } else {
@@ -2699,15 +2714,15 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
         }
     };
 
-    $scope.$on('displayHubListFalse', function() {
+    $scope.$on('displayHubListFalse', function () {
         $scope.displayHubList = false;
     });
 
-    $scope.$on('displayHubListCloseFalse', function() {
+    $scope.$on('displayHubListCloseFalse', function () {
         $scope.displayHubListClose = false;
     });
 
-    $scope.$on("$locationChangeStart", function(ev, next, current) {
+    $scope.$on("$locationChangeStart", function (ev, next, current) {
         if (!$scope.backCalled) {
             var currentPath = current.substring(current.indexOf('#') + 1);
             var nextPath = next.substring(next.indexOf('#') + 1);
@@ -2719,7 +2734,7 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
         $scope.backCalled = false;
     });
 
-    $scope.resizeNavbarCollapseHeight = function() {
+    $scope.resizeNavbarCollapseHeight = function () {
         var elem = $("#menu-collapse");
         if (elem.hasClass("collapse") && elem.hasClass("in")) {
             $(".navbar").css({
@@ -2742,16 +2757,16 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("ngViewController", ["$scope", "$window", "$location", function($scope, $window, $location) {
+app.controller("ngViewController", ["$scope", "$window", "$location", function ($scope, $window, $location) {
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.determineDevice = function() {
+    $scope.determineDevice = function () {
         // if (window.frameElement) {
         // 	$scope.screenWidth = +window.frameElement.attributes.width.value.replace("px","");
         // } else {
@@ -2780,7 +2795,7 @@ app.controller("ngViewController", ["$scope", "$window", "$location", function($
     // $window.parent.onresize();
 
     $scope.onresize = $window.onresize;
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.desktop = $window.innerWidth >= 768;
         $scope.mobile = $window.innerWidth < 768;
@@ -2794,13 +2809,13 @@ app.controller("ngViewController", ["$scope", "$window", "$location", function($
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("parentCategoryNavbarController", ["$scope", "$location", "$routeParams", "remotingService", "sessionService", function($scope, $location, $routeParams, remotingService, sessionService) {
+app.controller("parentCategoryNavbarController", ["$scope", "$location", "$routeParams", "remotingService", "sessionService", function ($scope, $location, $routeParams, remotingService, sessionService) {
     $scope.parentCategory = {};
     $scope.initialHierarchy = [];
     $scope.hierarchy = [];
     $scope.showHierarchy = false;
 
-    $scope.init = function() {
+    $scope.init = function () {
         $scope.initialHierarchy = [];
         $scope.hierarchy = [];
         if ($scope.info && $scope.info.user) {
@@ -2811,19 +2826,19 @@ app.controller("parentCategoryNavbarController", ["$scope", "$location", "$route
         $scope.getParentCategory($routeParams.categoryId);
     };
 
-    $scope.sectiontitleClick = function(){
+    $scope.sectiontitleClick = function () {
         $('#sitemap').slideToggle();
         $(this).toggleClass('open');
     }
 
 
-    $scope.getParentCategory = function(categoryId) {
+    $scope.getParentCategory = function (categoryId) {
         remotingService.execute(
 			"DSARemoterCategoryExtension.getParentCategoryWithMAC",
 			categoryId,
 			$scope.info.preferredMobileAppConfiguration,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        if (_.isEmpty($scope.parentCategory)) {
 			            $scope.parentCategory = result;
 			        } else {
@@ -2835,7 +2850,7 @@ app.controller("parentCategoryNavbarController", ["$scope", "$location", "$route
 			            $scope.getParentCategory(result.categoryId);
 			        }
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -2844,7 +2859,7 @@ app.controller("parentCategoryNavbarController", ["$scope", "$location", "$route
 		);
     };
 
-    $scope.handleHierarchy = function() {
+    $scope.handleHierarchy = function () {
         if ($scope.initialHierarchy.length > 0) {
             for (var i = $scope.initialHierarchy.length - 1; i >= 0; i--) {
                 $scope.hierarchy.push($scope.initialHierarchy[i]);
@@ -2852,33 +2867,33 @@ app.controller("parentCategoryNavbarController", ["$scope", "$location", "$route
         }
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.slideDownHierarchy = function() {
+    $scope.slideDownHierarchy = function () {
         $("#parent-category-hierarchy-wrapper").slideDown();
         $scope.showHierarchy = true;
     };
 
-    $scope.slideUpHierarchy = function() {
+    $scope.slideUpHierarchy = function () {
         $("#parent-category-hierarchy-wrapper").slideUp();
         $scope.showHierarchy = false;
     };
 
-    $scope.goToCategory = function(categoryId) {
+    $scope.goToCategory = function (categoryId) {
         var link = "/category/";
         if (categoryId) {
             link += categoryId;
@@ -2892,7 +2907,7 @@ app.controller("parentCategoryNavbarController", ["$scope", "$location", "$route
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("playlistController", ["$scope", "$window", "$routeParams", "$location", "remotingService", "sessionService", function($scope, $window, $routeParams, $location, remotingService, sessionService) {
+app.controller("playlistController", ["$scope", "$window", "$routeParams", "$location", "remotingService", "sessionService", function ($scope, $window, $routeParams, $location, remotingService, sessionService) {
     $scope.playlistScreenHeight = 0;
     $scope.playlist = {};
     $scope.displayPlaylistClose = false;
@@ -2904,12 +2919,12 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
     };
     $scope.hubId = '';
     $scope.chatterEnabled = false;
-    $scope.deviceList = ["desktop","ipad","iphone","ipod","androidPhone","androidTablet","blackberryPhone","blackberryTablet","windowsPhone","windowsTablet","fxosPhone","fxosTablet"];
-    $scope.orientationList = ["landscape","portrait"];
+    $scope.deviceList = ["desktop", "ipad", "iphone", "ipod", "androidPhone", "androidTablet", "blackberryPhone", "blackberryTablet", "windowsPhone", "windowsTablet", "fxosPhone", "fxosTablet"];
+    $scope.orientationList = ["landscape", "portrait"];
     $scope.myPlaylistIconUrl = resourceUrl + '/icons/standard/Playlist3.png';
     $scope.contentIcon = resourceUrl + '/icons/standard/document_blank.png';
 
-    $scope.init = function() {
+    $scope.init = function () {
         if ($scope.info && $scope.info.user) {
             $scope.chatterEnabled = $scope.info.isChatterEnabled;
             if (!$scope.info.user.isContentUser) {
@@ -2925,16 +2940,16 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
         $scope.logPlaylistReview();
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         $scope.chatterEnabled = $scope.info.isChatterEnabled;
         if (!$scope.info.user.isContentUser) {
@@ -2942,15 +2957,15 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
         }
     });
 
-    $scope.logPlaylistReview = function() {
+    $scope.logPlaylistReview = function () {
         var deviceName = "";
-        _.each($scope.deviceList, function(deviceOption) {
+        _.each($scope.deviceList, function (deviceOption) {
             if (device[deviceOption]()) {
                 deviceName = deviceOption;
             }
         });
         var orientationName = "";
-        _.each($scope.orientationList, function(orientationOption) {
+        _.each($scope.orientationList, function (orientationOption) {
             if (device[orientationOption]()) {
                 orientationName = orientationOption;
             }
@@ -2959,10 +2974,10 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
 			"DSARemoterPlaylistExtension.logPlaylistReview",
 			$routeParams.playlistId, deviceName, orientationName,
 			{
-			    success: function(result) {
+			    success: function (result) {
 
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -2997,15 +3012,15 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
     // 	);
     // };
 
-    $scope.addLike = function(itemId) {
+    $scope.addLike = function (itemId) {
         remotingService.execute(
 			"DSARemoterPlaylistExtension.addLike",
 			itemId,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.getPlaylistPosts();
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -3014,15 +3029,15 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
 		);
     };
 
-    $scope.removeLike = function(likeId) {
+    $scope.removeLike = function (likeId) {
         remotingService.execute(
 			"DSARemoterPlaylistExtension.removeLike",
 			likeId,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.getPlaylistPosts();
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -3031,7 +3046,7 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
 		);
     };
 
-    $scope.likePost = function(post) {
+    $scope.likePost = function (post) {
         if (post.feedLikesSummary.iLiked) {
             $scope.removeLike(post.feedLikesSummary.likedId);
         } else {
@@ -3039,7 +3054,7 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
         }
     };
 
-    $scope.likeComment = function(comment) {
+    $scope.likeComment = function (comment) {
         if (comment.feedLikesSummary.iLiked) {
             $scope.removeLike(comment.feedLikesSummary.likedId);
         } else {
@@ -3047,27 +3062,27 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
         }
     };
 
-    $scope.togglePosts = function() {
-        $(".comment").not(".last-post").slideToggle(function() {
+    $scope.togglePosts = function () {
+        $(".comment").not(".last-post").slideToggle(function () {
             var commentForm = $(".comment-form");
             if (commentForm.css("display") == "block") {
-                commentForm.css({display: "table"});
+                commentForm.css({ display: "table" });
             }
         });
     };
 
-    $scope.addPost = function() {
+    $scope.addPost = function () {
         if ($scope.myPost.Body) {
             remotingService.execute(
 				"DSARemoterPlaylistExtension.postOnPlaylist",
 				$routeParams.playlistId, $scope.myPost.Body,
 				{
-				    success: function(result) {
+				    success: function (result) {
 				        $(".comment").removeAttr("style");
 				        $scope.getPlaylistPosts();
 				        $scope.myPost.Body = "";
 				    },
-				    error: function(error) {
+				    error: function (error) {
 				        $scope.stopLoading();
 				        sessionService.checkSession(error.message);
 				    }
@@ -3079,16 +3094,16 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
         }
     };
 
-    $scope.getPlaylistPosts = function() {
+    $scope.getPlaylistPosts = function () {
         remotingService.execute(
 			"DSARemoterPlaylistExtension.getPlaylistPosts",
 			$routeParams.playlistId,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.posts = result;
 			        $scope.summarizeFeedLikes();
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -3097,8 +3112,8 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
 		);
     };
 
-    $scope.summarizeFeedLikes = function() {
-        _.each($scope.posts, function(post) {
+    $scope.summarizeFeedLikes = function () {
+        _.each($scope.posts, function (post) {
             var feedLikesSummary = {
                 total: 0,
                 iLiked: false,
@@ -3106,7 +3121,7 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
             };
             if (post.post.FeedLikes) {
                 feedLikesSummary.total = post.post.FeedLikes.length;
-                _.each(post.post.FeedLikes, function(feedLike) {
+                _.each(post.post.FeedLikes, function (feedLike) {
                     // compare user id with feed like created by id
                     if (feedLike.CreatedBy.Id == $scope.info.user.recordId) {
                         feedLikesSummary.iLiked = true;
@@ -3116,7 +3131,7 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
             }
             post.feedLikesSummary = feedLikesSummary;
             if (post.comments && post.comments.length > 0) {
-                _.each(post.comments, function(comment) {
+                _.each(post.comments, function (comment) {
                     var subFeedLikesSummary = {
                         total: 0,
                         iLiked: false,
@@ -3124,7 +3139,7 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
                     };
                     if (comment.commentLikes) {
                         subFeedLikesSummary.total = comment.commentLikes.length;
-                        _.each(comment.commentLikes, function(commentLike) {
+                        _.each(comment.commentLikes, function (commentLike) {
                             if (commentLike.chatterLike.user.id == $scope.info.user.recordId) {
                                 subFeedLikesSummary.iLiked = true;
                                 subFeedLikesSummary.likedId = commentLike.chatterLike.id;
@@ -3137,17 +3152,17 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
         });
     };
 
-    $scope.changePlaylistEditMode = function() {
+    $scope.changePlaylistEditMode = function () {
         $scope.editingPlaylist = !$scope.editingPlaylist;
         if (!$scope.editingPlaylist) {
             remotingService.execute(
 				"DSARemoterPlaylistExtension.updatePlaylist",
-				$routeParams.playlistId, $scope.playlist.name, (typeof($scope.playlist.description) !== 'undefined') ? $scope.playlist.description : null, $scope.playlist.isFeatured,
+				$routeParams.playlistId, $scope.playlist.name, (typeof ($scope.playlist.description) !== 'undefined') ? $scope.playlist.description : null, $scope.playlist.isFeatured,
 				{
-				    success: function(result) {
+				    success: function (result) {
 				        $scope.getPlaylistDetail();
 				    },
-				    error: function(error) {
+				    error: function (error) {
 				        $scope.stopLoading();
 				        sessionService.checkSession(error.message);
 				    }
@@ -3159,24 +3174,24 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
         }
     };
 
-    $scope.changeContentEditMode = function() {
+    $scope.changeContentEditMode = function () {
         $scope.editingContent = !$scope.editingContent;
     };
 
-    $scope.enableSorting = function() {
+    $scope.enableSorting = function () {
         $("#sortable").sortable({
             cancel: ".section-list-item-delete",
             stop: $scope.saveNewOrder
         });
     };
 
-    $scope.destroySorting = function() {
+    $scope.destroySorting = function () {
         $("#sortable").sortable("destroy");
     };
 
-    $scope.saveNewOrder = function(event, ui) {
+    $scope.saveNewOrder = function (event, ui) {
         var orderMap = {};
-        $(".sortable-item").each(function(index) {
+        $(".sortable-item").each(function (index) {
             var contentDocumentId = $(this).data("contentId");
             orderMap[contentDocumentId] = index;
         });
@@ -3184,7 +3199,7 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
 			"DSARemoterPlaylistExtension.orderPlaylist",
 			$routeParams.playlistId, orderMap,
 			{
-			    success: function(result) {
+			    success: function (result) {
 
 			    }
 			},
@@ -3192,17 +3207,17 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
 		);
     };
 
-    $scope.getPlaylistDetail = function() {
+    $scope.getPlaylistDetail = function () {
         $scope.startLoading();
         remotingService.execute(
 			"DSARemoterPlaylistExtension.getPlaylistDetail",
 			$routeParams.playlistId,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.stopLoading();
 			        $scope.playlist = result;
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -3211,7 +3226,7 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
 		);
     };
 
-    $scope.removeFromPlaylist = function(playlistId, documentId, event) {
+    $scope.removeFromPlaylist = function (playlistId, documentId, event) {
         if (playlistId && documentId) {
             if (event) {
                 $(event.target).parent().fadeOut();
@@ -3220,10 +3235,10 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
 				"DSARemoterPlaylistExtension.removeFromPlaylist",
 				playlistId, documentId,
 				{
-				    success: function(result) {
+				    success: function (result) {
 				        $scope.getPlaylistDetail();
 				    },
-				    error: function(error) {
+				    error: function (error) {
 				        $scope.stopLoading();
 				        sessionService.checkSession(error.message);
 				    }
@@ -3233,15 +3248,15 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
         }
     };
 
-    $scope.followPlaylist = function() {
+    $scope.followPlaylist = function () {
         remotingService.execute(
 			"DSARemoterPlaylistExtension.followPlaylist",
 			$routeParams.playlistId,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.init();
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -3250,15 +3265,15 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
 		);
     };
 
-    $scope.unfollowPlaylist = function() {
+    $scope.unfollowPlaylist = function () {
         remotingService.execute(
 			"DSARemoterPlaylistExtension.unFollowPlaylist",
 			$routeParams.playlistId,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.init();
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -3267,16 +3282,16 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
 		);
     };
 
-    $scope.openPlaylistContent = function() {
+    $scope.openPlaylistContent = function () {
         if ($scope.mobile && !$scope.displayPlaylistClose) {
             $scope.displayPlaylistClose = true;
             $scope.playlistContentTop = $(".playlistContent").position().top;
             $(".playlistContent").css({
-                "position":"absolute",
-                backgroundColor:"#1e2021",
-                width:"100%",
-                height:$window.innerHeight + "px",
-                "z-index":"100000",
+                "position": "absolute",
+                backgroundColor: "#1e2021",
+                width: "100%",
+                height: $window.innerHeight + "px",
+                "z-index": "100000",
                 top: $scope.playlistContentTop
             });
             $(".playlistContent .section-header").css({
@@ -3284,22 +3299,22 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
             })
             $(".playlistContent .section-list").show();
             $(".playlistContent").css({
-                top:0
+                top: 0
             });
         }
     };
 
-    $scope.expandPlaylistContent = function() {
+    $scope.expandPlaylistContent = function () {
         if ($scope.mobile) {
             if (!$scope.displayPlaylistClose) {
                 $scope.displayPlaylistClose = true;
                 $scope.playlistContentTop = $(".playlistContent").position().top;
                 $(".playlistContent").css({
-                    "position":"absolute",
-                    backgroundColor:"#1e2021",
-                    width:"100%",
-                    height:$window.innerHeight + "px",
-                    "z-index":"100000",
+                    "position": "absolute",
+                    backgroundColor: "#1e2021",
+                    width: "100%",
+                    height: $window.innerHeight + "px",
+                    "z-index": "100000",
                     top: $scope.playlistContentTop
                 });
                 $(".playlistContent .section-header").css({
@@ -3307,7 +3322,7 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
                 })
                 $(".playlistContent .section-list").show();
                 $(".playlistContent").animate({
-                    top:0
+                    top: 0
                 });
             } else {
                 $scope.collapsePlaylistContent();
@@ -3315,18 +3330,18 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
         }
     };
 
-    $scope.collapsePlaylistContent = function() {
+    $scope.collapsePlaylistContent = function () {
         $scope.displayPlaylistClose = false;
         $(".playlistContent").animate({
-            top:$scope.playlistContentTop
-        }, function() {
+            top: $scope.playlistContentTop
+        }, function () {
             $(this).removeAttr("style");
             $(".playlistContent .section-list").removeAttr("style");
             $(".playlistContent .section-header").removeAttr("style");
         });
     };
 
-    $scope.goToContent = function(content) {
+    $scope.goToContent = function (content) {
         var link = "/content/" + content.contentDocumentId + "?playlistId=" + $scope.playlist.recordId;
         if ($scope.hubPresent) {
             link += "&hubId=" + $scope.hubId;
@@ -3345,7 +3360,7 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
     // $window.parent.onresize();
 
     $scope.onresize = $window.onresize;
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.desktop = $window.innerWidth >= 768;
         $scope.mobile = $window.innerWidth < 768;
@@ -3360,26 +3375,26 @@ app.controller("playlistController", ["$scope", "$window", "$routeParams", "$loc
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("playlistEditController", ["$scope", "$window", "$location", "remotingService", "sessionService", function($scope, $window, $location, remotingService, sessionService) {
+app.controller("playlistEditController", ["$scope", "$window", "$location", "remotingService", "sessionService", function ($scope, $window, $location, remotingService, sessionService) {
     $scope.newPlaylist = {
-        newPlaylistTitle:"",
-        newPlaylistDescription:"",
-        newPlaylistIsFeatured:false
+        newPlaylistTitle: "",
+        newPlaylistDescription: "",
+        newPlaylistIsFeatured: false
     };
     $scope.myPlaylists = [];
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.$on("openAddToPlaylist", function() {
+    $scope.$on("openAddToPlaylist", function () {
         $scope.getExistingPlaylists();
         $("#addToPlaylist-menu").css({
             height: $window.innerHeight,
@@ -3397,11 +3412,11 @@ app.controller("playlistEditController", ["$scope", "$window", "$location", "rem
         }
     });
 
-    $scope.$on("closeAddToPlaylist", function() {
+    $scope.$on("closeAddToPlaylist", function () {
         $scope.closeAddTo();
     });
 
-    $scope.$on("openRemoveFromPlaylist", function() {
+    $scope.$on("openRemoveFromPlaylist", function () {
         $scope.getExistingPlaylists();
         if ($scope.mobile) {
             $("#removeFromPlaylist-menu").show().animate({
@@ -3415,15 +3430,15 @@ app.controller("playlistEditController", ["$scope", "$window", "$location", "rem
         }
     });
 
-    $scope.$on("closeRemoveFromPlaylist", function() {
+    $scope.$on("closeRemoveFromPlaylist", function () {
         $scope.closeRemoveFrom();
     });
 
-    $scope.closeAddTo = function() {
+    $scope.closeAddTo = function () {
         if ($scope.mobile) {
             $("#addToPlaylist-menu").animate({
                 top: 1000
-            }, function() {
+            }, function () {
                 $(this).removeAttr("style");
             });
         } else if ($scope.desktop) {
@@ -3434,11 +3449,11 @@ app.controller("playlistEditController", ["$scope", "$window", "$location", "rem
         }
     };
 
-    $scope.closeRemoveFrom = function() {
+    $scope.closeRemoveFrom = function () {
         if ($scope.mobile) {
             $("#removeFromPlaylist-menu").animate({
                 bottom: -1000
-            }, function() {
+            }, function () {
                 $(this).removeAttr("style");
             });
         } else if ($scope.desktop) {
@@ -3449,15 +3464,15 @@ app.controller("playlistEditController", ["$scope", "$window", "$location", "rem
         }
     };
 
-    $scope.getExistingPlaylists = function() {
+    $scope.getExistingPlaylists = function () {
         remotingService.execute(
 			"DSARemoterPlaylistExtension.getMyPlaylists",
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        result = _.sortBy(result, "name");
 			        $scope.myPlaylists = result;
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -3466,16 +3481,16 @@ app.controller("playlistEditController", ["$scope", "$window", "$location", "rem
 		);
     };
 
-    $scope.removeFromPlaylist = function(playlistId, documentId) {
+    $scope.removeFromPlaylist = function (playlistId, documentId) {
         if (playlistId && documentId) {
             remotingService.execute(
 				"DSARemoterPlaylistExtension.removeFromPlaylist",
 				playlistId, documentId,
 				{
-				    success: function(result) {
+				    success: function (result) {
 
 				    },
-				    error: function(error) {
+				    error: function (error) {
 				        $scope.stopLoading();
 				        sessionService.checkSession(error.message);
 				    }
@@ -3487,16 +3502,16 @@ app.controller("playlistEditController", ["$scope", "$window", "$location", "rem
         }
     };
 
-    $scope.addToPlaylist = function(playlistId, documentId) {
+    $scope.addToPlaylist = function (playlistId, documentId) {
         if (playlistId && documentId) {
             remotingService.execute(
 				"DSARemoterPlaylistExtension.addToPlaylist",
 				playlistId, documentId,
 				{
-				    success: function(result) {
+				    success: function (result) {
 
 				    },
-				    error: function(error) {
+				    error: function (error) {
 				        $scope.stopLoading();
 				        sessionService.checkSession(error.message);
 				    }
@@ -3508,27 +3523,27 @@ app.controller("playlistEditController", ["$scope", "$window", "$location", "rem
         }
     };
 
-    $scope.createAndAddToPlaylist = function(documentId) {
+    $scope.createAndAddToPlaylist = function (documentId) {
         if ($scope.newPlaylist.newPlaylistTitle && documentId) {
             if (!$scope.newPlaylist.newPlaylistDescription) {
                 $scope.newPlaylist.newPlaylistDescription = ' ';
             }
-            if(!$scope.newPlaylist.newPlaylistIsFeatured){
+            if (!$scope.newPlaylist.newPlaylistIsFeatured) {
                 $scope.newPlaylist.newPlaylistIsFeatured = false;
             }
             remotingService.execute(
 				"DSARemoterPlaylistExtension.createPlaylist",
 				$scope.newPlaylist.newPlaylistTitle, $scope.newPlaylist.newPlaylistDescription, $scope.newPlaylist.newPlaylistIsFeatured,
 				{
-				    success: function(result) {
+				    success: function (result) {
 				        $scope.addToPlaylist(result.recordId, documentId);
 				        $scope.newPlaylist = {
-				            newPlaylistTitle:"",
-				            newPlaylistDescription:"",
-				            newPlaylistIsFeatured:false
+				            newPlaylistTitle: "",
+				            newPlaylistDescription: "",
+				            newPlaylistIsFeatured: false
 				        };
 				    },
-				    error: function(error) {
+				    error: function (error) {
 				        $scope.stopLoading();
 				        sessionService.checkSession(error.message);
 				    }
@@ -3543,14 +3558,14 @@ app.controller("playlistEditController", ["$scope", "$window", "$location", "rem
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("playlistListController", ["$scope", "$route", "$window", "$location", "$routeParams", "remotingService", "sessionService", function($scope, $route, $window, $location, $routeParams, remotingService, sessionService) {
+app.controller("playlistListController", ["$scope", "$route", "$window", "$location", "$routeParams", "remotingService", "sessionService", function ($scope, $route, $window, $location, $routeParams, remotingService, sessionService) {
     $scope.alphaLists = [
-		{letter:"#", sublist: [], display: false},
-		{letter:"A", sublist: [], display: false}, {letter:"B", sublist: [], display: false}, {letter:"C", sublist: [], display: false}, {letter:"D", sublist: [], display: false}, {letter:"E", sublist: [], display: false}, {letter:"F", sublist: [], display: false},
-		{letter:"G", sublist: [], display: false}, {letter:"H", sublist: [], display: false}, {letter:"I", sublist: [], display: false}, {letter:"J", sublist: [], display: false}, {letter:"K", sublist: [], display: false}, {letter:"L", sublist: [], display: false},
-		{letter:"M", sublist: [], display: false}, {letter:"N", sublist: [], display: false}, {letter:"O", sublist: [], display: false}, {letter:"P", sublist: [], display: false}, {letter:"Q", sublist: [], display: false}, {letter:"R", sublist: [], display: false},
-		{letter:"S", sublist: [], display: false}, {letter:"T", sublist: [], display: false}, {letter:"U", sublist: [], display: false}, {letter:"V", sublist: [], display: false}, {letter:"W", sublist: [], display: false}, {letter:"X", sublist: [], display: false},
-		{letter:"Y", sublist: [], display: false}, {letter:"Z", sublist: [], display: false}
+		{ letter: "#", sublist: [], display: false },
+		{ letter: "A", sublist: [], display: false }, { letter: "B", sublist: [], display: false }, { letter: "C", sublist: [], display: false }, { letter: "D", sublist: [], display: false }, { letter: "E", sublist: [], display: false }, { letter: "F", sublist: [], display: false },
+		{ letter: "G", sublist: [], display: false }, { letter: "H", sublist: [], display: false }, { letter: "I", sublist: [], display: false }, { letter: "J", sublist: [], display: false }, { letter: "K", sublist: [], display: false }, { letter: "L", sublist: [], display: false },
+		{ letter: "M", sublist: [], display: false }, { letter: "N", sublist: [], display: false }, { letter: "O", sublist: [], display: false }, { letter: "P", sublist: [], display: false }, { letter: "Q", sublist: [], display: false }, { letter: "R", sublist: [], display: false },
+		{ letter: "S", sublist: [], display: false }, { letter: "T", sublist: [], display: false }, { letter: "U", sublist: [], display: false }, { letter: "V", sublist: [], display: false }, { letter: "W", sublist: [], display: false }, { letter: "X", sublist: [], display: false },
+		{ letter: "Y", sublist: [], display: false }, { letter: "Z", sublist: [], display: false }
     ];
     $scope.templates = {
         playlistList: resourceUrl + '/partials/playlist-list.html'
@@ -3567,7 +3582,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
     $scope.myPlaylistIconUrl = resourceUrl + '/icons/standard/Playlist3.png';
     $scope.contentIcon = resourceUrl + '/icons/standard/document_blank.png';
 
-    $scope.init = function() {
+    $scope.init = function () {
         if ($scope.info && $scope.info.user) {
             if (!$scope.info.user.isContentUser) {
                 $location.url("/error/" + $scope.info.contentUserErrorMessage);
@@ -3579,29 +3594,29 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
         $scope.initRun = true;
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.initRun = false;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.initRun = false;
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.changeEditMode = function() {
+    $scope.changeEditMode = function () {
         $scope.editing = !$scope.editing;
     };
 
-    $scope.deletePlaylist = function(recordId, event) {
+    $scope.deletePlaylist = function (recordId, event) {
         if (event) {
             $(event.target).parent().fadeOut();
         }
@@ -3609,10 +3624,10 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 			"DSARemoterPlaylistExtension.deletePlaylist",
 			recordId,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.getPlaylists($scope.pageNumber);
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -3621,7 +3636,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 		);
     };
 
-    $scope.getPlaylists = function(pageNumber) {
+    $scope.getPlaylists = function (pageNumber) {
         $scope.startLoading();
         console.log("$scope.info.preferredMobileAppConfiguration: ", $scope.info.preferredMobileAppConfiguration);
         switch ($scope.category) {
@@ -3633,7 +3648,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 						"DSARemoterPlaylistExtension.getPlaylistsForPrefixMAC",
 						$scope.letter, $scope.info.preferredMobileAppConfiguration,
 						{
-						    success: function(result) {
+						    success: function (result) {
 						        var resultObj = {
 						            items: result,
 						            pageNumber: 1,
@@ -3642,7 +3657,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 						        }
 						        $scope.handleResult(resultObj);
 						    },
-						    error: function(error) {
+						    error: function (error) {
 						        $scope.stopLoading();
 						        sessionService.checkSession(error.message);
 						    }
@@ -3654,10 +3669,10 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 						"DSARemoterPlaylistExtension.getPlaylistsMAC",
 						pageNumber, $scope.info.preferredMobileAppConfiguration,
 						{
-						    success: function(result) {
+						    success: function (result) {
 						        $scope.handleResult(result);
 						    },
-						    error: function(error) {
+						    error: function (error) {
 						        $scope.stopLoading();
 						        sessionService.checkSession(error.message);
 						    }
@@ -3672,7 +3687,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 						"DSARemoterPlaylistExtension.getMyPlaylistsForPrefix",
 						$scope.letter,
 						{
-						    success: function(result) {
+						    success: function (result) {
 						        var resultObj = {
 						            items: result,
 						            pageNumber: 1,
@@ -3681,7 +3696,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 						        }
 						        $scope.handleResult(resultObj);
 						    },
-						    error: function(error) {
+						    error: function (error) {
 						        $scope.stopLoading();
 						        sessionService.checkSession(error.message);
 						    }
@@ -3692,7 +3707,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
                     remotingService.execute(
 						"DSARemoterPlaylistExtension.getMyPlaylists",
 						{
-						    success: function(result) {
+						    success: function (result) {
 						        var resultObj = {
 						            items: result,
 						            pageNumber: 1,
@@ -3701,7 +3716,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 						        }
 						        $scope.handleResult(resultObj);
 						    },
-						    error: function(error) {
+						    error: function (error) {
 						        $scope.stopLoading();
 						        sessionService.checkSession(error.message);
 						    }
@@ -3716,7 +3731,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 						"DSARemoterPlaylistExtension.getFeaturedPlaylistsForPrefix",
 						$scope.letter,
 						{
-						    success: function(result) {
+						    success: function (result) {
 						        var resultObj = {
 						            items: result,
 						            pageNumber: 1,
@@ -3725,7 +3740,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 						        }
 						        $scope.handleResult(resultObj);
 						    },
-						    error: function(error) {
+						    error: function (error) {
 						        $scope.stopLoading();
 						        sessionService.checkSession(error.message);
 						    }
@@ -3736,7 +3751,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
                     remotingService.execute(
 						"DSARemoterPlaylistExtension.getFeaturedPlaylists",
 						{
-						    success: function(result) {
+						    success: function (result) {
 						        var resultObj = {
 						            items: result,
 						            pageNumber: 1,
@@ -3745,7 +3760,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 						        }
 						        $scope.handleResult(resultObj);
 						    },
-						    error: function(error) {
+						    error: function (error) {
 						        $scope.stopLoading();
 						        sessionService.checkSession(error.message);
 						    }
@@ -3760,7 +3775,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
                         "DSARemoterPlaylistExtension.getFavoritePlaylistsForPrefix",
                         $scope.letter,
                         {
-                            success: function(result) {
+                            success: function (result) {
                                 var resultObj = {
                                     items: result,
                                     pageNumber: 1,
@@ -3769,7 +3784,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
                                 }
                                 $scope.handleResult(resultObj);
                             },
-                            error: function(error) {
+                            error: function (error) {
                                 $scope.stopLoading();
                                 sessionService.checkSession(error.message);
                             }
@@ -3780,7 +3795,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
                     remotingService.execute(
                         "DSARemoterPlaylistExtension.getFavoritePlaylists",
                         {
-                            success: function(result) {
+                            success: function (result) {
                                 var resultObj = {
                                     items: result,
                                     pageNumber: 1,
@@ -3789,7 +3804,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
                                 }
                                 $scope.handleResult(resultObj);
                             },
-                            error: function(error) {
+                            error: function (error) {
                                 $scope.stopLoading();
                                 sessionService.checkSession(error.message);
                             }
@@ -3802,7 +3817,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
                 remotingService.execute(
 					"DSARemoterPlaylistExtension.getFollowedPlaylists",
 					{
-					    success: function(result) {
+					    success: function (result) {
 					        var resultObj = {
 					            items: result,
 					            pageNumber: 1,
@@ -3811,7 +3826,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 					        }
 					        $scope.handleResult(resultObj);
 					    },
-					    error: function(error) {
+					    error: function (error) {
 					        $scope.stopLoading();
 					        sessionService.checkSession(error.message);
 					    }
@@ -3823,7 +3838,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
                 remotingService.execute(
 					"DSARemoterPlaylistExtension.getTrendingPlaylistByViews",
 					{
-					    success: function(result) {
+					    success: function (result) {
 					        var resultObj = {
 					            items: result,
 					            pageNumber: 1,
@@ -3832,7 +3847,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 					        }
 					        $scope.handleResult(resultObj);
 					    },
-					    error: function(error) {
+					    error: function (error) {
 					        $scope.stopLoading;
 					        sessionService.checkSession(error.message);
 					    }
@@ -3843,7 +3858,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
         }
     };
 
-    $scope.handleResult = function(result) {
+    $scope.handleResult = function (result) {
         $scope.stopLoading();
         $scope.pageNumber = result.pageNumber;
         $scope.showPrevious = $scope.pageNumber > 1;
@@ -3855,29 +3870,29 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
         }
     };
 
-    $scope.getPrevious = function() {
+    $scope.getPrevious = function () {
         if ($scope.showPrevious) {
             $scope.pageNumber--;
             $scope.getPlaylists($scope.pageNumber);
         }
     };
 
-    $scope.getNext = function() {
+    $scope.getNext = function () {
         if ($scope.showNext) {
             $scope.pageNumber++;
             $scope.getPlaylists($scope.pageNumber);
         }
     };
 
-    $scope.filterResults = function(result, resultObj) {
-        _.each($scope.alphaLists, function(alphaList) {
+    $scope.filterResults = function (result, resultObj) {
+        _.each($scope.alphaLists, function (alphaList) {
             alphaList.display = false;
             alphaList.sublist = [];
         });
         //if (result && result.length > 0) {
         if (result) {
             result = _.sortBy(result, "name");
-            var groupedResult = _.groupBy(result, function(playlist) {
+            var groupedResult = _.groupBy(result, function (playlist) {
                 var letterKey = playlist.name.charAt(0);
                 if (letterKey.toLowerCase() == letterKey.toUpperCase()) {
                     letterKey = '#';
@@ -3886,16 +3901,16 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
                 }
                 return letterKey;
             });
-            _.each(_.keys(groupedResult), function(key) {
+            _.each(_.keys(groupedResult), function (key) {
                 var labelKey = key;
-                var alphaLists = _.where($scope.alphaLists, {letter: labelKey});
+                var alphaLists = _.where($scope.alphaLists, { letter: labelKey });
                 alphaLists[0].sublist = alphaLists[0].sublist.concat(groupedResult[key]);
                 alphaLists[0].display = true;
             });
             var letters = _.sortBy(_.keys(groupedResult));
             var index = 0;
             if (resultObj.totalPages == 1) {
-                _.each($scope.alphaLists, function(alphaList) {
+                _.each($scope.alphaLists, function (alphaList) {
                     alphaList.display = true;
                 });
             } else if (resultObj.totalPages > 1) {
@@ -3925,7 +3940,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
         }
     };
 
-    $scope.filterResultsByLetter = function(letter) {
+    $scope.filterResultsByLetter = function (letter) {
         if (letter === 'ALL') {
             $scope.letter = "";
             $scope.activeLetter = false;
@@ -3937,7 +3952,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
         $scope.init();
     };
 
-    $scope.goToAnchor = function(letter) {
+    $scope.goToAnchor = function (letter) {
         //if ($("#" + letter + ".active-letter").length) {
         console.log('activeLetter: ' + $scope.activeLetter);
         if ($scope.activeLetter) {
@@ -3947,14 +3962,14 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
         }
     };
 
-    $scope.goToPlaylist = function(recordId) {
+    $scope.goToPlaylist = function (recordId) {
         $location.url('/playlist/' + recordId);
         if ($scope.mobile) {
             $scope.collapsePlaylistList(true);
         }
     };
 
-    $scope.goToCategory = function(category) {
+    $scope.goToCategory = function (category) {
         $scope.editing = false;
         $scope.pageNumber = 1;
         $scope.letter = "";
@@ -3966,35 +3981,35 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
         }
     };
 
-    $scope.$on("expandPlaylistList2", function(event, category) {
+    $scope.$on("expandPlaylistList2", function (event, category) {
         $scope.displayPlaylistListClose = true;
         $scope.goToCategory(category);
     });
 
-    $scope.slideNewPlaylistForm = function() {
+    $scope.slideNewPlaylistForm = function () {
         $("#new-playlist-form").slideToggle();
     };
 
-    $scope.createAndAddToPlaylist = function() {
+    $scope.createAndAddToPlaylist = function () {
         if ($scope.newPlaylist.newPlaylistTitle) {
             if (!$scope.newPlaylist.newPlaylistDescription) {
                 $scope.newPlaylist.newPlaylistDescription = ' ';
             }
-            if(!$scope.newPlaylist.newPlaylistIsFeatured){
+            if (!$scope.newPlaylist.newPlaylistIsFeatured) {
                 $scope.newPlaylist.newPlaylistIsFeatured = false;
             }
             remotingService.execute(
 				"DSARemoterPlaylistExtension.createPlaylist",
 				$scope.newPlaylist.newPlaylistTitle, $scope.newPlaylist.newPlaylistDescription, $scope.newPlaylist.newPlaylistIsFeatured,
 				{
-				    success: function(result) {
+				    success: function (result) {
 				        $scope.newPlaylist = {
-				            newPlaylistTitle:"",
-				            newPlaylistDescription:"",
-				            newPlaylistIsFeatured:false
+				            newPlaylistTitle: "",
+				            newPlaylistDescription: "",
+				            newPlaylistIsFeatured: false
 				        };
 				    },
-				    error: function(error) {
+				    error: function (error) {
 				        $scope.stopLoading();
 				        sessionService.checkSession(error.message);
 				    }
@@ -4006,12 +4021,12 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
         //$scope.slideNewPlaylistForm();
     };
 
-    $scope.collapsePlaylistList = function(closeNavBar) {
+    $scope.collapsePlaylistList = function (closeNavBar) {
         $scope.displayPlaylistListClose = false;
         $scope.$emit("closePlaylistList", closeNavBar);
     };
 
-    $scope.$on('displayPlaylistListCloseTrue', function() {
+    $scope.$on('displayPlaylistListCloseTrue', function () {
         $scope.displayPlaylistListClose = true;
     });
 
@@ -4026,7 +4041,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
     // $window.parent.onresize();
 
     $scope.onresize = $window.onresize;
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.desktop = $window.innerWidth >= 768;
         $scope.mobile = $window.innerWidth < 768;
@@ -4043,7 +4058,7 @@ app.controller("playlistListController", ["$scope", "$route", "$window", "$locat
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("playlistNavbarController", ["$scope", "$location", "$routeParams", "remotingService", "sessionService", function($scope, $location, $routeParams, remotingService, sessionService) {
+app.controller("playlistNavbarController", ["$scope", "$location", "$routeParams", "remotingService", "sessionService", function ($scope, $location, $routeParams, remotingService, sessionService) {
     $scope.playlist = {};
     $scope.hasNext = false;
     $scope.hasPrevious = false;
@@ -4051,7 +4066,7 @@ app.controller("playlistNavbarController", ["$scope", "$location", "$routeParams
     $scope.position = 0;
     $scope.hubId = $routeParams.hubId;
 
-    $scope.init = function() {
+    $scope.init = function () {
         if ($scope.info && $scope.info.user) {
             if (!$scope.info.user.isContentUser) {
                 $location.url("/error/" + $scope.info.contentUserErrorMessage);
@@ -4061,12 +4076,12 @@ app.controller("playlistNavbarController", ["$scope", "$location", "$routeParams
 			"DSARemoterPlaylistExtension.getPlaylistDetail",
 			$scope.playlistId,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.playlist = result;
 			        $scope.playlistItems = $scope.playlist.contentItems;
 			        $scope.determineContentPosition();
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -4075,24 +4090,24 @@ app.controller("playlistNavbarController", ["$scope", "$location", "$routeParams
 		);
     };
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.init();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.determineContentPosition = function() {
-        _.each($scope.playlistItems, function(contentItem, index) {
+    $scope.determineContentPosition = function () {
+        _.each($scope.playlistItems, function (contentItem, index) {
             if ($routeParams.contentId == contentItem.contentDocumentId) {
                 $scope.position = index;
                 $scope.hasPrevious = $scope.position > 0;
@@ -4101,21 +4116,21 @@ app.controller("playlistNavbarController", ["$scope", "$location", "$routeParams
         });
     };
 
-    $scope.next = function() {
+    $scope.next = function () {
         if ($scope.hasNext) {
             var content = $scope.playlistItems[$scope.position + 1];
             $location.url("/content/" + content.contentDocumentId + "?playlistId=" + $scope.playlistId);
         }
     };
 
-    $scope.previous = function() {
+    $scope.previous = function () {
         if ($scope.hasPrevious) {
             var content = $scope.playlistItems[$scope.position - 1];
             $location.url("/content/" + content.contentDocumentId + "?playlistId=" + $scope.playlistId);
         }
     };
 
-    $scope.goToPlaylist = function() {
+    $scope.goToPlaylist = function () {
         var link = "/playlist/" + $scope.playlist.recordId;
         if ($scope.hubId) {
             link += "?hubId=" + $scope.hubId;
@@ -4127,7 +4142,7 @@ app.controller("playlistNavbarController", ["$scope", "$location", "$routeParams
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("preferencesController", ["$scope", "$location", "remotingService", "sessionService", function($scope, $location, remotingService, sessionService) {
+app.controller("preferencesController", ["$scope", "$location", "remotingService", "sessionService", function ($scope, $location, remotingService, sessionService) {
     $scope.templates = {
         menu: resourceUrl + "/partials/preferences-menu.html"
     };
@@ -4146,7 +4161,7 @@ app.controller("preferencesController", ["$scope", "$location", "remotingService
     $scope.macs = [];
     $scope.macSelected = false;
 
-    $scope.init = function() {
+    $scope.init = function () {
         if ($scope.info && $scope.info.user) {
             if (!$scope.info.user.isContentUser) {
                 $location.url("/error/" + $scope.info.contentUserErrorMessage);
@@ -4158,15 +4173,15 @@ app.controller("preferencesController", ["$scope", "$location", "remotingService
         $scope.getMobileAppConfigs();
     };
 
-    $scope.getMobileAppConfigs = function() {
+    $scope.getMobileAppConfigs = function () {
         remotingService.execute(
 			"DSARemoterMobileAppConfigExtension.getMobileAppConfigurations",
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.macs = result;
 			        $scope.checkForSelectedMac();
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -4175,19 +4190,19 @@ app.controller("preferencesController", ["$scope", "$location", "remotingService
 		);
     };
 
-    $scope.checkForSelectedMac = function() {
-        _.each($scope.macs, function(mac) {
+    $scope.checkForSelectedMac = function () {
+        _.each($scope.macs, function (mac) {
             mac.isSelected = mac.mobileAppConfigId == $scope.info.preferredMobileAppConfiguration;
         });
     };
 
-    $scope.selectMac = function(mac) {
+    $scope.selectMac = function (mac) {
         var previousSelectBool = mac.isSelected;
         mac.isSelected = !mac.isSelected;
-        var arr = _.where($scope.macs, {isSelected: true});
+        var arr = _.where($scope.macs, { isSelected: true });
         if (arr.length > 1) {
             if (mac.isSelected) {
-                _.each($scope.macs, function(m) {
+                _.each($scope.macs, function (m) {
                     if (m.mobileAppConfigId !== mac.mobileAppConfigId) {
                         m.isSelected = false;
                     }
@@ -4202,11 +4217,11 @@ app.controller("preferencesController", ["$scope", "$location", "remotingService
 				"DSARemoterInfoExtension.setPreferredMobileAppConfiguration",
 				mac.mobileAppConfigId,
 				{
-				    success: function(result) {
+				    success: function (result) {
 				        $scope.info.preferredMobileAppConfiguration = mac.mobileAppConfigId;
 				        $scope.$emit("infoUpdate-emit", $scope.info, mac.titleText);
 				    },
-				    error: function(error) {
+				    error: function (error) {
 				        $scope.stopLoading();
 				        sessionService.checkSession(error.message);
 				    }
@@ -4216,18 +4231,18 @@ app.controller("preferencesController", ["$scope", "$location", "remotingService
         }
     };
 
-    $scope.selectLanguage = function(language) {
+    $scope.selectLanguage = function (language) {
         language.isSelected = !language.isSelected;
-        var selectedLanguages = _.where($scope.languages, {isSelected: true});
+        var selectedLanguages = _.where($scope.languages, { isSelected: true });
         var languageValues = _.pluck(selectedLanguages, "value");
         remotingService.execute(
 			"DSARemoterInfoExtension.setPreferredLanguageCodes",
 			languageValues,
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $scope.$emit("refreshPage");
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        $scope.stopLoading();
 			        sessionService.checkSession(error.message);
 			    }
@@ -4236,7 +4251,7 @@ app.controller("preferencesController", ["$scope", "$location", "remotingService
 		);
     };
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
@@ -4244,14 +4259,14 @@ app.controller("preferencesController", ["$scope", "$location", "remotingService
         $scope.init();
     });
 
-    $scope.navigateToSF = function(){
-        window.location.href =location.protocol + '//' + location.hostname + '/home/home.jsp';
+    $scope.navigateToSF = function () {
+        window.location.href = location.protocol + '//' + location.hostname + '/home/home.jsp';
     }
 
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("searchController", ["$scope", "$location", "$timeout", function($scope, $location, $timeout) {
+app.controller("searchController", ["$scope", "$location", "$timeout", function ($scope, $location, $timeout) {
     $scope.searchIconClass = "fa-search";
     //$scope.searchResults = [];
 
@@ -4293,11 +4308,11 @@ app.controller("searchController", ["$scope", "$location", "$timeout", function(
 		}
 	};*/
 
-    $scope.$on("searchCompleted-broadcast", function() {
+    $scope.$on("searchCompleted-broadcast", function () {
         $scope.searchIconClass = "fa-search";
     });
 
-    $scope.handleSearchTermChange = function() {
+    $scope.handleSearchTermChange = function () {
         if (!($scope.searchTerm && $scope.searchTerm.length > 0)) {
             $scope.searchIconClass = "fa-times-circle";
             /*if ($scope.searchTerm.length > 2) {
@@ -4311,7 +4326,7 @@ app.controller("searchController", ["$scope", "$location", "$timeout", function(
         }
     };
 
-    $scope.clearSearch = function() {//debugger;
+    $scope.clearSearch = function () {//debugger;
         //$scope.searchResultsExpanded = false;
         if (!($scope.searchTerm) || ($scope.searchTerm && $scope.searchTerm.length == 0)) {
             $scope.searchTerm = '';
@@ -4324,7 +4339,7 @@ app.controller("searchController", ["$scope", "$location", "$timeout", function(
         }
     };
 
-    $scope.hideKeyword = function() {//debugger;
+    $scope.hideKeyword = function () {//debugger;
         // console.log("SFDC");
         $('body').on('click', function (event) {
             document.activeElement.blur();
@@ -4364,7 +4379,7 @@ app.controller("searchController", ["$scope", "$location", "$timeout", function(
 		});
 	};*/
 
-    $scope.goToResult = function() {//debugger;
+    $scope.goToResult = function () {//debugger;
         $scope.searchIconClass = "fa-spinner fa-spin";
         $location.url('/searchResults/' + $scope.searchTerm);
         /*var link = '#';
@@ -4398,7 +4413,7 @@ app.controller("searchController", ["$scope", "$location", "$timeout", function(
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("searchResultsController", ["$scope", "$routeParams", "$location", "$window", "remotingService", function($scope, $routeParams, $location, $window, remotingService) {
+app.controller("searchResultsController", ["$scope", "$routeParams", "$location", "$window", "remotingService", function ($scope, $routeParams, $location, $window, remotingService) {
     $scope.searchIconClass = "fa-spinner fa-spin";
     $scope.searchTerm = $routeParams.searchTerm;
     $scope.searchResults = [];
@@ -4415,37 +4430,37 @@ app.controller("searchResultsController", ["$scope", "$routeParams", "$location"
         }
     }
 
-    $scope.$on("internalOnlyMode-broadcast", function(event, internalOnlyMode) {
+    $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.search();
     });
 
-    $scope.$on("refreshPage-broadcast", function() {
+    $scope.$on("refreshPage-broadcast", function () {
         $scope.init();
     });
 
-    $scope.$on("infoUpdate", function(event, info) {
+    $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
     });
 
-    $scope.search = function() {
+    $scope.search = function () {
         $scope.startLoading();
         if ($scope.searchTerm) {
             remotingService.execute(
 				"DSARemoterSearchExtension.search",
 				$scope.searchTerm,
 				{
-				    success: function(result) {
+				    success: function (result) {
 				        $scope.stopLoading();
 				        $scope.searchErrorMessage = "";
 				        $scope.handleSearchResults(result);
 				        $scope.searchIconClass = "fa-search";
 				        $scope.$emit("searchCompleted");
 				    },
-				    error: function(message) {
+				    error: function (message) {
 				        $scope.stopLoading();
 				        $scope.searchIconClass = "fa-search";
 				        $scope.$emit("searchCompleted");
@@ -4457,35 +4472,35 @@ app.controller("searchResultsController", ["$scope", "$routeParams", "$location"
         }
     };
 
-    $scope.handleSearchResults = function(result) {
+    $scope.handleSearchResults = function (result) {
         var searchResults = [];
         var tagSet = {};
         if (result) {
-            _.each(result.categories, function(obj, index, collection) {
+            _.each(result.categories, function (obj, index, collection) {
                 obj.obj_type = 'category';
                 searchResults.push(obj);
-                _.each(obj.tags, function(tag) {
+                _.each(obj.tags, function (tag) {
                     tagSet[tag] = {
                         name: tag,
                         isChecked: false
                     };
                 });
             });
-            _.each(result.playlists, function(obj, index, collection) {
+            _.each(result.playlists, function (obj, index, collection) {
                 obj.obj_type = 'playlist';
                 searchResults.push(obj);
-                _.each(obj.tags, function(tag) {
+                _.each(obj.tags, function (tag) {
                     tagSet[tag] = {
                         name: tag,
                         isChecked: false
                     };
                 });
             });
-            _.each(result.contentItemDetails, function(obj, index, collection) {
+            _.each(result.contentItemDetails, function (obj, index, collection) {
                 obj.obj_type = 'contentItem';
                 obj.name = obj.title;
                 searchResults.push(obj);
-                _.each(obj.tags, function(tag) {
+                _.each(obj.tags, function (tag) {
                     tagSet[tag] = {
                         name: tag,
                         isChecked: false
@@ -4499,38 +4514,38 @@ app.controller("searchResultsController", ["$scope", "$routeParams", "$location"
 
     $scope.search();
 
-    $scope.belongsToCategories = function(value) {
+    $scope.belongsToCategories = function (value) {
         return value.obj_type == 'category';
     };
 
-    $scope.belongsToAllResults = function(value) {
+    $scope.belongsToAllResults = function (value) {
         return value.obj_type != 'category';
     };
 
-    $scope.filterResults = function(selectedTag) {
+    $scope.filterResults = function (selectedTag) {
         if (selectedTag) {
             selectedTag.isChecked = !selectedTag.isChecked;
         }
         $scope.filteredResultLists = [];
         var resultMap = {
             all_tags: {
-                label:"",
+                label: "",
                 results: []
             }
         };
         var selectedTags = [];
-        _.each($scope.tags, function(tag) {
+        _.each($scope.tags, function (tag) {
             if (tag.isChecked) {
                 selectedTags.push(tag.name);
             }
         });
         resultMap.all_tags.label = selectedTags.join(" + ");
-        _.each($scope.searchResults, function(searchResult) {
+        _.each($scope.searchResults, function (searchResult) {
             var intersection = _.intersection(selectedTags, searchResult.tags);
             if (selectedTags.length === intersection.length) {
                 resultMap.all_tags.results.push(searchResult);
             }
-            _.each(intersection, function(tag) {
+            _.each(intersection, function (tag) {
                 if (!resultMap[tag]) {
                     resultMap[tag] = {
                         label: tag,
@@ -4546,7 +4561,7 @@ app.controller("searchResultsController", ["$scope", "$routeParams", "$location"
         } else if (resultLists.length == 2) {
             $scope.filteredResultLists.push(resultLists[0]);
         } else {
-            _.each(resultLists, function(list) {
+            _.each(resultLists, function (list) {
                 $scope.filteredResultLists.push(list);
             });
         }
@@ -4554,7 +4569,7 @@ app.controller("searchResultsController", ["$scope", "$routeParams", "$location"
 
 
 
-    $scope.slideFilter = function() {
+    $scope.slideFilter = function () {
         $scope.filterIcon = $scope.filterIcon === "s1utility s1utility-filter" ? "fa fa-chevron-up" : "s1utility s1utility-filter";
         if ($scope.mobile) {
             $("#filter-results-section").css({
@@ -4564,31 +4579,31 @@ app.controller("searchResultsController", ["$scope", "$routeParams", "$location"
         $("#filter-results-section").slideToggle();
     };
 
-    $scope.applyFilter = function() {
+    $scope.applyFilter = function () {
         if ($scope.filteredResultLists.length > 0) {
             $scope.slideFilter();
         }
     };
 
-    $scope.clearFilter = function() {
+    $scope.clearFilter = function () {
         if ($scope.filteredResultLists.length > 0) {
-            _.each($scope.tags, function(tag) {
+            _.each($scope.tags, function (tag) {
                 tag.isChecked = false;
             });
             $scope.filterResults();
         }
     };
 
-    $scope.determineResultWidth = function() {
+    $scope.determineResultWidth = function () {
         $scope.resultWidth = $scope.desktop ? Math.floor(($scope.searchResultsScreenWidth - 21 - (20 * 6)) / 3) + "px" : "100%";
     };
 
-    $scope.determineRelatedCategoryWidth = function() {
+    $scope.determineRelatedCategoryWidth = function () {
         $scope.relatedCategoryWidth = Math.floor(($scope.searchResultsScreenWidth - 21 - (20 * 6)) / 5);
         $scope.relatedCategoryHeight = Math.floor(200 * $scope.relatedCategoryWidth / 280);
     };
 
-    $scope.goToItemDetail = function() {
+    $scope.goToItemDetail = function () {
         var link = '/';
         if (this.searchResult) {
             switch (this.searchResult.obj_type) {
@@ -4607,7 +4622,7 @@ app.controller("searchResultsController", ["$scope", "$routeParams", "$location"
     };
 
 
-    $scope.clearSearch = function() {
+    $scope.clearSearch = function () {
         //$scope.searchResultsExpanded = false;
         //debugger;
         if (!$scope.searchTerm) {
@@ -4621,7 +4636,7 @@ app.controller("searchResultsController", ["$scope", "$routeParams", "$location"
         }
     };
 
-    $scope.hideKeyword = function() {
+    $scope.hideKeyword = function () {
         //debugger;
         // console.log("SFDC");
         $('body').on('click', function (event) {
@@ -4634,7 +4649,7 @@ app.controller("searchResultsController", ["$scope", "$routeParams", "$location"
         });
     };
 
-    $scope.goToResult = function() {//debugger;
+    $scope.goToResult = function () {//debugger;
         $scope.searchIconClass = "fa-spinner fa-spin";
         //document.activeElement.blur();
         //$("input").blur();
@@ -4665,7 +4680,7 @@ app.controller("searchResultsController", ["$scope", "$routeParams", "$location"
     // $window.parent.onresize();
 
     $scope.onresize = $window.onresize;
-    $window.onresize = function() {
+    $window.onresize = function () {
         $scope.onresize();
         $scope.desktop = $window.innerWidth >= 768;
         $scope.mobile = $window.innerWidth < 768;
@@ -4681,12 +4696,12 @@ app.controller("searchResultsController", ["$scope", "$routeParams", "$location"
 }]);
 var app = angular.module("dsaApp");
 
-app.directive('expandCategoryList', ["$window", function($window) {
+app.directive('expandCategoryList', ["$window", function ($window) {
     return {
         restrict: 'C',
         link: function ($scope, element, attrs) {
 
-            $scope.$on("expandCategoryList2", function() {
+            $scope.$on("expandCategoryList2", function () {
                 $scope.displayCategoryListClose = true;
                 $(element).css({
                     display: "block"
@@ -4694,25 +4709,25 @@ app.directive('expandCategoryList', ["$window", function($window) {
                 $scope.categoryListTop = $(element).position().top;
                 $(element).css({
                     display: "block",
-                    "position":"fixed",
-                    backgroundColor:"#1e2021",
-                    width:"100%",
-                    height:$window.innerHeight + "px",
-                    "z-index":"2000000",
+                    "position": "fixed",
+                    backgroundColor: "#1e2021",
+                    width: "100%",
+                    height: $window.innerHeight + "px",
+                    "z-index": "2000000",
                     top: $scope.categoryListTop,
                     left: 0
                 });
                 $(element).animate({
-                    top:0
+                    top: 0
                 });
             });
 
-            $scope.$on("closeCategoryList2", function() {
+            $scope.$on("closeCategoryList2", function () {
                 if ($scope.mobile) {
                     $scope.displayCategoryListClose = false;
                     $(element).animate({
-                        top:$scope.categoryListTop
-                    }, function() {
+                        top: $scope.categoryListTop
+                    }, function () {
                         $(this).removeAttr("style");
                     });
                     $scope.$emit('displayCategoryListCloseFalse');
@@ -4723,12 +4738,12 @@ app.directive('expandCategoryList', ["$window", function($window) {
 }]);
 var app = angular.module("dsaApp");
 
-app.directive('expandContentList', ["$window", function($window) {
+app.directive('expandContentList', ["$window", function ($window) {
     return {
         restrict: 'C',
         link: function ($scope, element, attrs) {
 
-            $scope.$on("expandContentList2", function() {
+            $scope.$on("expandContentList2", function () {
                 $scope.displayContentListClose = true;
                 $(element).css({
                     display: "block"
@@ -4736,25 +4751,25 @@ app.directive('expandContentList', ["$window", function($window) {
                 $scope.contentListTop = $(element).position().top;
                 $(element).css({
                     display: "block",
-                    "position":"fixed",
-                    backgroundColor:"#1e2021",
-                    width:"100%",
-                    height:$window.innerHeight + "px",
-                    "z-index":"2000000",
+                    "position": "fixed",
+                    backgroundColor: "#1e2021",
+                    width: "100%",
+                    height: $window.innerHeight + "px",
+                    "z-index": "2000000",
                     top: $scope.contentListTop,
                     left: 0
                 });
                 $(element).animate({
-                    top:0
+                    top: 0
                 });
             });
 
-            $scope.$on("closeContentList2", function() {
+            $scope.$on("closeContentList2", function () {
                 if ($scope.mobile) {
                     $scope.displayContentListClose = false;
                     $(element).animate({
-                        top:$scope.contentListTop
-                    }, function() {
+                        top: $scope.contentListTop
+                    }, function () {
                         $(this).removeAttr("style");
                     });
                     $scope.$emit('displayContentListCloseFalse');
@@ -4765,12 +4780,12 @@ app.directive('expandContentList', ["$window", function($window) {
 }]);
 var app = angular.module("dsaApp");
 
-app.directive('expandHubList', ["$window", function($window) {
+app.directive('expandHubList', ["$window", function ($window) {
     return {
         restrict: 'C',
         link: function ($scope, element, attrs) {
 
-            $scope.$on("expandHubList2", function() {
+            $scope.$on("expandHubList2", function () {
                 $scope.displayHubListClose = true;
                 $(element).css({
                     display: "block"
@@ -4778,25 +4793,25 @@ app.directive('expandHubList', ["$window", function($window) {
                 $scope.hubListTop = $(element).position().top;
                 $(element).css({
                     display: "block",
-                    "position":"fixed",
-                    backgroundColor:"#1e2021",
-                    width:"100%",
-                    height:$window.innerHeight + "px",
-                    "z-index":"2000000",
+                    "position": "fixed",
+                    backgroundColor: "#1e2021",
+                    width: "100%",
+                    height: $window.innerHeight + "px",
+                    "z-index": "2000000",
                     top: $scope.hubListTop,
                     left: 0
                 });
                 $(element).animate({
-                    top:0
+                    top: 0
                 });
             });
 
-            $scope.$on("closeHubList2", function() {
+            $scope.$on("closeHubList2", function () {
                 if ($scope.mobile) {
                     $scope.displayHubListClose = false;
                     $(element).animate({
-                        top:$scope.hubListTop
-                    }, function() {
+                        top: $scope.hubListTop
+                    }, function () {
                         $(this).removeAttr("style");
                     });
                     $scope.$emit('displayHubListCloseFalse');
@@ -4807,12 +4822,12 @@ app.directive('expandHubList', ["$window", function($window) {
 }]);
 var app = angular.module("dsaApp");
 
-app.directive('expandPlaylistList', ["$window", function($window) {
+app.directive('expandPlaylistList', ["$window", function ($window) {
     return {
         restrict: 'C',
         link: function ($scope, element, attrs) {
 
-            $scope.$on("expandPlaylistList2", function() {
+            $scope.$on("expandPlaylistList2", function () {
                 $scope.displayPlaylistListClose = true;
                 $(element).css({
                     display: "block"
@@ -4820,25 +4835,25 @@ app.directive('expandPlaylistList', ["$window", function($window) {
                 $scope.playlistListTop = $(element).position().top;
                 $(element).css({
                     display: "block",
-                    "position":"fixed",
-                    backgroundColor:"#1e2021",
-                    width:"100%",
-                    height:$window.innerHeight + "px",
-                    "z-index":"2000000",
+                    "position": "fixed",
+                    backgroundColor: "#1e2021",
+                    width: "100%",
+                    height: $window.innerHeight + "px",
+                    "z-index": "2000000",
                     top: $scope.playlistListTop,
                     left: 0
                 });
                 $(element).animate({
-                    top:0
+                    top: 0
                 });
             });
 
-            $scope.$on("closePlaylistList2", function() {
+            $scope.$on("closePlaylistList2", function () {
                 if ($scope.mobile) {
                     $scope.displayPlaylistListClose = false;
                     $(element).animate({
-                        top:$scope.playlistListTop
-                    }, function() {
+                        top: $scope.playlistListTop
+                    }, function () {
                         $(this).removeAttr("style");
                     });
                     $scope.$emit('displayPlaylistListCloseFalse');
@@ -4849,15 +4864,15 @@ app.directive('expandPlaylistList', ["$window", function($window) {
 }]);
 var app = angular.module("dsaApp");
 
-app.directive('playlistHeight', ["$window", "$timeout", function($window, $timeout) {
+app.directive('playlistHeight', ["$window", "$timeout", function ($window, $timeout) {
     return {
         restrict: 'C',
         link: function ($scope, element, attrs) {
-            var playlistResize = function() {
+            var playlistResize = function () {
                 if ($scope.desktop) {
                     var tallest = 0;
                     var group = $(".playlist-height");
-                    group.each(function() {
+                    group.each(function () {
                         var myHeight = $(this).height();
                         tallest = myHeight > tallest ? myHeight : tallest;
                     });
@@ -4876,7 +4891,7 @@ app.directive('playlistHeight', ["$window", "$timeout", function($window, $timeo
             // };
 
             var windowResize = $window.onresize;
-            $window.onresize = function() {
+            $window.onresize = function () {
                 windowResize();
                 playlistResize();
             };
@@ -4885,7 +4900,7 @@ app.directive('playlistHeight', ["$window", "$timeout", function($window, $timeo
 }]);
 var app = angular.module('dsaApp');
 
-app.directive('uiSwitch', ['$window', '$timeout', '$parse', function($window, $timeout, $parse) {
+app.directive('uiSwitch', ['$window', '$timeout', '$parse', function ($window, $timeout, $parse) {
 
     /**
      * Initializes the HTML element as a Switchery switch.
@@ -4901,16 +4916,16 @@ app.directive('uiSwitch', ['$window', '$timeout', '$parse', function($window, $t
         try {
             options = $parse(attrs.uiSwitch)(scope);
         }
-        catch (e) {}
+        catch (e) { }
 
-        $timeout(function() {
+        $timeout(function () {
             var init = new $window.Switchery(elem[0], options);
             if (attrs.ngModel) {
-                scope.$watch(attrs.ngModel, function() {
+                scope.$watch(attrs.ngModel, function () {
                     init.setPosition(false);
                 });
             }
-            $(elem).on("change", function() {
+            $(elem).on("change", function () {
                 var internalOnlyMode = $(elem).filter(":checked").length > 0;
                 scope.$emit("internalOnlyMode", internalOnlyMode);
             });
@@ -4923,63 +4938,63 @@ app.directive('uiSwitch', ['$window', '$timeout', '$parse', function($window, $t
 }]);
 var app = angular.module('dsaApp');
 
-app.filter("ellipseText", function() {
-    return function(input) {
+app.filter("ellipseText", function () {
+    return function (input) {
         var ret = input;
         if (ret && ret.length > 160) {
-            ret = ret.substring(0, 160-3) + "...";
+            ret = ret.substring(0, 160 - 3) + "...";
         }
         return ret;
     };
 });
 
-app.filter("ellipseText22", function() {
-    return function(input) {
+app.filter("ellipseText22", function () {
+    return function (input) {
         var ret = input;
         if (ret && ret.length > 22) {
-            ret = ret.substring(0, 22-3) + "...";
+            ret = ret.substring(0, 22 - 3) + "...";
         }
         return ret;
     };
 });
 var app = angular.module('dsaApp');
 
-app.filter('fileIconClass', function() {
+app.filter('fileIconClass', function () {
     var fileTypeToClass = {
-        "ai":"ai","ps":"ai","svg":"ai", //ai
-        "aif":"audio","iff":"audio","m3u":"audio","m4a":"audio","mid":"audio","mp3":"audio","mpa":"audio","ra":"audio","wav":"audio","wma":"audio", //audio
-        "csv":"csv", //csv
-        "eps":"eps", //eps
-        "xlr":"excel","xls":"excel","xlsx":"excel", //excel
-        "apk":"exe","app":"exe","bat":"exe","cgi":"exe","com":"exe","exe":"exe","gadget":"exe","jar":"exe","pif":"exe","vb":"exe","wsf":"exe", //exe
-        "flv":"flash", //flash
-        "gdoc":"gdoc", //gdoc
-        "gpres":"gpres", //gpres
-        "gsheet":"gsheet", //gsheet
-        "asp":"html","aspx":"html","cer":"html","cfm":"html","csr":"html","css":"html","htm":"html","html":"html","js":"html","jsp":"html","php":"html","rss":"html","xhtml":"html", //html
-        "bmp":"image","dds":"image","gif":"image","jpg":"image","png":"image","pspimage":"image","tga":"image","thm":"image","tif":"image","tiff":"image","yuv":"image", //image
-        "key":"keynote", //keynote
-        "link":"link", //link
-        "mp4":"mp4", //mp4
-        "overlay":"overlay", //overlay
-        "pkg":"pack","msi":"pack","dmg":"pack","iso":"pack", //pack
-        "pages":"pages", //pages
-        "pdf":"pdf", //pdf
-        "pps":"ppt","ppt":"ppt","pptx":"ppt", //ppt
-        "psd":"psd", //psd
-        "rtf":"rtf", //rtf
-        "slide":"slide", //slide
-        "stypi":"stypi", //stypi
-        "txt":"txt", //txt
-        "unknown":"unknown", //unknown
-        "3g2":"video","3gp":"video","asf":"video","asx":"video","avi":"video","m4v":"video","mov":"video","mpg":"video","rm":"video","srt":"video","swf":"video","vob":"video","wmv":"video", //video
-        "visio":"visio", //visio
-        "webex":"webex",
-        "doc":"word","docx":"word","wpd":"word","wps":"word", //word
-        "xml":"xml", //xml
-        "7z":"zip","cbr":"zip","deb":"zip","gz":"zip","rar":"zip","rpm":"zip","sitx":"zip","tar.gz":"zip","zip":"zip","zipx":"zip" //zip
+        "ai": "ai", "ps": "ai", "svg": "ai", //ai
+        "aif": "audio", "iff": "audio", "m3u": "audio", "m4a": "audio", "mid": "audio", "mp3": "audio", "mpa": "audio", "ra": "audio", "wav": "audio", "wma": "audio", //audio
+        "csv": "csv", //csv
+        "eps": "eps", //eps
+        "xlr": "excel", "xls": "excel", "xlsx": "excel", //excel
+        "apk": "exe", "app": "exe", "bat": "exe", "cgi": "exe", "com": "exe", "exe": "exe", "gadget": "exe", "jar": "exe", "pif": "exe", "vb": "exe", "wsf": "exe", //exe
+        "flv": "flash", //flash
+        "gdoc": "gdoc", //gdoc
+        "gpres": "gpres", //gpres
+        "gsheet": "gsheet", //gsheet
+        "asp": "html", "aspx": "html", "cer": "html", "cfm": "html", "csr": "html", "css": "html", "htm": "html", "html": "html", "js": "html", "jsp": "html", "php": "html", "rss": "html", "xhtml": "html", //html
+        "bmp": "image", "dds": "image", "gif": "image", "jpg": "image", "png": "image", "pspimage": "image", "tga": "image", "thm": "image", "tif": "image", "tiff": "image", "yuv": "image", //image
+        "key": "keynote", //keynote
+        "link": "link", //link
+        "mp4": "mp4", //mp4
+        "overlay": "overlay", //overlay
+        "pkg": "pack", "msi": "pack", "dmg": "pack", "iso": "pack", //pack
+        "pages": "pages", //pages
+        "pdf": "pdf", //pdf
+        "pps": "ppt", "ppt": "ppt", "pptx": "ppt", //ppt
+        "psd": "psd", //psd
+        "rtf": "rtf", //rtf
+        "slide": "slide", //slide
+        "stypi": "stypi", //stypi
+        "txt": "txt", //txt
+        "unknown": "unknown", //unknown
+        "3g2": "video", "3gp": "video", "asf": "video", "asx": "video", "avi": "video", "m4v": "video", "mov": "video", "mpg": "video", "rm": "video", "srt": "video", "swf": "video", "vob": "video", "wmv": "video", //video
+        "visio": "visio", //visio
+        "webex": "webex",
+        "doc": "word", "docx": "word", "wpd": "word", "wps": "word", //word
+        "xml": "xml", //xml
+        "7z": "zip", "cbr": "zip", "deb": "zip", "gz": "zip", "rar": "zip", "rpm": "zip", "sitx": "zip", "tar.gz": "zip", "zip": "zip", "zipx": "zip" //zip
     };
-    return function(input) {
+    return function (input) {
         if (input) {
             if (input.indexOf(".") != -1) {
                 input = input.split(".")[1];
@@ -4993,8 +5008,8 @@ app.filter('fileIconClass', function() {
 });
 var app = angular.module("dsaApp");
 
-app.filter("searchResultLink", function() {
-    return function(searchResult) {
+app.filter("searchResultLink", function () {
+    return function (searchResult) {
         var link = '#';
         if (searchResult) {
             switch (searchResult.obj_type) {
@@ -5014,11 +5029,11 @@ app.filter("searchResultLink", function() {
 });
 var app = angular.module('dsaApp');
 
-app.filter('sfdcMonthDateYear', function() {
-    return function(input) {
+app.filter('sfdcMonthDateYear', function () {
+    return function (input) {
         var dateString = '';
         var monthNames = [
-			'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'
+			'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
         ];
         if (input) {
             var convertedDate = new Date(input);
@@ -5028,11 +5043,11 @@ app.filter('sfdcMonthDateYear', function() {
     };
 });
 
-app.filter('sfdcMonthDateYearTime', function() {
-    return function(input) {
+app.filter('sfdcMonthDateYearTime', function () {
+    return function (input) {
         var dateString = '';
         var monthNames = [
-			'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'
+			'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
         ];
         if (input) {
             var convertedDate = new Date(input);
@@ -5053,8 +5068,8 @@ app.filter('sfdcMonthDateYearTime', function() {
 });
 var app = angular.module("dsaApp");
 
-app.service("remotingService", ["$q", "$rootScope", "Stub", function($q, $rootScope, Stub) {
-    this.execute = function() {
+app.service("remotingService", ["$q", "$rootScope", "Stub", function ($q, $rootScope, Stub) {
+    this.execute = function () {
 
         var args, callback, escapeResults, options, remotedFunction, scope, _i;
         var __slice = [].slice;
@@ -5068,19 +5083,19 @@ app.service("remotingService", ["$q", "$rootScope", "Stub", function($q, $rootSc
         }
         var error = options.error;
         if (!error) {
-            error = function(error) {
+            error = function (error) {
                 throw new Error(error.message);
             };
         }
         success = _.bind(success, scope);
         error = _.bind(error, scope);
 
-        var remotedFunctionReq = function() {
+        var remotedFunctionReq = function () {
             var deferred = $q.defer();
 
-            callback = function(result, event) {
+            callback = function (result, event) {
                 if (!$rootScope.$$phase) {
-                    $rootScope.$apply(function() {
+                    $rootScope.$apply(function () {
                         if (event.status) {
                             deferred.resolve(result);
                         }
@@ -5114,14 +5129,14 @@ app.service("remotingService", ["$q", "$rootScope", "Stub", function($q, $rootSc
         };
         var handleSuccess = this.handleSuccess;
         return remotedFunctionReq().then(
-	    	function(result) {
+	    	function (result) {
 	    	    success(result);
-	    	}, function(event) {
+	    	}, function (event) {
 	    	    error(event);
 	    	});
     };
 
-    this.determineMethod = function(remotedFunction) {
+    this.determineMethod = function (remotedFunction) {
         if (packageName === "{!packageName}") {
             packageName = "";
         }
@@ -5141,15 +5156,15 @@ app.service("remotingService", ["$q", "$rootScope", "Stub", function($q, $rootSc
 }]);
 var app = angular.module("dsaApp");
 
-app.service("sessionService", ["$location", "remotingService", function($location, remotingService) {
-    this.checkSession = function(errorMessage) {
+app.service("sessionService", ["$location", "remotingService", function ($location, remotingService) {
+    this.checkSession = function (errorMessage) {
         remotingService.execute(
 			"DSARemoter.checkSession",
 			{
-			    success: function(result) {
+			    success: function (result) {
 			        $location.url("/error/" + errorMessage);
 			    },
-			    error: function(error) {
+			    error: function (error) {
 			        location.reload(true);
 			    }
 			},
@@ -5166,7 +5181,7 @@ app.factory("Stub", ["DSARemoterHubExtensionStub",
 					"DSARemoterInfoExtensionStub",
 					"DSARemoterMobileAppConfigExtensionStub",
 					"DSARemoterCategoryExtensionStub",
-					function(DSARemoterHubExtensionStub,
+					function (DSARemoterHubExtensionStub,
 							DSARemoterContentItemExtensionStub,
 							DSARemoterSearchExtensionStub,
 							DSARemoterPlaylistExtensionStub,
@@ -5193,68 +5208,68 @@ app.factory("Stub", ["DSARemoterHubExtensionStub",
 					}]);
 var app = angular.module("dsaApp");
 
-app.factory("DSARemoterCategoryExtensionStub", function() {
+app.factory("DSARemoterCategoryExtensionStub", function () {
     function getTopLevelCategories(mobileConfigId, callback, options) {
         callback(
 			[
 				{
-				    "categoryId":"0123456789012341",
-				    "name":"Getting Started",
-				    "isTopLevel":true,
-				    "isParent":true,
-				    "landscapeImageURL":"images/market-bg2-hi.jpg",
-				    "portraitImageURL":"images/market-bg2-hi.jpg",
-				    "languageCode":"",
+				    "categoryId": "0123456789012341",
+				    "name": "Getting Started",
+				    "isTopLevel": true,
+				    "isParent": true,
+				    "landscapeImageURL": "images/market-bg2-hi.jpg",
+				    "portraitImageURL": "images/market-bg2-hi.jpg",
+				    "languageCode": "",
 				    "iconImageURL": "images/Default-Category-Avatar.png"
 				},
 				{
-				    "categoryId":"0123456789012342",
-				    "name":"Dreamforce",
-				    "isTopLevel":true,
-				    "isParent":true,
-				    "landscapeImageURL":"images/customize-bg-hi.jpg",
-				    "portraitImageURL":"images/customize-bg-hi.jpg",
-				    "languageCode":"",
+				    "categoryId": "0123456789012342",
+				    "name": "Dreamforce",
+				    "isTopLevel": true,
+				    "isParent": true,
+				    "landscapeImageURL": "images/customize-bg-hi.jpg",
+				    "portraitImageURL": "images/customize-bg-hi.jpg",
+				    "languageCode": "",
 				    "iconImageURL": "images/Default-Category-Avatar.png"
 				},
 				{
-				    "categoryId":"0123456789012343",
-				    "name":"Salesforce1",
-				    "isTopLevel":true,
-				    "isParent":true,
-				    "landscapeImageURL":"images/sell-bg1-hi.jpg",
-				    "portraitImageURL":"images/sell-bg1-hi.jpg",
-				    "languageCode":"",
+				    "categoryId": "0123456789012343",
+				    "name": "Salesforce1",
+				    "isTopLevel": true,
+				    "isParent": true,
+				    "landscapeImageURL": "images/sell-bg1-hi.jpg",
+				    "portraitImageURL": "images/sell-bg1-hi.jpg",
+				    "languageCode": "",
 				    "iconImageURL": "images/Default-Category-Avatar.png"
 				},
 				{
-				    "categoryId":"0123456789012344",
-				    "name":"Sales Cloud",
-				    "isTopLevel":true,
-				    "isParent":true,
-				    "landscapeImageURL":"images/sell-bg2-hi.jpg",
-				    "portraitImageURL":"images/sell-bg2-hi.jpg",
-				    "languageCode":"",
+				    "categoryId": "0123456789012344",
+				    "name": "Sales Cloud",
+				    "isTopLevel": true,
+				    "isParent": true,
+				    "landscapeImageURL": "images/sell-bg2-hi.jpg",
+				    "portraitImageURL": "images/sell-bg2-hi.jpg",
+				    "languageCode": "",
 				    "iconImageURL": "images/Default-Category-Avatar.png"
 				},
 				{
-				    "categoryId":"0123456789012345",
-				    "name":"Marketing Cloud",
-				    "isTopLevel":true,
-				    "isParent":true,
-				    "landscapeImageURL":"images/service-bg1-hi.jpg",
-				    "portraitImageURL":"images/service-bg1-hi.jpg",
-				    "languageCode":"",
+				    "categoryId": "0123456789012345",
+				    "name": "Marketing Cloud",
+				    "isTopLevel": true,
+				    "isParent": true,
+				    "landscapeImageURL": "images/service-bg1-hi.jpg",
+				    "portraitImageURL": "images/service-bg1-hi.jpg",
+				    "languageCode": "",
 				    "iconImageURL": "images/Default-Category-Avatar.png"
 				},
 				{
-				    "categoryId":"0123456789012346",
-				    "name":"Service Cloud",
-				    "isTopLevel":true,
-				    "isParent":true,
-				    "landscapeImageURL":"images/service-bg2-hi.jpg",
-				    "portraitImageURL":"images/service-bg2-hi.jpg",
-				    "languageCode":"",
+				    "categoryId": "0123456789012346",
+				    "name": "Service Cloud",
+				    "isTopLevel": true,
+				    "isParent": true,
+				    "landscapeImageURL": "images/service-bg2-hi.jpg",
+				    "portraitImageURL": "images/service-bg2-hi.jpg",
+				    "languageCode": "",
 				    "iconImageURL": "images/Default-Category-Avatar.png"
 				}
 			],
@@ -5267,13 +5282,13 @@ app.factory("DSARemoterCategoryExtensionStub", function() {
     function getCategory(categoryId, callback, options) {
         callback(
 			{
-			    "categoryId":"0123456789012344",
-			    "name":"Sales Cloud",
-			    "isTopLevel":true,
-			    "isParent":true,
+			    "categoryId": "0123456789012344",
+			    "name": "Sales Cloud",
+			    "isTopLevel": true,
+			    "isParent": true,
 			    "iconImageURL": "images/Default-Category-Avatar.png",
-			    "landscapeImageURL":"images/sell-bg2-hi.jpg",
-			    "portraitImageURL":"images/sell-bg2-hi.jpg"
+			    "landscapeImageURL": "images/sell-bg2-hi.jpg",
+			    "portraitImageURL": "images/sell-bg2-hi.jpg"
 			},
 			{
 			    status: true
@@ -5284,231 +5299,231 @@ app.factory("DSARemoterCategoryExtensionStub", function() {
     function getCategoryDetail(categoryId, callback, options) {
         callback(
 			{
-			    "categoryId":"0123456789012344",
-			    "name":"Sales Cloud",
-			    "isTopLevel":false,
-			    "isParent":true,
-			    "landscapeImageURL":"images/sell-bg2-hi.jpg",
-			    "portraitImageURL":"images/sell-bg2-hi.jpg",
-			    "languageCode":"",
+			    "categoryId": "0123456789012344",
+			    "name": "Sales Cloud",
+			    "isTopLevel": false,
+			    "isParent": true,
+			    "landscapeImageURL": "images/sell-bg2-hi.jpg",
+			    "portraitImageURL": "images/sell-bg2-hi.jpg",
+			    "languageCode": "",
 			    "iconImageURL": "images/Default-Category-Avatar.png",
 			    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lectus leo elementum non sollicitudin vitae, pellentesque in leo. Nullam a eros aliquet dolor consequat viverra.",
 			    "contentItems": [
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":".mov",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": ".mov",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"mpg",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "mpg",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"wmv",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "wmv",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"pdf",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "pdf",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"pdf",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "pdf",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"pdf",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "pdf",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"jpg",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "jpg",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"png",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "png",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"gif",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "gif",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"xls",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "xls",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"ppt",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "ppt",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"xlsx",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "xlsx",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":".mov",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": ".mov",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"mpg",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "mpg",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"wmv",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "wmv",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"pdf",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "pdf",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"pdf",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "pdf",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"pdf",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "pdf",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"jpg",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "jpg",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"png",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "png",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"gif",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "gif",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"xls",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "xls",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"ppt",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "ppt",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"xlsx",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "xlsx",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":".mov",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": ".mov",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"mpg",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "mpg",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"wmv",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "wmv",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"pdf",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "pdf",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"pdf",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "pdf",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"pdf",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "pdf",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"jpg",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "jpg",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"png",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "png",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"gif",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "gif",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"xls",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "xls",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"ppt",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "ppt",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
-					    "title":"Lorem ipsum dolor sit amet",
-					    "fileExtension":"xlsx",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "title": "Lorem ipsum dolor sit amet",
+					    "fileExtension": "xlsx",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					}
 			    ]
 			},
@@ -5522,53 +5537,53 @@ app.factory("DSARemoterCategoryExtensionStub", function() {
         callback(
 			[
 				{
-				    "categoryId":"0123456789012301",
-				    "name":"Data.com",
-				    "isTopLevel":false,
-				    "isParent":false,
-				    "landscapeImageURL":"images/market-bg2-hi.jpg",
-				    "portraitImageURL":"images/market-bg2-hi.jpg",
-				    "languageCode":"",
+				    "categoryId": "0123456789012301",
+				    "name": "Data.com",
+				    "isTopLevel": false,
+				    "isParent": false,
+				    "landscapeImageURL": "images/market-bg2-hi.jpg",
+				    "portraitImageURL": "images/market-bg2-hi.jpg",
+				    "languageCode": "",
 				    "iconImageURL": "images/Default-Category-Avatar.png"
 				},
 				{
-				    "categoryId":"0123456789012302",
-				    "name":"Work.com",
-				    "isTopLevel":false,
-				    "isParent":false,
-				    "landscapeImageURL":"images/sell-bg1-hi.jpg",
-				    "portraitImageURL":"images/sell-bg1-hi.jpg",
-				    "languageCode":"",
+				    "categoryId": "0123456789012302",
+				    "name": "Work.com",
+				    "isTopLevel": false,
+				    "isParent": false,
+				    "landscapeImageURL": "images/sell-bg1-hi.jpg",
+				    "portraitImageURL": "images/sell-bg1-hi.jpg",
+				    "languageCode": "",
 				    "iconImageURL": "images/Default-Category-Avatar.png"
 				},
 				{
-				    "categoryId":"0123456789012303",
-				    "name":"Pardot",
-				    "isTopLevel":false,
-				    "isParent":false,
-				    "landscapeImageURL":"images/sell-bg2-hi.jpg",
-				    "portraitImageURL":"images/sell-bg2-hi.jpg",
-				    "languageCode":"",
+				    "categoryId": "0123456789012303",
+				    "name": "Pardot",
+				    "isTopLevel": false,
+				    "isParent": false,
+				    "landscapeImageURL": "images/sell-bg2-hi.jpg",
+				    "portraitImageURL": "images/sell-bg2-hi.jpg",
+				    "languageCode": "",
 				    "iconImageURL": "images/Default-Category-Avatar.png"
 				},
 				{
-				    "categoryId":"0123456789012304",
-				    "name":"Sales Performance Accelerator",
-				    "isTopLevel":false,
-				    "isParent":false,
-				    "landscapeImageURL":"images/service-bg1-hi.jpg",
-				    "portraitImageURL":"images/service-bg1-hi.jpg",
-				    "languageCode":"",
+				    "categoryId": "0123456789012304",
+				    "name": "Sales Performance Accelerator",
+				    "isTopLevel": false,
+				    "isParent": false,
+				    "landscapeImageURL": "images/service-bg1-hi.jpg",
+				    "portraitImageURL": "images/service-bg1-hi.jpg",
+				    "languageCode": "",
 				    "iconImageURL": "images/Default-Category-Avatar.png"
 				},
 				{
-				    "categoryId":"0123456789012305",
-				    "name":"Dreamforce",
-				    "isTopLevel":false,
-				    "isParent":false,
-				    "landscapeImageURL":"images/customize-bg-hi.jpg",
-				    "portraitImageURL":"images/customize-bg-hi.jpg",
-				    "languageCode":"",
+				    "categoryId": "0123456789012305",
+				    "name": "Dreamforce",
+				    "isTopLevel": false,
+				    "isParent": false,
+				    "landscapeImageURL": "images/customize-bg-hi.jpg",
+				    "portraitImageURL": "images/customize-bg-hi.jpg",
+				    "languageCode": "",
 				    "iconImageURL": "images/Default-Category-Avatar.png"
 				}
 			],
@@ -5581,13 +5596,13 @@ app.factory("DSARemoterCategoryExtensionStub", function() {
     function getParentCategory(childCategoryId, callback, options) {
         callback(
 			{
-			    "categoryId":"0123456789012341",
-			    "name":"Getting Started",
-			    "isTopLevel":true,
-			    "isParent":true,
-			    "landscapeImageURL":"images/market-bg2-hi.jpg",
-			    "portraitImageURL":"images/market-bg2-hi.jpg",
-			    "languageCode":"",
+			    "categoryId": "0123456789012341",
+			    "name": "Getting Started",
+			    "isTopLevel": true,
+			    "isParent": true,
+			    "landscapeImageURL": "images/market-bg2-hi.jpg",
+			    "portraitImageURL": "images/market-bg2-hi.jpg",
+			    "languageCode": "",
 			    "iconImageURL": "images/Default-Category-Avatar.png"
 			},
 			{
@@ -5600,64 +5615,64 @@ app.factory("DSARemoterCategoryExtensionStub", function() {
         callback(
 			[
 				{
-				    "title":"Lorem ipsum dolor sit amet",
-				    "fileExtension":"wmv",
-				    "recordId":"0123456789012303",
-				    "contentDocumentId":"123"
+				    "title": "Lorem ipsum dolor sit amet",
+				    "fileExtension": "wmv",
+				    "recordId": "0123456789012303",
+				    "contentDocumentId": "123"
 				},
 				{
-				    "title":"Lorem ipsum dolor sit amet",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123"
+				    "title": "Lorem ipsum dolor sit amet",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123"
 				},
 				{
-				    "title":"Lorem ipsum dolor sit amet",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012302",
-				    "contentDocumentId":"123"
+				    "title": "Lorem ipsum dolor sit amet",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012302",
+				    "contentDocumentId": "123"
 				},
 				{
-				    "title":"Lorem ipsum dolor sit amet",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012303",
-				    "contentDocumentId":"123"
+				    "title": "Lorem ipsum dolor sit amet",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012303",
+				    "contentDocumentId": "123"
 				},
 				{
-				    "title":"Lorem ipsum dolor sit amet",
-				    "fileExtension":"jpg",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123"
+				    "title": "Lorem ipsum dolor sit amet",
+				    "fileExtension": "jpg",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123"
 				},
 				{
-				    "title":"Lorem ipsum dolor sit amet",
-				    "fileExtension":"png",
-				    "recordId":"0123456789012302",
-				    "contentDocumentId":"123"
+				    "title": "Lorem ipsum dolor sit amet",
+				    "fileExtension": "png",
+				    "recordId": "0123456789012302",
+				    "contentDocumentId": "123"
 				},
 				{
-				    "title":"Lorem ipsum dolor sit amet",
-				    "fileExtension":"gif",
-				    "recordId":"0123456789012303",
-				    "contentDocumentId":"123"
+				    "title": "Lorem ipsum dolor sit amet",
+				    "fileExtension": "gif",
+				    "recordId": "0123456789012303",
+				    "contentDocumentId": "123"
 				},
 				{
-				    "title":"Lorem ipsum dolor sit amet",
-				    "fileExtension":"xls",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123"
+				    "title": "Lorem ipsum dolor sit amet",
+				    "fileExtension": "xls",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123"
 				},
 				{
-				    "title":"Lorem ipsum dolor sit amet",
-				    "fileExtension":"ppt",
-				    "recordId":"0123456789012302",
-				    "contentDocumentId":"123"
+				    "title": "Lorem ipsum dolor sit amet",
+				    "fileExtension": "ppt",
+				    "recordId": "0123456789012302",
+				    "contentDocumentId": "123"
 				},
 				{
-				    "title":"Lorem ipsum dolor sit amet",
-				    "fileExtension":"xlsx",
-				    "recordId":"0123456789012303",
-				    "contentDocumentId":"123"
+				    "title": "Lorem ipsum dolor sit amet",
+				    "fileExtension": "xlsx",
+				    "recordId": "0123456789012303",
+				    "contentDocumentId": "123"
 				}
 			],
 			{
@@ -5677,34 +5692,34 @@ app.factory("DSARemoterCategoryExtensionStub", function() {
 });
 var app = angular.module("dsaApp");
 
-app.factory("DSARemoterContentItemExtensionStub", function() {
+app.factory("DSARemoterContentItemExtensionStub", function () {
     function getContentItemDetail(contentItemId, callback, options) {
         callback(
 			{
-			    "recordId":"0123456789012341",
-			    "contentDocumentId":"0123456789012301",
-			    "title":"Sales Cloud Product Demo",
-			    "description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lectus leo elementum non sollicitudin vitae, pellentesque in leo. Nullam a eros aliquet dolor consequat viverra.",
-			    "fileType":"LINK",
-			    "linkUrl":"http://www.google.com",
-			    "contentSize":"",
-			    "smallImageUrl":"images/market-bg2-hi.jpg",
-			    "myVote":"up",
-			    "upVotes":"13",
-			    "downVotes":"2",
-			    "largeImageUrl":"images/market-bg2-hi.jpg",
+			    "recordId": "0123456789012341",
+			    "contentDocumentId": "0123456789012301",
+			    "title": "Sales Cloud Product Demo",
+			    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lectus leo elementum non sollicitudin vitae, pellentesque in leo. Nullam a eros aliquet dolor consequat viverra.",
+			    "fileType": "LINK",
+			    "linkUrl": "http://www.google.com",
+			    "contentSize": "",
+			    "smallImageUrl": "images/market-bg2-hi.jpg",
+			    "myVote": "up",
+			    "upVotes": "13",
+			    "downVotes": "2",
+			    "largeImageUrl": "images/market-bg2-hi.jpg",
 			    //"streamUUID":"123456789",
 			    "comments": [
 
 			    ],
 			    "createdByUser": {
-			        "firstName":"John",
-			        "lastName":"Doe"
+			        "firstName": "John",
+			        "lastName": "Doe"
 			    },
-			    "lastModified":1402444800000,
-			    "fileExtension":".html",
-			    "sourceContentDocumentId":"0123456789012303",
-			    "externalApproved":false
+			    "lastModified": 1402444800000,
+			    "fileExtension": ".html",
+			    "sourceContentDocumentId": "0123456789012303",
+			    "externalApproved": false
 			},
 			{
 			    status: true
@@ -5719,19 +5734,19 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
             totalItems: 6,
             items: [
 				{
-				    "title":"2. Benefits",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "2. Benefits",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ]
 				},
 				{
-				    "title":"3. Force.com API",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "3. Force.com API",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"programming",
 						"force.com",
@@ -5739,10 +5754,10 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
 				    ]
 				},
 				{
-				    "title":"Force.com Training",
-				    "fileExtension":".mov",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Force.com Training",
+				    "fileExtension": ".mov",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"force.com",
 						"apex",
@@ -5757,28 +5772,28 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
             totalItems: 6,
             items: [
 				{
-				    "title":"Intro to SFDC",
-				    "fileExtension":".mov",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Intro to SFDC",
+				    "fileExtension": ".mov",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ]
 				},
 				{
-				    "title":"Sales Cloud Video",
-				    "fileExtension":".mov",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Sales Cloud Video",
+				    "fileExtension": ".mov",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"sales"
 				    ]
 				},
 				{
-				    "title":"Service Cloud White Paper",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Service Cloud White Paper",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"service",
 						"white paper"
@@ -5804,28 +5819,28 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
         callback(
 			[
 				{
-				    "title":prefix + "Intro to SFDC",
-				    "fileExtension":".mov",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": prefix + "Intro to SFDC",
+				    "fileExtension": ".mov",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ]
 				},
 				{
-				    "title":prefix + "Sales Cloud Video",
-				    "fileExtension":".mov",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": prefix + "Sales Cloud Video",
+				    "fileExtension": ".mov",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"sales"
 				    ]
 				},
 				{
-				    "title":prefix + "Service Cloud White Paper",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": prefix + "Service Cloud White Paper",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"service",
 						"white paper"
@@ -5842,19 +5857,19 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
         callback(
 			[
 				{
-				    "title":"Featured Benefits",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Featured Benefits",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ]
 				},
 				{
-				    "title":"Featured Force.com API",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Featured Force.com API",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"programming",
 						"force.com",
@@ -5862,10 +5877,10 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
 				    ]
 				},
 				{
-				    "title":"Featured Force.com Training",
-				    "fileExtension":".mov",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Featured Force.com Training",
+				    "fileExtension": ".mov",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"force.com",
 						"apex",
@@ -5883,19 +5898,19 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
         callback(
 			[
 				{
-				    "title":prefix + "Featured Benefits",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": prefix + "Featured Benefits",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ]
 				},
 				{
-				    "title":prefix + "Featured Force.com API",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": prefix + "Featured Force.com API",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"programming",
 						"force.com",
@@ -5903,10 +5918,10 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
 				    ]
 				},
 				{
-				    "title":prefix + "Featured Force.com Training",
-				    "fileExtension":".mov",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": prefix + "Featured Force.com Training",
+				    "fileExtension": ".mov",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"force.com",
 						"apex",
@@ -5924,28 +5939,28 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
         callback(
 			[
 				{
-				    "title":"Intro to SFDC",
-				    "fileExtension":".mov",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Intro to SFDC",
+				    "fileExtension": ".mov",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ]
 				},
 				{
-				    "title":"Benefits",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Benefits",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ]
 				},
 				{
-				    "title":"Force.com API",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Force.com API",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"programming",
 						"force.com",
@@ -5963,19 +5978,19 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
         callback(
 			[
 				{
-				    "title":"Sales Cloud Video",
-				    "fileExtension":".mov",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Sales Cloud Video",
+				    "fileExtension": ".mov",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"sales"
 				    ]
 				},
 				{
-				    "title":"Force.com API",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Force.com API",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"programming",
 						"force.com",
@@ -5983,10 +5998,10 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
 				    ]
 				},
 				{
-				    "title":"Benefits",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Benefits",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ]
@@ -6002,19 +6017,19 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
         callback(
 			[
 				{
-				    "title":"Related Sales Cloud Video",
-				    "fileExtension":".mov",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Related Sales Cloud Video",
+				    "fileExtension": ".mov",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"sales"
 				    ]
 				},
 				{
-				    "title":"Related Force.com API",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Related Force.com API",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"programming",
 						"force.com",
@@ -6022,10 +6037,10 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
 				    ]
 				},
 				{
-				    "title":"Related Benefits",
-				    "fileExtension":".docx",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Related Benefits",
+				    "fileExtension": ".docx",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ]
@@ -6068,36 +6083,36 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
         callback(
 			[
 				{
-				    "title":"Intro to SFDC",
-				    "fileExtension":".mov",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Intro to SFDC",
+				    "fileExtension": ".mov",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ],
-				    "viewCount":5
+				    "viewCount": 5
 				},
 				{
-				    "title":"Benefits",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Benefits",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ],
-				    "viewCount":3
+				    "viewCount": 3
 				},
 				{
-				    "title":"https://na17.salesforce.com/068o0000000QDo6",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "https://na17.salesforce.com/068o0000000QDo6",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"programming",
 						"force.com",
 						"apex"
 				    ],
-				    "viewCount":1
+				    "viewCount": 1
 				}
 			],
 			{
@@ -6110,36 +6125,36 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
         callback(
 			[
 				{
-				    "title":"Force.com API",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Force.com API",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"programming",
 						"force.com",
 						"apex"
 				    ],
-				    "ratingCount":100
+				    "ratingCount": 100
 				},
 				{
-				    "title":"Benefits",
-				    "fileExtension":"pdf",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Benefits",
+				    "fileExtension": "pdf",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ],
-				    "ratingCount":5
+				    "ratingCount": 5
 				},
 				{
-				    "title":"Intro to SFDC",
-				    "fileExtension":".mov",
-				    "recordId":"0123456789012301",
-				    "contentDocumentId":"123",
+				    "title": "Intro to SFDC",
+				    "fileExtension": ".mov",
+				    "recordId": "0123456789012301",
+				    "contentDocumentId": "123",
 				    "tags": [
 						"new hires"
 				    ],
-				    "ratingCount":3
+				    "ratingCount": 3
 				}
 			],
 			{
@@ -6166,7 +6181,7 @@ app.factory("DSARemoterContentItemExtensionStub", function() {
 });
 var app = angular.module("dsaApp");
 
-app.factory("DSARemoterHubExtensionStub", function() {
+app.factory("DSARemoterHubExtensionStub", function () {
     function getFeaturedHubs(customerFacingMode, callback, options) {
         callback(
 			[
@@ -6217,7 +6232,7 @@ app.factory("DSARemoterHubExtensionStub", function() {
         callback(
 			{
 			    "recordId": "0123456789012344",
-			    "externalApproved":false,
+			    "externalApproved": false,
 			    "name": "Sales Cloud",
 			    "curator": {
 			        "firstName": "Adam",
@@ -6232,394 +6247,394 @@ app.factory("DSARemoterHubExtensionStub", function() {
 			    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lectus leo elementum non sollicitudin vitae, pellentesque in leo. Nullam a eros aliquet dolor consequat viverra.",
 			    "relatedHubs": [
 					{
-					    "recordId":"0123456789012301",
-					    "name":"Data.com",
-					    "smallImageUrl":"../images/market-bg2-hi.jpg",
-					    "iconImageUrl":"images/Default-Hub-Avatar.png"
+					    "recordId": "0123456789012301",
+					    "name": "Data.com",
+					    "smallImageUrl": "../images/market-bg2-hi.jpg",
+					    "iconImageUrl": "images/Default-Hub-Avatar.png"
 					},
 					{
-					    "recordId":"0123456789012302",
-					    "name":"Work.com",
-					    "smallImageUrl":"../images/sell-bg1-hi.jpg",
-					    "iconImageUrl":"images/Default-Hub-Avatar.png"
+					    "recordId": "0123456789012302",
+					    "name": "Work.com",
+					    "smallImageUrl": "../images/sell-bg1-hi.jpg",
+					    "iconImageUrl": "images/Default-Hub-Avatar.png"
 					},
 					{
-					    "recordId":"0123456789012303",
-					    "name":"Pardot",
-					    "smallImageUrl":"../images/sell-bg2-hi.jpg",
-					    "iconImageUrl":"images/Default-Hub-Avatar.png"
+					    "recordId": "0123456789012303",
+					    "name": "Pardot",
+					    "smallImageUrl": "../images/sell-bg2-hi.jpg",
+					    "iconImageUrl": "images/Default-Hub-Avatar.png"
 					},
 					{
-					    "recordId":"0123456789012304",
-					    "name":"Sales Performance Accelerator",
-					    "smallImageUrl":"../images/service-bg1-hi.jpg",
-					    "iconImageUrl":"images/Default-Hub-Avatar.png"
+					    "recordId": "0123456789012304",
+					    "name": "Sales Performance Accelerator",
+					    "smallImageUrl": "../images/service-bg1-hi.jpg",
+					    "iconImageUrl": "images/Default-Hub-Avatar.png"
 					},
 					{
-					    "recordId":"0123456789012305",
-					    "name":"Dreamforce",
-					    "smallImageUrl":"../images/customize-bg-hi.jpg",
-					    "iconImageUrl":"images/Default-Hub-Avatar.png"
+					    "recordId": "0123456789012305",
+					    "name": "Dreamforce",
+					    "smallImageUrl": "../images/customize-bg-hi.jpg",
+					    "iconImageUrl": "images/Default-Hub-Avatar.png"
 					}
 			    ],
 			    "playlistDetails": [
 					{
-					    "recordId":"pl1",
-					    "name":"Analyst Reports & Whitepapers",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
-					    "description":"",
-					    "largeImageUrl":"",
-					    "commentCount":"59",
-					    "followerCount":"300",
+					    "recordId": "pl1",
+					    "name": "Analyst Reports & Whitepapers",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
+					    "description": "",
+					    "largeImageUrl": "",
+					    "commentCount": "59",
+					    "followerCount": "300",
 					    "contentItems": [
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":".mov",
-							    "recordId":"0123456789012301",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": ".mov",
+							    "recordId": "0123456789012301",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"mpg",
-							    "recordId":"0123456789012302",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "mpg",
+							    "recordId": "0123456789012302",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"wmv",
-							    "recordId":"0123456789012303",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "wmv",
+							    "recordId": "0123456789012303",
+							    "contentDocumentId": "123"
 							}
 					    ]
 					},
 					{
-					    "recordId":"pl2",
-					    "name":"eBooks",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
-					    "description":"",
-					    "largeImageUrl":"",
-					    "commentCount":"59",
-					    "followerCount":"300",
+					    "recordId": "pl2",
+					    "name": "eBooks",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
+					    "description": "",
+					    "largeImageUrl": "",
+					    "commentCount": "59",
+					    "followerCount": "300",
 					    "contentItems": [
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"pdf",
-							    "recordId":"0123456789012301",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "pdf",
+							    "recordId": "0123456789012301",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"pdf",
-							    "recordId":"0123456789012302",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "pdf",
+							    "recordId": "0123456789012302",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"pdf",
-							    "recordId":"0123456789012303",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "pdf",
+							    "recordId": "0123456789012303",
+							    "contentDocumentId": "123"
 							}
 					    ]
 					},
 					{
-					    "recordId":"pl3",
-					    "name":"Infographics",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
-					    "description":"",
-					    "largeImageUrl":"",
-					    "commentCount":"59",
-					    "followerCount":"300",
+					    "recordId": "pl3",
+					    "name": "Infographics",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
+					    "description": "",
+					    "largeImageUrl": "",
+					    "commentCount": "59",
+					    "followerCount": "300",
 					    "contentItems": [
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"jpg",
-							    "recordId":"0123456789012301",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "jpg",
+							    "recordId": "0123456789012301",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"png",
-							    "recordId":"0123456789012302",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "png",
+							    "recordId": "0123456789012302",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"gif",
-							    "recordId":"0123456789012303",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "gif",
+							    "recordId": "0123456789012303",
+							    "contentDocumentId": "123"
 							}
 					    ]
 					},
 					{
-					    "recordId":"pl4",
-					    "name":"Data Sheets",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
-					    "description":"",
-					    "largeImageUrl":"",
-					    "commentCount":"59",
-					    "followerCount":"300",
+					    "recordId": "pl4",
+					    "name": "Data Sheets",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
+					    "description": "",
+					    "largeImageUrl": "",
+					    "commentCount": "59",
+					    "followerCount": "300",
 					    "contentItems": [
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"xls",
-							    "recordId":"0123456789012301",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "xls",
+							    "recordId": "0123456789012301",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"ppt",
-							    "recordId":"0123456789012302",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "ppt",
+							    "recordId": "0123456789012302",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"xlsx",
-							    "recordId":"0123456789012303",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "xlsx",
+							    "recordId": "0123456789012303",
+							    "contentDocumentId": "123"
 							}
 					    ]
 					},
 					{
-					    "recordId":"pl1",
-					    "name":"Product Videos",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
-					    "description":"",
-					    "largeImageUrl":"",
-					    "commentCount":"59",
-					    "followerCount":"300",
+					    "recordId": "pl1",
+					    "name": "Product Videos",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
+					    "description": "",
+					    "largeImageUrl": "",
+					    "commentCount": "59",
+					    "followerCount": "300",
 					    "contentItems": [
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":".mov",
-							    "recordId":"0123456789012301",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": ".mov",
+							    "recordId": "0123456789012301",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"mpg",
-							    "recordId":"0123456789012302",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "mpg",
+							    "recordId": "0123456789012302",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"wmv",
-							    "recordId":"0123456789012303",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "wmv",
+							    "recordId": "0123456789012303",
+							    "contentDocumentId": "123"
 							}
 					    ]
 					},
 					{
-					    "recordId":"pl2",
-					    "name":"eBooks",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
-					    "description":"",
-					    "largeImageUrl":"",
-					    "commentCount":"59",
-					    "followerCount":"300",
+					    "recordId": "pl2",
+					    "name": "eBooks",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
+					    "description": "",
+					    "largeImageUrl": "",
+					    "commentCount": "59",
+					    "followerCount": "300",
 					    "contentItems": [
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"pdf",
-							    "recordId":"0123456789012301",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "pdf",
+							    "recordId": "0123456789012301",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"pdf",
-							    "recordId":"0123456789012302",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "pdf",
+							    "recordId": "0123456789012302",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"pdf",
-							    "recordId":"0123456789012303",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "pdf",
+							    "recordId": "0123456789012303",
+							    "contentDocumentId": "123"
 							}
 					    ]
 					},
 					{
-					    "recordId":"pl3",
-					    "name":"Infographics",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
-					    "description":"",
-					    "largeImageUrl":"",
-					    "commentCount":"59",
-					    "followerCount":"300",
+					    "recordId": "pl3",
+					    "name": "Infographics",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
+					    "description": "",
+					    "largeImageUrl": "",
+					    "commentCount": "59",
+					    "followerCount": "300",
 					    "contentItems": [
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"jpg",
-							    "recordId":"0123456789012301",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "jpg",
+							    "recordId": "0123456789012301",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"png",
-							    "recordId":"0123456789012302",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "png",
+							    "recordId": "0123456789012302",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"gif",
-							    "recordId":"0123456789012303",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "gif",
+							    "recordId": "0123456789012303",
+							    "contentDocumentId": "123"
 							}
 					    ]
 					},
 					{
-					    "recordId":"pl4",
-					    "name":"Data Sheets",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
-					    "description":"",
-					    "largeImageUrl":"",
-					    "commentCount":"59",
-					    "followerCount":"300",
+					    "recordId": "pl4",
+					    "name": "Data Sheets",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
+					    "description": "",
+					    "largeImageUrl": "",
+					    "commentCount": "59",
+					    "followerCount": "300",
 					    "contentItems": [
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"xls",
-							    "recordId":"0123456789012301",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "xls",
+							    "recordId": "0123456789012301",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"ppt",
-							    "recordId":"0123456789012302",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "ppt",
+							    "recordId": "0123456789012302",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"xlsx",
-							    "recordId":"0123456789012303",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "xlsx",
+							    "recordId": "0123456789012303",
+							    "contentDocumentId": "123"
 							}
 					    ]
 					},
 					{
-					    "recordId":"pl1",
-					    "name":"Product Videos",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
-					    "description":"",
-					    "largeImageUrl":"",
-					    "commentCount":"59",
-					    "followerCount":"300",
+					    "recordId": "pl1",
+					    "name": "Product Videos",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
+					    "description": "",
+					    "largeImageUrl": "",
+					    "commentCount": "59",
+					    "followerCount": "300",
 					    "contentItems": [
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":".mov",
-							    "recordId":"0123456789012301",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": ".mov",
+							    "recordId": "0123456789012301",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"mpg",
-							    "recordId":"0123456789012302",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "mpg",
+							    "recordId": "0123456789012302",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"wmv",
-							    "recordId":"0123456789012303",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "wmv",
+							    "recordId": "0123456789012303",
+							    "contentDocumentId": "123"
 							}
 					    ]
 					},
 					{
-					    "recordId":"pl2",
-					    "name":"eBooks",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
-					    "description":"",
-					    "largeImageUrl":"",
-					    "commentCount":"59",
-					    "followerCount":"300",
+					    "recordId": "pl2",
+					    "name": "eBooks",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
+					    "description": "",
+					    "largeImageUrl": "",
+					    "commentCount": "59",
+					    "followerCount": "300",
 					    "contentItems": [
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"pdf",
-							    "recordId":"0123456789012301",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "pdf",
+							    "recordId": "0123456789012301",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"pdf",
-							    "recordId":"0123456789012302",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "pdf",
+							    "recordId": "0123456789012302",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"pdf",
-							    "recordId":"0123456789012303",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "pdf",
+							    "recordId": "0123456789012303",
+							    "contentDocumentId": "123"
 							}
 					    ]
 					},
 					{
-					    "recordId":"pl3",
-					    "name":"Infographics",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
-					    "description":"",
-					    "largeImageUrl":"",
-					    "commentCount":"59",
-					    "followerCount":"300",
+					    "recordId": "pl3",
+					    "name": "Infographics",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
+					    "description": "",
+					    "largeImageUrl": "",
+					    "commentCount": "59",
+					    "followerCount": "300",
 					    "contentItems": [
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"jpg",
-							    "recordId":"0123456789012301",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "jpg",
+							    "recordId": "0123456789012301",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"png",
-							    "recordId":"0123456789012302",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "png",
+							    "recordId": "0123456789012302",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"gif",
-							    "recordId":"0123456789012303",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "gif",
+							    "recordId": "0123456789012303",
+							    "contentDocumentId": "123"
 							}
 					    ]
 					},
 					{
-					    "recordId":"pl4",
-					    "name":"Data Sheets",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
-					    "description":"",
-					    "largeImageUrl":"",
-					    "commentCount":"59",
-					    "followerCount":"300",
+					    "recordId": "pl4",
+					    "name": "Data Sheets",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
+					    "description": "",
+					    "largeImageUrl": "",
+					    "commentCount": "59",
+					    "followerCount": "300",
 					    "contentItems": [
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"xls",
-							    "recordId":"0123456789012301",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "xls",
+							    "recordId": "0123456789012301",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"ppt",
-							    "recordId":"0123456789012302",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "ppt",
+							    "recordId": "0123456789012302",
+							    "contentDocumentId": "123"
 							},
 							{
-							    "title":"Lorem ipsum dolor sit amet",
-							    "fileExtension":"xlsx",
-							    "recordId":"0123456789012303",
-							    "contentDocumentId":"123"
+							    "title": "Lorem ipsum dolor sit amet",
+							    "fileExtension": "xlsx",
+							    "recordId": "0123456789012303",
+							    "contentDocumentId": "123"
 							}
 					    ]
 					}
@@ -6628,21 +6643,21 @@ app.factory("DSARemoterHubExtensionStub", function() {
 					{
 					    "title": "Sales Cloud Product Demo",
 					    //"smallImageUrl": "images/service-bg2-hi.jpg",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123",
-					    "fileExtension":".doc"
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123",
+					    "fileExtension": ".doc"
 					},
 					{
 					    "title": "Herman Miller Customer Story",
 					    "smallImageUrl": "images/service-bg1-hi.jpg",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123"
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123"
 					},
 					{
 					    "title": "Sales Cloud & The Internet of Customers",
 					    "smallImageUrl": "images/sell-bg1-hi.jpg",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123"
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123"
 					}
 			    ]
 			},
@@ -6753,29 +6768,29 @@ app.factory("DSARemoterHubExtensionStub", function() {
 });
 var app = angular.module("dsaApp");
 
-app.factory("DSARemoterInfoExtensionStub", function() {
+app.factory("DSARemoterInfoExtensionStub", function () {
 
     function getInfo(callback, options) {
         callback(
 			{
 			    "user": {
-			        "recordId":"3209483094802002",
-			        "email":"john@doe.com",
-			        "lastName":"Doe",
-			        "firstName":"John",
-			        "username":"aschu",
-			        "isContentUser":true
+			        "recordId": "3209483094802002",
+			        "email": "john@doe.com",
+			        "lastName": "Doe",
+			        "firstName": "John",
+			        "username": "aschu",
+			        "isContentUser": true
 			    },
 			    "preferredLanguageCodes": [
 
 			    ],
-			    "appName":"Hoa Kula",
-			    "appVersion":"1.0",
-			    "supportUrl":"www.google.com",
-			    "isChatterEnabled":true,
-			    "preferredMobileAppConfiguration":"mac1",
-			    "currentMACTitle":"MAC 1",
-			    "isFeaturePlaylistAdmin":true
+			    "appName": "Hoa Kula",
+			    "appVersion": "1.0",
+			    "supportUrl": "www.google.com",
+			    "isChatterEnabled": true,
+			    "preferredMobileAppConfiguration": "mac1",
+			    "currentMACTitle": "MAC 1",
+			    "isFeaturePlaylistAdmin": true
 			},
 			{
 			    status: true
@@ -6809,63 +6824,63 @@ app.factory("DSARemoterInfoExtensionStub", function() {
 });
 var app = angular.module("dsaApp");
 
-app.factory("DSARemoterMobileAppConfigExtensionStub", function() {
+app.factory("DSARemoterMobileAppConfigExtensionStub", function () {
 
     function getMobileAppConfigurations(callback, options) {
         callback(
 			[
 				{
-				    "mobileAppConfigId":"mac0",
-				    "mobileAppConfigName":"MAC 0",
-				    "titleText":"Name 0",
-				    "landscapeBackgroundImageURL":"images/market-bg2-hi.jpg",
-				    "portraitBackgroundImageURL":"images/market-bg2-hi.jpg"
+				    "mobileAppConfigId": "mac0",
+				    "mobileAppConfigName": "MAC 0",
+				    "titleText": "Name 0",
+				    "landscapeBackgroundImageURL": "images/market-bg2-hi.jpg",
+				    "portraitBackgroundImageURL": "images/market-bg2-hi.jpg"
 				},
 				{
-				    "mobileAppConfigId":"mac1",
-				    "mobileAppConfigName":"MAC 1",
-				    "titleText":"Name 1",
-				    "landscapeBackgroundImageURL":"images/customize-bg-hi.jpg",
-				    "portraitBackgroundImageURL":"images/customize-bg-hi.jpg"
+				    "mobileAppConfigId": "mac1",
+				    "mobileAppConfigName": "MAC 1",
+				    "titleText": "Name 1",
+				    "landscapeBackgroundImageURL": "images/customize-bg-hi.jpg",
+				    "portraitBackgroundImageURL": "images/customize-bg-hi.jpg"
 				},
 				{
-				    "mobileAppConfigId":"mac2",
-				    "mobileAppConfigName":"MAC 2",
-				    "titleText":"Name 2",
-				    "landscapeBackgroundImageURL":"images/sell-bg1-hi.jpg",
-				    "portraitBackgroundImageURL":"images/sell-bg1-hi.jpg"
+				    "mobileAppConfigId": "mac2",
+				    "mobileAppConfigName": "MAC 2",
+				    "titleText": "Name 2",
+				    "landscapeBackgroundImageURL": "images/sell-bg1-hi.jpg",
+				    "portraitBackgroundImageURL": "images/sell-bg1-hi.jpg"
 				},
 				{
-				    "mobileAppConfigId":"mac3",
-				    "mobileAppConfigName":"MAC 3",
-				    "titleText":"Name 3",
-				    "landscapeBackgroundImageURL":"images/sell-bg2-hi.jpg",
-				    "portraitBackgroundImageURL":"images/sell-bg2-hi.jpg"
+				    "mobileAppConfigId": "mac3",
+				    "mobileAppConfigName": "MAC 3",
+				    "titleText": "Name 3",
+				    "landscapeBackgroundImageURL": "images/sell-bg2-hi.jpg",
+				    "portraitBackgroundImageURL": "images/sell-bg2-hi.jpg"
 				},
 				{
-				    "mobileAppConfigId":"mac4",
-				    "mobileAppConfigName":"MAC 4",
-				    "titleText":"Name 4",
-				    "landscapeBackgroundImageURL":"images/service-bg1-hi.jpg",
-				    "portraitBackgroundImageURL":"images/service-bg1-hi.jpg"
+				    "mobileAppConfigId": "mac4",
+				    "mobileAppConfigName": "MAC 4",
+				    "titleText": "Name 4",
+				    "landscapeBackgroundImageURL": "images/service-bg1-hi.jpg",
+				    "portraitBackgroundImageURL": "images/service-bg1-hi.jpg"
 				},
 				{
-				    "mobileAppConfigId":"mac5",
-				    "mobileAppConfigName":"MAC 5",
-				    "titleText":"Name 5",
-				    "landscapeBackgroundImageURL":"images/service-bg2-hi.jpg",
-				    "portraitBackgroundImageURL":"images/service-bg2-hi.jpg"
+				    "mobileAppConfigId": "mac5",
+				    "mobileAppConfigName": "MAC 5",
+				    "titleText": "Name 5",
+				    "landscapeBackgroundImageURL": "images/service-bg2-hi.jpg",
+				    "portraitBackgroundImageURL": "images/service-bg2-hi.jpg"
 				},
 				{
-				    "mobileAppConfigId":"mac6",
-				    "mobileAppConfigName":"MAC 6",
-				    "titleText":"Name 6",
-				    "landscapeBackgroundImageURL":"images/service-bg2-hi.jpg",
-				    "portraitBackgroundImageURL":"images/service-bg2-hi.jpg"
+				    "mobileAppConfigId": "mac6",
+				    "mobileAppConfigName": "MAC 6",
+				    "titleText": "Name 6",
+				    "landscapeBackgroundImageURL": "images/service-bg2-hi.jpg",
+				    "portraitBackgroundImageURL": "images/service-bg2-hi.jpg"
 				}
 			],
 			{
-			    status:true
+			    status: true
 			}
 		);
     }
@@ -6876,49 +6891,49 @@ app.factory("DSARemoterMobileAppConfigExtensionStub", function() {
 });
 var app = angular.module("dsaApp");
 
-app.factory("DSARemoterPlaylistExtensionStub", function() {
+app.factory("DSARemoterPlaylistExtensionStub", function () {
     function getPlaylistDetail(playlistId, callback, options) {
         callback(
 			{
-			    "recordId":"pl1",
-			    "name":"New Product Videos and other really fun stuff",
-			    "smallImageUrl":"",
-			    "description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lectus leo elementum non sollicitudin vitae, pellentesque in leo. Nullam a eros aliquet dolor consequat viverra.",
-			    "largeImageUrl":"",
-			    "commentCount":"59",
-			    "followerCount":"300",
+			    "recordId": "pl1",
+			    "name": "New Product Videos and other really fun stuff",
+			    "smallImageUrl": "",
+			    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lectus leo elementum non sollicitudin vitae, pellentesque in leo. Nullam a eros aliquet dolor consequat viverra.",
+			    "largeImageUrl": "",
+			    "commentCount": "59",
+			    "followerCount": "300",
 			    "contentItems": [
 					{
-					    "title":"1. Lorem ipsum dolor sit amet",
-					    "fileExtension":".mov",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123",
-					    "description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lectus leo elementum non sollicitudin vitae, pellentesque in leo. Nullam a eros aliquet dolor consequat viverra."
+					    "title": "1. Lorem ipsum dolor sit amet",
+					    "fileExtension": ".mov",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123",
+					    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lectus leo elementum non sollicitudin vitae, pellentesque in leo. Nullam a eros aliquet dolor consequat viverra."
 					},
 					{
-					    "title":"2. Lorem ipsum dolor sit amet",
-					    "fileExtension":"mpg",
-					    "recordId":"0123456789012302",
-					    "contentDocumentId":"123",
-					    "description":"Lorem ipsum dolor sit amet"//, consectetur adipiscing elit. Aliquam lectus leo elementum non sollicitudin vitae, pellentesque in leo. Nullam a eros aliquet dolor consequat viverra."
+					    "title": "2. Lorem ipsum dolor sit amet",
+					    "fileExtension": "mpg",
+					    "recordId": "0123456789012302",
+					    "contentDocumentId": "123",
+					    "description": "Lorem ipsum dolor sit amet"//, consectetur adipiscing elit. Aliquam lectus leo elementum non sollicitudin vitae, pellentesque in leo. Nullam a eros aliquet dolor consequat viverra."
 					},
 					{
-					    "title":"3. Lorem ipsum dolor sit amet",
-					    "fileExtension":"wmv",
-					    "recordId":"0123456789012303",
-					    "contentDocumentId":"123",
-					    "description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lectus leo elementum non sollicitudin vitae, pellentesque in leo. Nullam a eros aliquet dolor consequat viverra."
+					    "title": "3. Lorem ipsum dolor sit amet",
+					    "fileExtension": "wmv",
+					    "recordId": "0123456789012303",
+					    "contentDocumentId": "123",
+					    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam lectus leo elementum non sollicitudin vitae, pellentesque in leo. Nullam a eros aliquet dolor consequat viverra."
 					}
 			    ],
 			    "createdByUser": {
-			        "firstName":"John",
-			        "lastName":"Doe"
+			        "firstName": "John",
+			        "lastName": "Doe"
 			    },
-			    "lastModified":1402444800000,
-			    "followedByMe":true,
-			    "ownerId":"3209483094802002",
-			    "hasEditAccess":true,
-			    "externalApproved":false
+			    "lastModified": 1402444800000,
+			    "followedByMe": true,
+			    "ownerId": "3209483094802002",
+			    "hasEditAccess": true,
+			    "externalApproved": false
 			},
 			{
 			    status: true
@@ -6928,126 +6943,126 @@ app.factory("DSARemoterPlaylistExtensionStub", function() {
 
     function getPlaylists(pageNumber, callback, options) {
         var page1 = {
-            "pageNumber":1,
-            "totalPages":2,
-            "totalItems":12,
-            "items":[
+            "pageNumber": 1,
+            "totalPages": 2,
+            "totalItems": 12,
+            "items": [
 				{
-				    "recordId":"pl1",
-				    "name":"Call Centers",
-				    "smallImageUrl":"",
-				    "iconImageUrl":"",
-				    "tags":[
+				    "recordId": "pl1",
+				    "name": "Call Centers",
+				    "smallImageUrl": "",
+				    "iconImageUrl": "",
+				    "tags": [
 			         	"service"
 				    ]
 				},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"Call Centers2",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "Call Centers2",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"eBooks",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "eBooks",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"white papers"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"eBooks2",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "eBooks2",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"white papers"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"Human Resources",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "Human Resources",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"new hires"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"Human Resources2",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "Human Resources2",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"new hires"
 			   	    ]
 			   	}
             ]
         };
         var page2 = {
-            "pageNumber":2,
-            "totalPages":2,
-            "totalItems":12,
-            "items":[
+            "pageNumber": 2,
+            "totalPages": 2,
+            "totalItems": 12,
+            "items": [
 				{
-				    "recordId":"pl1",
-				    "name":"Product Videos",
-				    "smallImageUrl":"",
-				    "iconImageUrl":"",
-				    "tags":[
+				    "recordId": "pl1",
+				    "name": "Product Videos",
+				    "smallImageUrl": "",
+				    "iconImageUrl": "",
+				    "tags": [
 			         	"products",
 			         	"sales",
 			         	"service"
 				    ]
 				},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"Product Videos2",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "Product Videos2",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			        	"products",
 			        	"sales",
 			        	"service"
 			   	    ]
 			   	},
 				{
-				    "recordId":"pl2",
-				    "name":"Renewals",
-				    "smallImageUrl":"",
-				    "iconImageUrl":"",
-				    "tags":[
+				    "recordId": "pl2",
+				    "name": "Renewals",
+				    "smallImageUrl": "",
+				    "iconImageUrl": "",
+				    "tags": [
 			         	"sales"
 				    ]
 				},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"Renewals2",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "Renewals2",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sales"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"Sites Benefits",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "Sites Benefits",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sites"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"Sites Benefits2",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "Sites Benefits2",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sites"
 			   	    ]
 			   	}
@@ -7071,33 +7086,33 @@ app.factory("DSARemoterPlaylistExtensionStub", function() {
         callback(
 			[
 				{
-				    "recordId":"pl1",
-				    "name":prefix + "Product Videos",
-				    "smallImageUrl":"",
-				    "iconImageUrl":"",
-				    "tags":[
+				    "recordId": "pl1",
+				    "name": prefix + "Product Videos",
+				    "smallImageUrl": "",
+				    "iconImageUrl": "",
+				    "tags": [
 			         	"products",
 			         	"sales",
 			         	"service"
 				    ]
 				},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":prefix + "Product Videos2",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": prefix + "Product Videos2",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			        	"products",
 			        	"sales",
 			        	"service"
 			   	    ]
 			   	},
 				{
-				    "recordId":"pl2",
-				    "name":prefix + "Renewals",
-				    "smallImageUrl":"",
-				    "iconImageUrl":"",
-				    "tags":[
+				    "recordId": "pl2",
+				    "name": prefix + "Renewals",
+				    "smallImageUrl": "",
+				    "iconImageUrl": "",
+				    "tags": [
 			         	"sales"
 				    ]
 				}
@@ -7112,147 +7127,147 @@ app.factory("DSARemoterPlaylistExtensionStub", function() {
         callback(
 			[
 				{
-				    "recordId":"pl1",
-				    "name":"My Call Centers",
-				    "smallImageUrl":"",
-				    "iconImageUrl":"",
-				    "tags":[
+				    "recordId": "pl1",
+				    "name": "My Call Centers",
+				    "smallImageUrl": "",
+				    "iconImageUrl": "",
+				    "tags": [
 			         	"service"
 				    ]
 				},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"My Product Videos",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "My Product Videos",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"products",
 			         	"sales",
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"My Sites Benefits",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "My Sites Benefits",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sites"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"My Call Centers",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "My Call Centers",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"My Product Videos",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "My Product Videos",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"products",
 			         	"sales",
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"My Sites Benefits",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "My Sites Benefits",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sites"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"My Call Centers",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "My Call Centers",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"My Product Videos",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "My Product Videos",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"products",
 			         	"sales",
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"My Sites Benefits",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "My Sites Benefits",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sites"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"My Call Centers",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "My Call Centers",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"My Product Videos",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "My Product Videos",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"products",
 			         	"sales",
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"My Sites Benefits",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "My Sites Benefits",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sites"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"My Call Centers",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "My Call Centers",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"My Product Videos",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "My Product Videos",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"products",
 			         	"sales",
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"My Sites Benefits",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "My Sites Benefits",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sites"
 			   	    ]
 			   	}
@@ -7267,31 +7282,31 @@ app.factory("DSARemoterPlaylistExtensionStub", function() {
         callback(
 			[
 				{
-				    "recordId":"pl1",
-				    "name":prefix + "My Call Centers",
-				    "smallImageUrl":"",
-				    "iconImageUrl":"",
-				    "tags":[
+				    "recordId": "pl1",
+				    "name": prefix + "My Call Centers",
+				    "smallImageUrl": "",
+				    "iconImageUrl": "",
+				    "tags": [
 			         	"service"
 				    ]
 				},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":prefix + "My Product Videos",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": prefix + "My Product Videos",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"products",
 			         	"sales",
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":prefix + "My Sites Benefits",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": prefix + "My Sites Benefits",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sites"
 			   	    ]
 			   	}
@@ -7306,31 +7321,31 @@ app.factory("DSARemoterPlaylistExtensionStub", function() {
         callback(
 			[
 				{
-				    "recordId":"pl1",
-				    "name":"Featured Call Centers",
-				    "smallImageUrl":"",
-				    "iconImageUrl":"",
-				    "tags":[
+				    "recordId": "pl1",
+				    "name": "Featured Call Centers",
+				    "smallImageUrl": "",
+				    "iconImageUrl": "",
+				    "tags": [
 			         	"service"
 				    ]
 				},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"Featured Product Videos",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "Featured Product Videos",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"products",
 			         	"sales",
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"Featured Sites Benefits",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "Featured Sites Benefits",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sites"
 			   	    ]
 			   	}
@@ -7345,31 +7360,31 @@ app.factory("DSARemoterPlaylistExtensionStub", function() {
         callback(
 			[
 				{
-				    "recordId":"pl1",
-				    "name":prefix + "Featured Call Centers",
-				    "smallImageUrl":"",
-				    "iconImageUrl":"",
-				    "tags":[
+				    "recordId": "pl1",
+				    "name": prefix + "Featured Call Centers",
+				    "smallImageUrl": "",
+				    "iconImageUrl": "",
+				    "tags": [
 			         	"service"
 				    ]
 				},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":prefix + "Featured Product Videos",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": prefix + "Featured Product Videos",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"products",
 			         	"sales",
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":prefix + "Featured Sites Benefits",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": prefix + "Featured Sites Benefits",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sites"
 			   	    ]
 			   	}
@@ -7384,31 +7399,31 @@ app.factory("DSARemoterPlaylistExtensionStub", function() {
         callback(
 			[
 				{
-				    "recordId":"pl1",
-				    "name":"Followed Call Centers",
-				    "smallImageUrl":"",
-				    "iconImageUrl":"",
-				    "tags":[
+				    "recordId": "pl1",
+				    "name": "Followed Call Centers",
+				    "smallImageUrl": "",
+				    "iconImageUrl": "",
+				    "tags": [
 			         	"service"
 				    ]
 				},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"Followed Product Videos",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "Followed Product Videos",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"products",
 			         	"sales",
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"Followed Sites Benefits",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "Followed Sites Benefits",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sites"
 			   	    ]
 			   	}
@@ -7422,11 +7437,11 @@ app.factory("DSARemoterPlaylistExtensionStub", function() {
     function createPlaylist(title, description, customerFacingMode, callback, options) {
         callback(
 			{
-			    "recordId":"pl2",
-			    "name":title,
-			    "smallImageUrl":"",
-			    "iconImageUrl":"",
-			    "tags":[
+			    "recordId": "pl2",
+			    "name": title,
+			    "smallImageUrl": "",
+			    "iconImageUrl": "",
+			    "tags": [
 		         	"sites"
 			    ]
 			},
@@ -7477,108 +7492,108 @@ app.factory("DSARemoterPlaylistExtensionStub", function() {
 			[
 				{
 				    "post": {
-				        "Parent":{
-				            "Name":"Awesome Playlist",
-				            "Id":"a22o0000000TsRyAAK"
+				        "Parent": {
+				            "Name": "Awesome Playlist",
+				            "Id": "a22o0000000TsRyAAK"
 				        },
-				        "Body":"JELLO pudding!",
-				        "ParentId":"a22o0000000TsRyAAK",
-				        "Type":"TextPost",
-				        "CreatedById":"005o0000000MX8wAAG",
-				        "CreatedBy":{
-				            "FirstName":"Adam",
-				            "Id":"005o0000000MX8wAAG",
-				            "LastName":"Schultz",
-				            "SmallPhotoUrl":"../images/userThumbnail.png"
+				        "Body": "JELLO pudding!",
+				        "ParentId": "a22o0000000TsRyAAK",
+				        "Type": "TextPost",
+				        "CreatedById": "005o0000000MX8wAAG",
+				        "CreatedBy": {
+				            "FirstName": "Adam",
+				            "Id": "005o0000000MX8wAAG",
+				            "LastName": "Schultz",
+				            "SmallPhotoUrl": "../images/userThumbnail.png"
 				        },
-				        "CreatedDate":1406747842000,
-				        "Id":"0D5o00000025U3lCAE",
+				        "CreatedDate": 1406747842000,
+				        "Id": "0D5o00000025U3lCAE",
 				        "FeedLikes": [
 		            		{
-		            		    "CreatedBy":{
-		            		        "FirstName":"Adam",
-		            		        "Id":"3209483094802002",
-		            		        "LastName":"Schultz"
+		            		    "CreatedBy": {
+		            		        "FirstName": "Adam",
+		            		        "Id": "3209483094802002",
+		            		        "LastName": "Schultz"
 		            		    }
 		            		}
 				        ],
 				        "InsertedBy": {
-				            "Id":"005o0000000MX8wAAG",
+				            "Id": "005o0000000MX8wAAG",
 				            "Profile": {
-				                "Id":"00eo0000000QX2yAAG",
+				                "Id": "00eo0000000QX2yAAG",
 				                "CreatedBy": {
-				                    "Id":"005o0000000MWeRAAW",
-				                    "SmallPhotoUrl":"../images/userThumbnail.png"
+				                    "Id": "005o0000000MWeRAAW",
+				                    "SmallPhotoUrl": "../images/userThumbnail.png"
 				                },
-				                "CreatedById":"005o0000000MWeRAAW"
+				                "CreatedById": "005o0000000MWeRAAW"
 				            },
-				            "ProfileId":"00eo0000000QX2yAAG"
+				            "ProfileId": "00eo0000000QX2yAAG"
 				        },
-				        "InsertedById":"005o0000000MX8wAAG"
+				        "InsertedById": "005o0000000MX8wAAG"
 				    },
-				    "smallPhotoUrl":"../images/userThumbnail.png",
+				    "smallPhotoUrl": "../images/userThumbnail.png",
 				    "comments": [
 
 				    ]
 				},
 				{
 				    "post": {
-				        "Parent":{
-				            "Name":"Awesome Playlist",
-				            "Id":"a22o0000000TsRyAAK"
+				        "Parent": {
+				            "Name": "Awesome Playlist",
+				            "Id": "a22o0000000TsRyAAK"
 				        },
-				        "Body":"the playlist creator has style",
-				        "ParentId":"a22o0000000TsRyAAK",
-				        "Type":"TextPost",
-				        "CreatedById":"005o0000000MX8wAAG",
-				        "CreatedBy":{
-				            "FirstName":"Adam",
-				            "Id":"005o0000000MX8wAAG",
-				            "LastName":"Schultz",
-				            "SmallPhotoUrl":"../images/userThumbnail.png"
+				        "Body": "the playlist creator has style",
+				        "ParentId": "a22o0000000TsRyAAK",
+				        "Type": "TextPost",
+				        "CreatedById": "005o0000000MX8wAAG",
+				        "CreatedBy": {
+				            "FirstName": "Adam",
+				            "Id": "005o0000000MX8wAAG",
+				            "LastName": "Schultz",
+				            "SmallPhotoUrl": "../images/userThumbnail.png"
 				        },
-				        "CreatedDate":1406747842000,
-				        "Id":"0D5o00000025TrnCAE",
+				        "CreatedDate": 1406747842000,
+				        "Id": "0D5o00000025TrnCAE",
 				        "InsertedBy": {
-				            "Id":"005o0000000MX8wAAG",
+				            "Id": "005o0000000MX8wAAG",
 				            "Profile": {
-				                "Id":"00eo0000000QX2yAAG",
+				                "Id": "00eo0000000QX2yAAG",
 				                "CreatedBy": {
-				                    "Id":"005o0000000MWeRAAW",
-				                    "SmallPhotoUrl":"../images/userThumbnail.png"
+				                    "Id": "005o0000000MWeRAAW",
+				                    "SmallPhotoUrl": "../images/userThumbnail.png"
 				                },
-				                "CreatedById":"005o0000000MWeRAAW"
+				                "CreatedById": "005o0000000MWeRAAW"
 				            },
-				            "ProfileId":"00eo0000000QX2yAAG"
+				            "ProfileId": "00eo0000000QX2yAAG"
 				        },
-				        "InsertedById":"005o0000000MX8wAAG"
+				        "InsertedById": "005o0000000MX8wAAG"
 				    },
-				    "smallPhotoUrl":"../images/userThumbnail.png",
+				    "smallPhotoUrl": "../images/userThumbnail.png",
 				    "comments": [
 	         			{
 	         			    "comment": {
-	         			        "CommentBody":"This is a comment to a comment.",
-	         			        "CreatedDate":1406870260000,
+	         			        "CommentBody": "This is a comment to a comment.",
+	         			        "CreatedDate": 1406870260000,
 	         			        "CreatedBy": {
-	         			            "FirstName":"Jim",
-	         			            "LastName":"Doe"
+	         			            "FirstName": "Jim",
+	         			            "LastName": "Doe"
 	         			        }
 	         			    },
-	         			    "smallPhotoUrl":"../images/userThumbnail.png",
+	         			    "smallPhotoUrl": "../images/userThumbnail.png",
 	         			    "commentLikes": [
 	         					{
 	         					    "chatterLike": {
-	         					        "id":"0I0o0000000TOohCAG",
+	         					        "id": "0I0o0000000TOohCAG",
 	         					        "user": {
-	         					            "id":"3209483094802002"
+	         					            "id": "3209483094802002"
 	         					        }
 	         					    }
 	         					},
 	         					{
 	         					    "chatterLike": {
-	         					        "id":"0I0o0000000TOohCAG",
+	         					        "id": "0I0o0000000TOohCAG",
 	         					        "user": {
-	         					            "id":"005o0000000MWeRAAW"
+	         					            "id": "005o0000000MWeRAAW"
 	         					        }
 	         					    }
 	         					}
@@ -7588,37 +7603,37 @@ app.factory("DSARemoterPlaylistExtensionStub", function() {
 				},
 				{
 				    "post": {
-				        "Parent":{
-				            "Name":"Awesome Playlist",
-				            "Id":"a22o0000000TsRyAAK"
+				        "Parent": {
+				            "Name": "Awesome Playlist",
+				            "Id": "a22o0000000TsRyAAK"
 				        },
-				        "Body":"this playlist is indeed awesome",
-				        "ParentId":"a22o0000000TsRyAAK",
-				        "Type":"TextPost",
-				        "CreatedById":"005o0000000MX8wAAG",
-				        "CreatedBy":{
-				            "FirstName":"Adam",
-				            "Id":"005o0000000MX8wAAG",
-				            "LastName":"Schultz",
-				            "SmallPhotoUrl":"../images/userThumbnail.png"
+				        "Body": "this playlist is indeed awesome",
+				        "ParentId": "a22o0000000TsRyAAK",
+				        "Type": "TextPost",
+				        "CreatedById": "005o0000000MX8wAAG",
+				        "CreatedBy": {
+				            "FirstName": "Adam",
+				            "Id": "005o0000000MX8wAAG",
+				            "LastName": "Schultz",
+				            "SmallPhotoUrl": "../images/userThumbnail.png"
 				        },
-				        "CreatedDate":1406747842000,
-				        "Id":"0D5o00000025U3MCAU",
+				        "CreatedDate": 1406747842000,
+				        "Id": "0D5o00000025U3MCAU",
 				        "InsertedBy": {
-				            "Id":"005o0000000MX8wAAG",
+				            "Id": "005o0000000MX8wAAG",
 				            "Profile": {
-				                "Id":"00eo0000000QX2yAAG",
+				                "Id": "00eo0000000QX2yAAG",
 				                "CreatedBy": {
-				                    "Id":"005o0000000MWeRAAW",
-				                    "SmallPhotoUrl":"../images/userThumbnail.png"
+				                    "Id": "005o0000000MWeRAAW",
+				                    "SmallPhotoUrl": "../images/userThumbnail.png"
 				                },
-				                "CreatedById":"005o0000000MWeRAAW"
+				                "CreatedById": "005o0000000MWeRAAW"
 				            },
-				            "ProfileId":"00eo0000000QX2yAAG"
+				            "ProfileId": "00eo0000000QX2yAAG"
 				        },
-				        "InsertedById":"005o0000000MX8wAAG"
+				        "InsertedById": "005o0000000MX8wAAG"
 				    },
-				    "smallPhotoUrl":"../images/userThumbnail.png",
+				    "smallPhotoUrl": "../images/userThumbnail.png",
 				    "comments": [
 
 				    ]
@@ -7706,31 +7721,31 @@ app.factory("DSARemoterPlaylistExtensionStub", function() {
         callback(
 			[
 				{
-				    "recordId":"pl1",
-				    "name":"Trending Call Centers",
-				    "smallImageUrl":"",
-				    "iconImageUrl":"",
-				    "tags":[
+				    "recordId": "pl1",
+				    "name": "Trending Call Centers",
+				    "smallImageUrl": "",
+				    "iconImageUrl": "",
+				    "tags": [
 			         	"service"
 				    ]
 				},
 			   	{
-			   	    "recordId":"pl1",
-			   	    "name":"Trending Product Videos",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl1",
+			   	    "name": "Trending Product Videos",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"products",
 			         	"sales",
 			         	"service"
 			   	    ]
 			   	},
 			   	{
-			   	    "recordId":"pl2",
-			   	    "name":"Trending Sites Benefits",
-			   	    "smallImageUrl":"",
-			   	    "iconImageUrl":"",
-			   	    "tags":[
+			   	    "recordId": "pl2",
+			   	    "name": "Trending Sites Benefits",
+			   	    "smallImageUrl": "",
+			   	    "iconImageUrl": "",
+			   	    "tags": [
 			         	"sites"
 			   	    ]
 			   	}
@@ -7779,7 +7794,7 @@ app.factory("DSARemoterPlaylistExtensionStub", function() {
 });
 var app = angular.module("dsaApp");
 
-app.factory("DSARemoterSearchExtensionStub", function() {
+app.factory("DSARemoterSearchExtensionStub", function () {
     function search(searchTerm, callback, options) {
         callback(
 			{
@@ -7844,10 +7859,10 @@ app.factory("DSARemoterSearchExtensionStub", function() {
 			    ],
 			    "playlists": [
 					{
-					    "recordId":"pl1",
-					    "name":"Product Videos",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
+					    "recordId": "pl1",
+					    "name": "Product Videos",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
 					    "tags": [
 							"products",
 							"sales",
@@ -7855,46 +7870,46 @@ app.factory("DSARemoterSearchExtensionStub", function() {
 					    ]
 					},
 					{
-					    "recordId":"pl2",
-					    "name":"eBooks",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
+					    "recordId": "pl2",
+					    "name": "eBooks",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
 					    "tags": [
 							"white papers"
 					    ]
 					},
 					{
-					    "recordId":"pl1",
-					    "name":"Human Resources",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
+					    "recordId": "pl1",
+					    "name": "Human Resources",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
 					    "tags": [
 							"new hires"
 					    ]
 					},
 					{
-					    "recordId":"pl2",
-					    "name":"Renewals",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
+					    "recordId": "pl2",
+					    "name": "Renewals",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
 					    "tags": [
 							"sales"
 					    ]
 					},
 					{
-					    "recordId":"pl1",
-					    "name":"Call Centers",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
+					    "recordId": "pl1",
+					    "name": "Call Centers",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
 					    "tags": [
 							"service"
 					    ]
 					},
 					{
-					    "recordId":"pl2",
-					    "name":"Sites Benefits",
-					    "smallImageUrl":"",
-					    "iconImageUrl":"",
+					    "recordId": "pl2",
+					    "name": "Sites Benefits",
+					    "smallImageUrl": "",
+					    "iconImageUrl": "",
 					    "tags": [
 							"sites"
 					    ]
@@ -7902,29 +7917,29 @@ app.factory("DSARemoterSearchExtensionStub", function() {
 			    ],
 			    "contentItemDetails": [
 					{
-					    "title":"Sales Cloud Video",
-					    "fileExtension":".mov",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123",
+					    "title": "Sales Cloud Video",
+					    "fileExtension": ".mov",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123",
 					    "tags": [
 							"sales"
 					    ]
 					},
 					{
-					    "title":"Service Cloud White Paper",
-					    "fileExtension":"pdf",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123",
+					    "title": "Service Cloud White Paper",
+					    "fileExtension": "pdf",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123",
 					    "tags": [
 							"service",
 							"white paper"
 					    ]
 					},
 					{
-					    "title":"Force.com Training",
-					    "fileExtension":".mov",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123",
+					    "title": "Force.com Training",
+					    "fileExtension": ".mov",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123",
 					    "tags": [
 							"force.com",
 							"apex",
@@ -7932,10 +7947,10 @@ app.factory("DSARemoterSearchExtensionStub", function() {
 					    ]
 					},
 					{
-					    "title":"Force.com API",
-					    "fileExtension":"pdf",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123",
+					    "title": "Force.com API",
+					    "fileExtension": "pdf",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123",
 					    "tags": [
 							"programming",
 							"force.com",
@@ -7943,19 +7958,19 @@ app.factory("DSARemoterSearchExtensionStub", function() {
 					    ]
 					},
 					{
-					    "title":"Intro to SFDC",
-					    "fileExtension":".mov",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123",
+					    "title": "Intro to SFDC",
+					    "fileExtension": ".mov",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123",
 					    "tags": [
 							"new hires"
 					    ]
 					},
 					{
-					    "title":"http://www.salesforce.com/us/developer/docs/pages/Content/pages_variables_functions.htm",
-					    "fileExtension":"pdf",
-					    "recordId":"0123456789012301",
-					    "contentDocumentId":"123",
+					    "title": "http://www.salesforce.com/us/developer/docs/pages/Content/pages_variables_functions.htm",
+					    "fileExtension": "pdf",
+					    "recordId": "0123456789012301",
+					    "contentDocumentId": "123",
 					    "tags": [
 							"new hires"
 					    ]
