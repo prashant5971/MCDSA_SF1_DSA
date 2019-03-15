@@ -78,6 +78,10 @@ app.config(function ($routeProvider) {
 		    templateUrl: resourceUrl + "/partials/content-list.html",
 		    controller: "contentListController"
 		})
+		.when("/myContent", {
+			templateUrl: resourceUrl + "/partials/my-content.html",
+			controller: "myContentController"
+		})
 		.when("/error/:message", {
 		    templateUrl: resourceUrl + "/partials/error.html",
 		    controller: "errorController"
@@ -1573,9 +1577,97 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("errorController", ["$scope", "$routeParams", "$window", "$location", "remotingService", function ($scope, $routeParams, $window, $location, remotingService) {
-    $scope.message = $routeParams.message;
-    $scope.init = function () {
+app.controller("myContentController", ["$scope", "remotingService", function($scope, remotingService) {
+	$scope.mycontentLists = [];
+	$scope.encodeedLists = []
+
+	$scope.init = function() {
+		
+	}
+	$scope.handleChange = function(ev) {
+		if(ev.target.files){
+			for (var i = 0; i < ev.target.files.length; i++){
+				var file = ev.target.files[i];
+				$scope.mycontentLists.push(file);
+			};
+			console.log($scope.mycontentLists);
+			$scope.$apply();
+		}
+	}
+	$scope.handleDrop = function(ev) {
+		if (ev.dataTransfer.items) {
+			for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+			  if (ev.dataTransfer.items[i].kind === 'file') {
+				var file = ev.dataTransfer.items[i].getAsFile();
+				$scope.mycontentLists.push(file);
+				};
+			};
+			console.log($scope.mycontentLists);
+			$scope.$apply();
+		}
+	}
+	$scope.removeContentItem = function(index){
+		if (index > -1) {
+			$scope.mycontentLists.splice(index, 1);
+		}
+	}
+	$scope.uploadContentItem = function(index){
+		var file = $scope.mycontentLists[index];
+		$scope.base64Encode(file, function(dataurl) {
+            console.log(dataurl);
+        });
+	}
+	$scope.emailContentItem = function(index){
+		var file = $scope.mycontentLists[index];
+		$scope.base64Encode(file, function(dataurl) {
+            console.log(dataurl);
+        });
+	}
+	$scope.uploadAll = function(){
+		$scope.mycontentLists
+		for (var i = 0; i < $scope.mycontentLists.length; i++) {
+			$scope.base64Encode($scope.mycontentLists[i], function(dataurl) {
+					$scope.encodeedLists.push(dataurl);
+				}
+			);
+		}
+		console.log($scope.encodeedLists);
+		remotingService.execute(
+			"DSARemoterContentItemExtension.saveAllContentItems", $scope.encodeedLists,{
+				success: function(result) {
+					console.log(result);
+				},
+				error: function(error) {
+					sessionService.checkSession(error.message);
+				}
+			},
+			$scope
+		);
+	}
+	$scope.base64Encode = function(file, onProcessedCallback){
+	  var dataurl = '';
+      var fileBase64 = '';
+          var reader = new FileReader();
+          reader.onload = function() {
+            var readerResult = reader.result;
+            fileBase64 = readerResult.split(",").pop();
+    
+            const data = {
+              'file': file.$$hashKey,
+              'filename': file.name
+            };
+            onProcessedCallback(data);
+          }
+          reader.readAsDataURL(file);
+
+      return dataurl;
+	}
+}]);
+var app = angular.module("dsaApp");
+
+app.controller("errorController", ["$scope", "$routeParams", "$window", "$location", "remotingService", function($scope, $routeParams, $window, $location, remotingService) {
+	$scope.message = $routeParams.message;
+	$scope.init = function() {
 
     };
 
@@ -2583,7 +2675,7 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
         setTimeout(function () {
             var elements = document.getElementsByClassName('walkme-custom-icon-outer-div');
             elements[0].style.display = 'none';
-        }, 2000);
+        }, 2500);
     }
 
 
@@ -2714,9 +2806,17 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
         }
     };
 
-    $scope.$on('displayHubListFalse', function () {
-        $scope.displayHubList = false;
-    });
+	$scope.goToMyContent = function() {
+		if ($scope.mobile) {
+			$location.url("myContent");
+		} else {
+			$location.url("myContent");
+		}
+	};
+
+	$scope.$on('displayHubListFalse', function() {
+		$scope.displayHubList = false;
+	});
 
     $scope.$on('displayHubListCloseFalse', function () {
         $scope.displayHubListClose = false;
@@ -3387,6 +3487,8 @@ app.controller("playlistEditController", ["$scope", "$window", "$location", "rem
         $scope.internalOnlyMode = internalOnlyMode;
     });
 
+   
+
     $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
         if (!$scope.info.user.isContentUser) {
@@ -3480,6 +3582,8 @@ app.controller("playlistEditController", ["$scope", "$window", "$location", "rem
 			$scope
 		);
     };
+
+  
 
     $scope.removeFromPlaylist = function (playlistId, documentId) {
         if (playlistId && documentId) {
@@ -4090,6 +4194,8 @@ app.controller("playlistNavbarController", ["$scope", "$location", "$routeParams
 		);
     };
 
+    
+
     $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
         $scope.init();
@@ -4258,6 +4364,8 @@ app.controller("preferencesController", ["$scope", "$location", "remotingService
         }
         $scope.init();
     });
+
+
 
     $scope.navigateToSF = function () {
         window.location.href = location.protocol + '//' + location.hostname + '/home/home.jsp';
@@ -4918,24 +5026,123 @@ app.directive('uiSwitch', ['$window', '$timeout', '$parse', function ($window, $
         }
         catch (e) { }
 
-        $timeout(function () {
-            var init = new $window.Switchery(elem[0], options);
-            if (attrs.ngModel) {
-                scope.$watch(attrs.ngModel, function () {
-                    init.setPosition(false);
+            $timeout(function() {
+                var init = new $window.Switchery(elem[0], options);
+                if (attrs.ngModel) {
+                    scope.$watch(attrs.ngModel, function() {
+                        init.setPosition(false);
+                    });
+                }
+                $(elem).on("change", function() {
+                    var internalOnlyMode = $(elem).filter(":checked").length > 0;
+                    scope.$emit("internalOnlyMode", internalOnlyMode);
                 });
-            }
-            $(elem).on("change", function () {
-                var internalOnlyMode = $(elem).filter(":checked").length > 0;
-                scope.$emit("internalOnlyMode", internalOnlyMode);
-            });
-        }, 0);
-    }
+            }, 0);
+        }
+        return {
+            restrict: 'AE',
+            link: linkSwitchery
+        }
+    }]);
+var app = angular.module('dsaApp');
+
+app.directive('droppable', function() {
     return {
-        restrict: 'AE',
-        link: linkSwitchery
+        scope: {
+			drop: '&' // parent
+		},
+        link: function(scope, element) {
+            // again we need the native object
+			var el = element[0];
+
+			el.addEventListener(
+				'dragover',
+				function(e) {
+					e.dataTransfer.dropEffect = 'move';
+					// allows us to drop
+					if (e.preventDefault) e.preventDefault();
+					this.classList.add('over');
+					return false;
+				},
+				false
+			);
+			el.addEventListener(
+				'dragenter',
+				function(e) {
+					this.classList.add('over');
+					return false;
+				},
+				false
+			);
+			
+			el.addEventListener(
+				'dragleave',
+				function(e) {
+					this.classList.remove('over');
+					return false;
+				},
+				false
+			);
+			el.addEventListener(
+				'drop',
+				function(e) {
+					// Stops some browsers from redirecting.
+					if (e.stopPropagation) e.stopPropagation();
+					e.preventDefault();
+					this.classList.remove('over');
+
+					//scope.$apply('drop()');
+					scope.$parent.handleDrop(e);
+			
+					return false;
+				},
+				false
+			);
+			el.addEventListener(
+				'change',
+				function(e) {
+					// Stops some browsers from redirecting.
+					if (e.stopPropagation) e.stopPropagation();
+					e.preventDefault();
+					this.classList.remove('over');
+
+					//scope.$apply('drop()');
+					scope.$parent.handleChange(e);
+			
+					return false;
+				},
+				false
+			);
+        }
     }
-}]);
+});
+var app = angular.module('dsaApp');
+
+app.directive('onFileChange', function() {
+    return {
+        scope: {},
+        link: function(scope, element) {
+            // again we need the native object
+			var el = element[0];
+
+			el.addEventListener(
+				'change',
+				function(e) {
+					// Stops some browsers from redirecting.
+					if (e.stopPropagation) e.stopPropagation();
+					e.preventDefault();
+					this.classList.remove('over');
+
+					//scope.$apply('drop()');
+					scope.$parent.handleChange(e);
+			
+					return false;
+				},
+				false
+			);
+        }
+    }
+});
 var app = angular.module('dsaApp');
 
 app.filter("ellipseText", function () {
