@@ -142,7 +142,9 @@
         margin: auto;
         color: #fff;
     }
-
+    .backgroundColor{
+        background-color:white;
+    }
 
     @media screen and (min-width: 400px) {
         .SearchBox:hover .SearchBox-input {
@@ -353,7 +355,7 @@
 
                                         <div id="new-playlist-form" class="section-list-item-form">
                                             <div class="section-list-item-form-field">
-                                                <input type="text" placeholder="Title" ng-model="newPlaylist.newPlaylistTitle"></input>
+                                                <input type="text" placeholder="Title" ng-model="newPlaylist.newPlaylistTitle" class="backgroundColor"></input>
                                             </div>
                                             <div class="section-list-item-form-field">
                                                 <textarea placeholder="Description" rows="4" ng-model="newPlaylist.newPlaylistDescription"></textarea>

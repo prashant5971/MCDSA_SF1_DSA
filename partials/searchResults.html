@@ -1,3 +1,22 @@
+<style type="text/css">
+    .breadcrumbs li {
+  display: inline-block;    
+}
+.breadcrumbs li:after {
+  content: " >";
+  color: rgb(211, 211, 211);        
+}
+.breadcrumbs li:last-child:after,.breadcrumbs li:nth-last-child(2):after {
+  content: "";
+}
+button {
+  padding: 1px 3px;
+  border: 1px solid rgb(175, 175, 175);
+  border-radius: 3px;
+}
+
+</style>
+
 <div id="page-content" style="min-height:{{resultsScreenHeight}}px;height:{{resultsScreenHeight}}px;">
 	<form ng-submit="goToResult()" class="search-form navbar-search" role="search">
 		<div id="searchResults-search" class="form-group">
@@ -64,6 +83,16 @@
 								{{searchResult.name}}
 							</div>
 						</div>
+                        <nav class="breadcrumbs">
+                            <ul id="breadcrumbs" ng-init="setPath()">
+                                <li><a href="#">Home</a></li>
+                                <li><a href="#">First Child</a></li>
+                                <li><a href="#">Second Child</a></li>
+                                <li><a href="#">Third Child</a></li>
+                                <li id="button"><button id="showBreadcrumbs" ng-click="expandPath()">...</button></li>
+                                <li><a href="#">Fourth Child</a></li>
+                            </ul>
+                        </nav>
 					</div>
 				</div>
 			</div>

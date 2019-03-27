@@ -79,8 +79,8 @@ app.config(function ($routeProvider) {
 		    controller: "contentListController"
 		})
 		.when("/myContent", {
-			templateUrl: resourceUrl + "/partials/my-content.html",
-			controller: "myContentController"
+		    templateUrl: resourceUrl + "/partials/my-content.html",
+		    controller: "myContentController"
 		})
 		.when("/error/:message", {
 		    templateUrl: resourceUrl + "/partials/error.html",
@@ -1577,97 +1577,175 @@ app.controller("contentListController", ["$scope", "$window", "$location", "$rou
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("myContentController", ["$scope", "remotingService", function($scope, remotingService) {
-	$scope.mycontentLists = [];
-	$scope.encodeedLists = []
+app.controller("myContentController", ["$scope", "remotingService", "$location", "$sce", function ($scope, remotingService, $location, $sce) {
+    $scope.mycontentLists = [];
+    $scope.jsonStringLists = [];
+    $scope.existingContent = [];
 
-	$scope.init = function() {
-		
-	}
-	$scope.handleChange = function(ev) {
-		if(ev.target.files){
-			for (var i = 0; i < ev.target.files.length; i++){
-				var file = ev.target.files[i];
-				$scope.mycontentLists.push(file);
-			};
-			console.log($scope.mycontentLists);
-			$scope.$apply();
-		}
-	}
-	$scope.handleDrop = function(ev) {
-		if (ev.dataTransfer.items) {
-			for (var i = 0; i < ev.dataTransfer.items.length; i++) {
-			  if (ev.dataTransfer.items[i].kind === 'file') {
-				var file = ev.dataTransfer.items[i].getAsFile();
-				$scope.mycontentLists.push(file);
-				};
-			};
-			console.log($scope.mycontentLists);
-			$scope.$apply();
-		}
-	}
-	$scope.removeContentItem = function(index){
-		if (index > -1) {
-			$scope.mycontentLists.splice(index, 1);
-		}
-	}
-	$scope.uploadContentItem = function(index){
-		var file = $scope.mycontentLists[index];
-		$scope.base64Encode(file, function(dataurl) {
-            console.log(dataurl);
-        });
-	}
-	$scope.emailContentItem = function(index){
-		var file = $scope.mycontentLists[index];
-		$scope.base64Encode(file, function(dataurl) {
-            console.log(dataurl);
-        });
-	}
-	$scope.uploadAll = function(){
-		$scope.mycontentLists
-		for (var i = 0; i < $scope.mycontentLists.length; i++) {
-			$scope.base64Encode($scope.mycontentLists[i], function(dataurl) {
-					$scope.encodeedLists.push(dataurl);
-				}
-			);
-		}
-		console.log($scope.encodeedLists);
-		remotingService.execute(
-			"DSARemoterContentItemExtension.saveAllContentItems", $scope.encodeedLists,{
-				success: function(result) {
-					console.log(result);
-				},
-				error: function(error) {
-					sessionService.checkSession(error.message);
-				}
+    $scope.init = function () {
+        $scope.getMyContent();
+    }
+
+    $scope.goToContent = function (id) {
+        $location.url("/content/" + id);
+    }
+
+    $scope.getMyContent = function (ev) {
+        $scope.startLoading();
+        remotingService.execute(
+			"DSARemoterContentItemExtension.getMyContentItems", {
+			    success: function (result) {
+			        $scope.stopLoading();
+			        $scope.existingContent = result;
+			    },
+			    error: function (error) {
+			        console.log(error.message);
+			    }
 			},
 			$scope
 		);
-	}
-	$scope.base64Encode = function(file, onProcessedCallback){
-	  var dataurl = '';
-      var fileBase64 = '';
-          var reader = new FileReader();
-          reader.onload = function() {
+    }
+    $scope.handleChange = function (ev) {
+        if (ev.target.files) {
+            for (var i = 0; i < ev.target.files.length; i++) {
+                var file = ev.target.files[i];
+                $scope.mycontentLists.push(file);
+            };
+            $scope.$apply();
+        }
+    }
+    $scope.handleDrop = function (ev) {
+        if (ev.dataTransfer.items) {
+            for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+                if (ev.dataTransfer.items[i].kind === 'file') {
+                    var file = ev.dataTransfer.items[i].getAsFile();
+                    $scope.mycontentLists.push(file);
+                };
+            };
+            $scope.$apply();
+        }
+    }
+    $scope.removeContentItem = function (index) {
+        if (index > -1) {
+            $scope.mycontentLists.splice(index, 1);
+        }
+    }
+    $scope.uploadContentItem = function (index) {
+        var uploadItem = [];
+        var file = $scope.mycontentLists[index];
+        if (file) {
+            $scope.base64Encode(file, function (dataurl) {
+                uploadItem.push(JSON.stringify(dataurl));
+            });
+            $scope.startLoading();
+            remotingService.execute(
+				"DSARemoterContentItemExtension.saveAllContentItems2", uploadItem, {
+				    success: function (result) {
+				        $scope.getMyContent();
+				        $scope.mycontentLists.splice(index, 1);
+				        $scope.jsonStringLists = [];
+				    },
+				    error: function (error) {
+				        console.log(error.message);
+				        $scope.stopLoading();
+				    }
+				},
+				$scope
+			);
+        }
+
+    }
+    $scope.emailContentItem = function (Id) {
+        if (Id) {
+            remotingService.execute(
+				"DSARemoterContentItemExtension.getContentItemDetail", Id, {
+				    success: function (result) {
+				        $scope.stopLoading();
+				        var downloadURL = result.downloadURL;
+				        var doc = $sce.trustAsResourceUrl(downloadURL);
+				        window.location.href = "mailto:?subject=Content%20From%20Mastercard&body=Content:%0D%0A" + doc;
+				    },
+				    error: function (error) {
+				        $scope.stopLoading();
+				        console.log(error);
+				    },
+				},
+				$scope
+			);
+        }
+    }
+    $scope.deleteContentItem = function (Id, Name) {
+        var deleteThis = confirm("Are you sure you want to delete this file from Salesforce?: \n" + Name);
+        if (deleteThis == true) {
+            $scope.startLoading();
+            remotingService.execute(
+				"DSARemoterContentItemExtension.deleteContent", Id, {
+				    success: function (result) {
+				        $scope.getMyContent();
+				    },
+				    error: function (error) {
+				        $scope.stopLoading();
+				        console.log(error.message);
+				    }
+				},
+				$scope
+			);
+        } else {
+            console.log('Cancelled');
+        }
+
+    }
+    $scope.uploadAll = function () {
+        $scope.startLoading();
+        if ($scope.mycontentLists.length > 0) {
+            for (var i = 0; i < $scope.mycontentLists.length; i++) {
+                $scope.base64Encode($scope.mycontentLists[i], function (dataurl) {
+                    $scope.jsonStringLists.push(JSON.stringify(dataurl));
+                }
+				);
+            }
+
+            remotingService.execute(
+				"DSARemoterContentItemExtension.saveAllContentItems2", $scope.jsonStringLists, {
+				    success: function (result) {
+				        $scope.getMyContent();
+				        $scope.mycontentLists = [];
+				        $scope.jsonStringLists = [];
+				    },
+				    error: function (error) {
+				        console.log(error.message);
+				        $scope.stopLoading();
+				    }
+				},
+				$scope
+			);
+        }
+    }
+    $scope.base64Encode = function (file, onProcessedCallback) {
+        var dataurl = '';
+        var fileBase64 = '';
+        var reader = new FileReader();
+        reader.onload = function () {
             var readerResult = reader.result;
             fileBase64 = readerResult.split(",").pop();
-    
+
             const data = {
-              'file': file.$$hashKey,
-              'filename': file.name
+                'file': fileBase64,
+                'filename': file.name
             };
             onProcessedCallback(data);
-          }
-          reader.readAsDataURL(file);
+        }
+        reader.readAsDataURL(file);
 
-      return dataurl;
-	}
+        return dataurl;
+    }
+    $scope.init();
 }]);
 var app = angular.module("dsaApp");
 
-app.controller("errorController", ["$scope", "$routeParams", "$window", "$location", "remotingService", function($scope, $routeParams, $window, $location, remotingService) {
-	$scope.message = $routeParams.message;
-	$scope.init = function() {
+app.controller("errorController", ["$scope", "$routeParams", "$window", "$location", "remotingService", function ($scope, $routeParams, $window, $location, remotingService) {
+    $scope.message = $routeParams.message;
+    $scope.init = function () {
 
     };
 
@@ -2671,15 +2749,13 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
     };
 
     $scope.removeWalkMe = function () {
-      
+
         setTimeout(function () {
             var elements = document.getElementsByClassName('walkme-custom-icon-outer-div');
-            elements[0].style.display = 'none';
-        }, 2500);
+            if (elements && elements.length > 0)
+                elements[0].style.display = 'none';
+        }, 3000);
     }
-
-
-
 
     $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
@@ -2693,7 +2769,12 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
     });
 
     $scope.navigateToSF = function () {
-        window.location.href = location.protocol + '//' + location.hostname + '/home/home.jsp';
+        if (window.sforce && window.sforce.one) {
+            window.sforce.one.back();
+        } else {
+            window.location.href = location.protocol + '//' + location.hostname + '/home/home.jsp';
+        }
+
     }
 
     $scope.determineDevice = function () {
@@ -2806,17 +2887,17 @@ app.controller("navbarMenuController", ["$scope", "$rootScope", "$window", "$loc
         }
     };
 
-	$scope.goToMyContent = function() {
-		if ($scope.mobile) {
-			$location.url("myContent");
-		} else {
-			$location.url("myContent");
-		}
-	};
+    $scope.goToMyContent = function () {
+        if ($scope.mobile) {
+            $location.url("myContent");
+        } else {
+            $location.url("myContent");
+        }
+    };
 
-	$scope.$on('displayHubListFalse', function() {
-		$scope.displayHubList = false;
-	});
+    $scope.$on('displayHubListFalse', function () {
+        $scope.displayHubList = false;
+    });
 
     $scope.$on('displayHubListCloseFalse', function () {
         $scope.displayHubListClose = false;
@@ -3487,7 +3568,7 @@ app.controller("playlistEditController", ["$scope", "$window", "$location", "rem
         $scope.internalOnlyMode = internalOnlyMode;
     });
 
-   
+
 
     $scope.$on("infoUpdate", function (event, info) {
         $scope.info = info;
@@ -3583,7 +3664,7 @@ app.controller("playlistEditController", ["$scope", "$window", "$location", "rem
 		);
     };
 
-  
+
 
     $scope.removeFromPlaylist = function (playlistId, documentId) {
         if (playlistId && documentId) {
@@ -4194,7 +4275,7 @@ app.controller("playlistNavbarController", ["$scope", "$location", "$routeParams
 		);
     };
 
-    
+
 
     $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
         $scope.internalOnlyMode = internalOnlyMode;
@@ -4368,7 +4449,11 @@ app.controller("preferencesController", ["$scope", "$location", "remotingService
 
 
     $scope.navigateToSF = function () {
-        window.location.href = location.protocol + '//' + location.hostname + '/home/home.jsp';
+        if (window.sforce && window.sforce.one) {
+            window.sforce.one.back();
+        } else {
+            window.location.href = location.protocol + '//' + location.hostname + '/home/home.jsp';
+        }
     }
 
 }]);
@@ -4536,6 +4621,23 @@ app.controller("searchResultsController", ["$scope", "$routeParams", "$location"
         if (!$scope.info.user.isContentUser) {
             $location.url("/error/" + $scope.info.contentUserErrorMessage);
         }
+    }
+
+    $scope.expandPath = function(){
+        debugger;
+            $("#breadcrumbs li")
+              .not(":first-child")
+              .not(":last-child")
+              .not("#button")
+              .toggle(50);
+    };
+
+    $scope.setPath = function () {
+            $("#breadcrumbs li")
+              .not(":first-child")
+              .not(":last-child")
+              .not("#button")
+              .hide();
     }
 
     $scope.$on("internalOnlyMode-broadcast", function (event, internalOnlyMode) {
@@ -5026,90 +5128,89 @@ app.directive('uiSwitch', ['$window', '$timeout', '$parse', function ($window, $
         }
         catch (e) { }
 
-            $timeout(function() {
-                var init = new $window.Switchery(elem[0], options);
-                if (attrs.ngModel) {
-                    scope.$watch(attrs.ngModel, function() {
-                        init.setPosition(false);
-                    });
-                }
-                $(elem).on("change", function() {
-                    var internalOnlyMode = $(elem).filter(":checked").length > 0;
-                    scope.$emit("internalOnlyMode", internalOnlyMode);
+        $timeout(function () {
+            var init = new $window.Switchery(elem[0], options);
+            if (attrs.ngModel) {
+                scope.$watch(attrs.ngModel, function () {
+                    init.setPosition(false);
                 });
-            }, 0);
-        }
-        return {
-            restrict: 'AE',
-            link: linkSwitchery
-        }
-    }]);
+            }
+            $(elem).on("change", function () {
+                var internalOnlyMode = $(elem).filter(":checked").length > 0;
+                scope.$emit("internalOnlyMode", internalOnlyMode);
+            });
+        }, 0);
+    }
+    return {
+        restrict: 'AE',
+        link: linkSwitchery
+    }
+}]);
 var app = angular.module('dsaApp');
 
-app.directive('droppable', function() {
+app.directive('droppable', function () {
     return {
         scope: {
-			drop: '&' // parent
-		},
-        link: function(scope, element) {
+            drop: '&' // parent
+        },
+        link: function (scope, element) {
             // again we need the native object
-			var el = element[0];
+            var el = element[0];
 
-			el.addEventListener(
+            el.addEventListener(
 				'dragover',
-				function(e) {
-					e.dataTransfer.dropEffect = 'move';
-					// allows us to drop
-					if (e.preventDefault) e.preventDefault();
-					this.classList.add('over');
-					return false;
+				function (e) {
+				    e.dataTransfer.dropEffect = 'move';
+				    // allows us to drop
+				    if (e.preventDefault) e.preventDefault();
+				    this.classList.add('over');
+				    return false;
 				},
 				false
 			);
-			el.addEventListener(
+            el.addEventListener(
 				'dragenter',
-				function(e) {
-					this.classList.add('over');
-					return false;
+				function (e) {
+				    this.classList.add('over');
+				    return false;
 				},
 				false
 			);
-			
-			el.addEventListener(
+
+            el.addEventListener(
 				'dragleave',
-				function(e) {
-					this.classList.remove('over');
-					return false;
+				function (e) {
+				    this.classList.remove('over');
+				    return false;
 				},
 				false
 			);
-			el.addEventListener(
+            el.addEventListener(
 				'drop',
-				function(e) {
-					// Stops some browsers from redirecting.
-					if (e.stopPropagation) e.stopPropagation();
-					e.preventDefault();
-					this.classList.remove('over');
+				function (e) {
+				    // Stops some browsers from redirecting.
+				    if (e.stopPropagation) e.stopPropagation();
+				    this.classList.remove('over');
+				    e.preventDefault();
 
-					//scope.$apply('drop()');
-					scope.$parent.handleDrop(e);
-			
-					return false;
+				    scope.$parent.handleDrop(e);
+
+				    return false;
 				},
 				false
 			);
-			el.addEventListener(
+            el.addEventListener(
 				'change',
-				function(e) {
-					// Stops some browsers from redirecting.
-					if (e.stopPropagation) e.stopPropagation();
-					e.preventDefault();
-					this.classList.remove('over');
+				function (e) {
+				    // Stops some browsers from redirecting.
+				    if (e.stopPropagation) e.stopPropagation();
+				    e.preventDefault();
+				    this.classList.remove('over');
 
-					//scope.$apply('drop()');
-					scope.$parent.handleChange(e);
-			
-					return false;
+				    //scope.$apply('drop()');
+				    scope.$parent.handleChange(e);
+
+				    return false;
 				},
 				false
 			);
@@ -5118,25 +5219,25 @@ app.directive('droppable', function() {
 });
 var app = angular.module('dsaApp');
 
-app.directive('onFileChange', function() {
+app.directive('onFileChange', function () {
     return {
         scope: {},
-        link: function(scope, element) {
+        link: function (scope, element) {
             // again we need the native object
-			var el = element[0];
+            var el = element[0];
 
-			el.addEventListener(
+            el.addEventListener(
 				'change',
-				function(e) {
-					// Stops some browsers from redirecting.
-					if (e.stopPropagation) e.stopPropagation();
-					e.preventDefault();
-					this.classList.remove('over');
+				function (e) {
+				    // Stops some browsers from redirecting.
+				    if (e.stopPropagation) e.stopPropagation();
+				    e.preventDefault();
+				    this.classList.remove('over');
 
-					//scope.$apply('drop()');
-					scope.$parent.handleChange(e);
-			
-					return false;
+				    //scope.$apply('drop()');
+				    scope.$parent.handleChange(e);
+
+				    return false;
 				},
 				false
 			);

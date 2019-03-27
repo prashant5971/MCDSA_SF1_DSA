@@ -58,9 +58,9 @@
 				<span class="category-navbar-header-icon fa fa-circle"></span><span class="category-navbar-header-text">{{mobile ? (hierarchyCategory.name | ellipseText22) : hierarchyCategory.name}}</span>
 			</div>
 		</div>
-		<div id="category-navbar-header" ng-click="goToCategory()">
+		<div id="category-navbar-header" ng-click="goToCategory(parentCategory.Id)">
             <div class="wrapper">
-                <a class="second after fontSize" href="#">
+                <a class="second after fontSize" >
                     <span class="category-navbar-header-icon fa fa-circle"></span><span class="category-navbar-header-text">{{mobile ? (parentCategory.name | ellipseText22) : parentCategory.name}}</span>
                 </a>
             </div>

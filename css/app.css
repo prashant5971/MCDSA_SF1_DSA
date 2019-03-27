@@ -29424,7 +29424,7 @@ body {
 #page-content #contentMetadata {
   padding-bottom: 15px;
   padding-top: 10px;
-  float: left;
+ /* float: left; */
 }
 @media (min-width: 768px) {
   #page-content #contentMetadata {
@@ -30217,6 +30217,10 @@ body {
 [data-ng-click],
 [x-ng-click] {
     cursor: pointer;
+}
+
+.walkme-icon-image-div{
+    display:none !important;
 }
 
 /*# sourceMappingURL=app.css.map*/
