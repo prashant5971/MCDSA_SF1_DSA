@@ -895,14 +895,19 @@ app.controller("contentController", ["$scope", "$routeParams", "$window", "$loca
         $scope.logContentReview();
     };
 
-    $scope.fixInvalidImage = function (contentItem, isMobile) {
-        if (isMobile) {
-            contentItem.smallImageUrl = '';
-        } else {
-            contentItem.largeImageUrl = '';
-        }
-        $window.onresize();
-    };
+	$scope.fixInvalidImage = function(contentItem, isMobile) {
+		if (isMobile) {
+			contentItem.smallImageUrl = '';
+		} else {
+			contentItem.largeImageUrl = '';
+		}
+		$window.onresize();
+	};
+
+	$scope.goToEdit = function(url){
+		console.log(url);
+		window.open(url, '_blank');
+	}
 
     $scope.isValidImageUrl = function (contentItem, isMobile) {
         var img = new Image();
@@ -1604,51 +1609,54 @@ app.controller("myContentController", ["$scope", "remotingService", "$location",
 			},
 			$scope
 		);
-    }
-    $scope.handleChange = function (ev) {
-        if (ev.target.files) {
-            for (var i = 0; i < ev.target.files.length; i++) {
-                var file = ev.target.files[i];
-                $scope.mycontentLists.push(file);
-            };
-            $scope.$apply();
-        }
-    }
-    $scope.handleDrop = function (ev) {
-        if (ev.dataTransfer.items) {
-            for (var i = 0; i < ev.dataTransfer.items.length; i++) {
-                if (ev.dataTransfer.items[i].kind === 'file') {
-                    var file = ev.dataTransfer.items[i].getAsFile();
-                    $scope.mycontentLists.push(file);
-                };
-            };
-            $scope.$apply();
-        }
-    }
-    $scope.removeContentItem = function (index) {
-        if (index > -1) {
-            $scope.mycontentLists.splice(index, 1);
-        }
-    }
-    $scope.uploadContentItem = function (index) {
-        var uploadItem = [];
-        var file = $scope.mycontentLists[index];
-        if (file) {
-            $scope.base64Encode(file, function (dataurl) {
-                uploadItem.push(JSON.stringify(dataurl));
-            });
-            $scope.startLoading();
-            remotingService.execute(
-				"DSARemoterContentItemExtension.saveAllContentItems2", uploadItem, {
-				    success: function (result) {
-				        $scope.getMyContent();
-				        $scope.mycontentLists.splice(index, 1);
-				        $scope.jsonStringLists = [];
-				    },
-				    error: function (error) {
-				        console.log(error.message);
-				        $scope.stopLoading();
-				    }
+	}
+	$scope.handleChange = function(ev) {
+		if(ev.target.files){
+			for (var i = 0; i < ev.target.files.length; i++){
+				var file = ev.target.files[i];
+				$scope.mycontentLists.push(file);
+			};
+			$scope.$apply();
+			$scope.uploadAll();
+		}
+	}
+	$scope.handleDrop = function(ev) {
+		if (ev.dataTransfer.items) {
+			for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+			  if (ev.dataTransfer.items[i].kind === 'file') {
+				var file = ev.dataTransfer.items[i].getAsFile();
+				$scope.mycontentLists.push(file);
+				};
+			};
+			$scope.$apply();
+			$scope.uploadAll();
+		}
+		
+	}
+	$scope.removeContentItem = function(index){
+		if (index > -1) {
+			$scope.mycontentLists.splice(index, 1);
+		}
+	}
+	$scope.uploadContentItem = function(index){
+		var uploadItem = [];
+		var file = $scope.mycontentLists[index];
+		if(file){
+			$scope.base64Encode(file, function(dataurl) {
+				uploadItem.push(JSON.stringify(dataurl));
+			});
+			$scope.startLoading();
+			remotingService.execute(
+				"DSARemoterContentItemExtension.saveAllContentItems2", uploadItem,{
+					success: function(result) {
+						$scope.getMyContent();
+						$scope.mycontentLists.splice(index, 1);
+						$scope.jsonStringLists = [];
+					},
+					error: function(error) {
+						console.log(error.message);
+						$scope.stopLoading();
+					}
 				},
 				$scope
 			);
@@ -1692,40 +1700,50 @@ app.controller("myContentController", ["$scope", "remotingService", "$location",
 			);
         } else {
             console.log('Cancelled');
-        }
-
-    }
-    $scope.uploadAll = function () {
-        $scope.startLoading();
-        if ($scope.mycontentLists.length > 0) {
-            for (var i = 0; i < $scope.mycontentLists.length; i++) {
-                $scope.base64Encode($scope.mycontentLists[i], function (dataurl) {
-                    $scope.jsonStringLists.push(JSON.stringify(dataurl));
-                }
+          }
+		
+	}
+	$scope.uploadAll = function(){
+		var names = '';
+		for (var i = 0; i < $scope.mycontentLists.length; i++) {
+			names += $scope.mycontentLists[i].name + (i+1 == $scope.mycontentLists.length ? '' : ', ');
+		}
+		var uploadThis = confirm("Would you like to upload these files to Salesforce? \n" + names);
+		if (uploadThis == true) {
+			$scope.startLoading();
+			if($scope.mycontentLists.length > 0){
+				for (var i = 0; i < $scope.mycontentLists.length; i++) {
+					$scope.base64Encode($scope.mycontentLists[i], function(dataurl) {
+							$scope.jsonStringLists.push(JSON.stringify(dataurl));
+						}
+					);
+				}
+				
+				remotingService.execute(
+					"DSARemoterContentItemExtension.saveAllContentItems2", $scope.jsonStringLists,{
+						success: function(result) {
+							$scope.getMyContent();
+							$scope.mycontentLists = [];
+							$scope.jsonStringLists = [];
+						},
+						error: function(error) {
+							console.log(error.message);
+							$scope.stopLoading();
+						}
+					},
+					$scope
 				);
-            }
-
-            remotingService.execute(
-				"DSARemoterContentItemExtension.saveAllContentItems2", $scope.jsonStringLists, {
-				    success: function (result) {
-				        $scope.getMyContent();
-				        $scope.mycontentLists = [];
-				        $scope.jsonStringLists = [];
-				    },
-				    error: function (error) {
-				        console.log(error.message);
-				        $scope.stopLoading();
-				    }
-				},
-				$scope
-			);
-        }
-    }
-    $scope.base64Encode = function (file, onProcessedCallback) {
-        var dataurl = '';
-        var fileBase64 = '';
-        var reader = new FileReader();
-        reader.onload = function () {
+			}
+		}else{
+			$scope.mycontentLists = [];
+			$scope.jsonStringLists = [];
+		}
+	}
+	$scope.base64Encode = function(file, onProcessedCallback){
+	  var dataurl = '';
+      var fileBase64 = '';
+          var reader = new FileReader();
+          reader.onload = function() {
             var readerResult = reader.result;
             fileBase64 = readerResult.split(",").pop();
 

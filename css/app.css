@@ -29476,7 +29476,7 @@ body {
   display: inline-block;
   padding-right: 30px;
 }
-#page-content .contentActions > div.contentActionShare {
+#page-content .contentActions > div.contentActionShare, #page-content .contentActions > div.contentActionGoToEdit {
   float: right;
 }
 #page-content .contentActions .contentAction-label {

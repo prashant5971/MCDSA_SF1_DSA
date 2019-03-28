@@ -398,6 +398,9 @@
                     </div>
                 </div>
             </div>
+			<div ng-if="contentItem.editableVersion" class="contentActionGoToEdit" ng-click="goToEdit(contentItem.editableVersion)">
+				<span class="contentAction-icon fa fa-pencil"></span><span class="contentAction-label">Link to Editable Content</span>
+			</div>
         </div>
     </div>
     <div class="section relatedContent right-side">
